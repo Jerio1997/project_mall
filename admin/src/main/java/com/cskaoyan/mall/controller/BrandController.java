@@ -3,13 +3,11 @@ package com.cskaoyan.mall.controller;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Brand;
 import com.cskaoyan.mall.service.BrandService;
-import com.cskaoyan.mall.service.BrandServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,4 +37,29 @@ public class BrandController {
         baseReqVo.setData(data);
         return baseReqVo;
     }
+
+    /**
+     * 删除一个brand
+     * @param brand
+     * @return
+     */
+    @RequestMapping("delete")
+    public BaseReqVo deleteBrand(@RequestBody Brand brand) {
+        int result = brandService.deleteBrand(brand);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @RequestMapping("update")
+    public BaseReqVo updateBrand(@RequestBody Brand brand) {
+        int result = brandService.updateBrand(brand);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(brand);
+        return baseReqVo;
+    }
+
 }

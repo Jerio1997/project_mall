@@ -29,5 +29,4 @@ public interface BrandMapper {
 
     int updateByPrimaryKey(Brand record);
 
-    List<Brand> selectBrandByConditionOrderByAddTime();
 }

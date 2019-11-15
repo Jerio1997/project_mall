@@ -45,4 +45,16 @@ public class BrandServiceImpl implements BrandService {
         long countByExample = brandMapper.countByExample(new BrandExample());
         return countByExample;
     }
+
+    @Override
+    public int deleteBrand(Brand brand) {
+        int i = brandMapper.deleteByPrimaryKey(brand.getId());
+        return i;
+    }
+
+    @Override
+    public int updateBrand(Brand brand) {
+        int i = brandMapper.updateByPrimaryKey(brand);
+        return i;
+    }
 }
