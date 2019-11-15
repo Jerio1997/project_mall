@@ -109,11 +109,7 @@
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.mall.bean.Category">
     insert into cskaoyan_mall_category (id, name, keywords,
-<<<<<<< HEAD
       `desc`, pid, icon_url,
-=======
-      `desc`, pid, icon_url,
->>>>>>> 9e1bdb284fb5ee7bf81a9c89ebc2d05490cdf897
       pic_url, level, sort_order,
       add_time, update_time, deleted
       )

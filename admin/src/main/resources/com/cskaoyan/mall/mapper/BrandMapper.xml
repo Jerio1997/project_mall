@@ -104,11 +104,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.mall.bean.Brand">
-<<<<<<< HEAD
     insert into cskaoyan_mall_brand (id, name, `desc`,
-=======
-    insert into cskaoyan_mall_brand (id, name, `desc`,
->>>>>>> 9e1bdb284fb5ee7bf81a9c89ebc2d05490cdf897
       pic_url, sort_order, floor_price,
       add_time, update_time, deleted
       )
