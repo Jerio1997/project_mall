@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cskaoyanmall?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+pagehelper:
+  helper-dialect: mysql
+logging:
+  level:
+    com:
+      cskaoyan:
+        mall:
+          mapper: debug
+mybatis:
+  type-handlers-package: com.cskaoyan.mall.handler
