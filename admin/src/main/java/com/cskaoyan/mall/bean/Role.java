@@ -3,9 +3,9 @@ package com.cskaoyan.mall.bean;
 import java.util.Date;
 
 public class Role {
-    private Integer id;
+    private Integer value;
 
-    private String name;
+    private String label;
 
     private String desc;
 
@@ -17,20 +17,20 @@ public class Role {
 
     private Boolean deleted;
 
-    public Integer getId() {
-        return id;
+    public Integer getValue() {
+        return value;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getDesc() {
