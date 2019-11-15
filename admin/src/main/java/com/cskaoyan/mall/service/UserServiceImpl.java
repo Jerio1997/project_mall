@@ -25,4 +25,10 @@ public class UserServiceImpl implements UserService {
 
         return users;
     }
+
+    @Override
+    public User getUserById(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        return user;
+    }
 }

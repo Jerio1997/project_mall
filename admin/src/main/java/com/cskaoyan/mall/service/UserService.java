@@ -8,4 +8,6 @@ public interface UserService {
 
 
     List<User> queryUsers(Integer page, Integer limit);
+
+    User getUserById(Integer userId);
 }
