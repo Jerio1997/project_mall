@@ -5,6 +5,7 @@ import com.cskaoyan.mall.bean.Goods;
 import com.cskaoyan.mall.bean.GoodsListResVo;
 import com.cskaoyan.mall.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,11 +25,11 @@ public class GoodsController {
      * @param order
      * @return
      */
-    @RequestMapping("list")
-    public BaseReqVo<GoodsListResVo> listGoods(int page, int limit, String sort, String order){
+    @GetMapping("list")
+    public BaseReqVo<GoodsListResVo> listGoods(Integer page, Integer limit,Integer goodsSn, String name, String sort, String order){
         BaseReqVo<GoodsListResVo> goodsBaseReqVo = new BaseReqVo<>();
         int total = goodsService.queryGoodsCounts();
-        List<Goods> goods = goodsService.queryGoods(page, limit, sort, order);
+        List<Goods> goods = goodsService.queryGoods(page, limit,goodsSn, name, sort, order);
         GoodsListResVo goodsListResVo = new GoodsListResVo();
         goodsListResVo.setTotal(total);
         goodsListResVo.setItems(goods);

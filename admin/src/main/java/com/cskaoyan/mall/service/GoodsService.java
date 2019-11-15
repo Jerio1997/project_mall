@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GoodsService {
     int queryGoodsCounts();
-    List<Goods> queryGoods(int page,int limit,String sort,String order);
+    List<Goods> queryGoods(Integer page, Integer limit,Integer goodsSn, String name, String sort, String order);
 }
