@@ -41,10 +41,10 @@ public class OrderServiceImpl implements OrderService {
         if (orderStatusArray != null) {
             criteria.andOrderStatusIn(Arrays.asList(orderStatusArray));
         }
-        example.setOrderByClause("add_time desc");
+        example.setOrderByClause(sort + " " + order);
         List<Order> orderList = orderMapper.selectByExample(example);
-        PageInfo<Order> userPageInfo = new PageInfo<>(orderList);
-        long total = userPageInfo.getTotal();
+        PageInfo<Order> orderPageInfo = new PageInfo<>(orderList);
+        long total = orderPageInfo.getTotal();
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
         data.put("items", orderList);

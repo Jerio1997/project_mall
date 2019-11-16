@@ -28,4 +28,6 @@ public interface IssueMapper {
     int updateByPrimaryKeySelective(Issue record);
 
     int updateByPrimaryKey(Issue record);
+
+    int insertSelectiveAndGetId(Issue record);
 }

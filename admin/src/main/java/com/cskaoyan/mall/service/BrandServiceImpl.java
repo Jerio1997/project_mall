@@ -30,10 +30,10 @@ public class BrandServiceImpl implements BrandService {
         if (name != null) {
             criteria.andNameLike("%" + name + "%");
         }
-        example.setOrderByClause("add_time desc");
+        example.setOrderByClause(sort + " " + order);
         List<Brand> brandList = brandMapper.selectByExample(example);
-        PageInfo<Brand> userPageInfo = new PageInfo<>(brandList);
-        long total = userPageInfo.getTotal();
+        PageInfo<Brand> brandPageInfo = new PageInfo<>(brandList);
+        long total = brandPageInfo.getTotal();
         Map<String, Object> data = new HashMap<>();
         data.put("total", total);
         data.put("items", brandList);
@@ -49,6 +49,9 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public int deleteBrand(Brand brand) {
         int i = brandMapper.deleteByPrimaryKey(brand.getId());
+        // 删除应该是修改一个 delete 标志位？ 前端不是靠标志位来判断的
+//        brand.setDeleted(true);
+//        int i = brandMapper.updateByPrimaryKey(brand);
         return i;
     }
 

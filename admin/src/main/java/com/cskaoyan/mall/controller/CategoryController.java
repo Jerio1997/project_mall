@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("admin/category")
@@ -49,7 +46,8 @@ public class CategoryController {
 
     @RequestMapping("update")
     public BaseReqVo updateCategory(@RequestBody Category category) {
-        categoryService.updateCategory(category);
+        category.setUpdateTime(new Date());
+        int i = categoryService.updateCategory(category);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");

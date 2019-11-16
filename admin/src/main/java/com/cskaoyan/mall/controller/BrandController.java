@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -54,6 +55,7 @@ public class BrandController {
 
     @RequestMapping("update")
     public BaseReqVo updateBrand(@RequestBody Brand brand) {
+        brand.setUpdateTime(new Date());
         int result = brandService.updateBrand(brand);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
