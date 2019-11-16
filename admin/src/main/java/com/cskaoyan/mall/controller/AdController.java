@@ -5,9 +5,7 @@ import com.cskaoyan.mall.bean.AdListResVo;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +32,17 @@ public class AdController {
         adListResVoBaseReqVo.setErrmsg("成功");
         adListResVoBaseReqVo.setData(adListResVo);
         return adListResVoBaseReqVo;
-
     }
+
+   /* @PostMapping("create")
+    public BaseReqVo<Ad> createAd (@RequestBody Ad ad){
+        System.out.println(ad);
+        BaseReqVo<Ad> adBaseReqVo = new BaseReqVo<>();
+        adBaseReqVo.setErrno(0);
+        adBaseReqVo.setData(ad);
+        adBaseReqVo.setErrmsg("只是尝试");
+        return adBaseReqVo;
+//        int result = adService.createAd(ad);
+    }*/
 
 }
