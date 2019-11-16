@@ -61,7 +61,7 @@ public class GoodsController {
     @PostMapping("create")
     public BaseReqVo<GoodsCreatedResVo> create(@RequestBody GoodsCreatedResVo goods ){
         BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
-        int i = goodsService.CreateGoods(goods);
+        int i = goodsService.createGoods(goods);
         if(i == 1){
             goodsBaseReqVo.setErrno(0);
             goodsBaseReqVo.setErrmsg("成功");
@@ -87,11 +87,24 @@ public class GoodsController {
     @PostMapping("update")
     public BaseReqVo<GoodsCreatedResVo> updateGoodsDetail(@RequestBody GoodsCreatedResVo goods){
         BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
-        int i = goodsService.UpdateGoods(goods);
+        int i = goodsService.updateGoods(goods);
         goodsBaseReqVo.setErrno(0);
         goodsBaseReqVo.setErrmsg("成功");
         return goodsBaseReqVo;
 
     }
+
+    @PostMapping("delete")
+    public BaseReqVo<GoodsCreatedResVo> deleteGoodsDetail(@RequestBody Goods goods){
+        BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
+        goodsService.deleteGoods(goods);
+        goodsBaseReqVo.setErrno(0);
+        goodsBaseReqVo.setErrmsg("成功");
+        return goodsBaseReqVo;
+
+    }
+
+
+
 
 }

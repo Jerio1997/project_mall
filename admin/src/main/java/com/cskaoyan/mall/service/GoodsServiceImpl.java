@@ -35,6 +35,7 @@ public class GoodsServiceImpl implements GoodsService {
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");
         }
+        criteria.andDeletedNotEqualTo(true);
         long total = goodsMapper.countByExample(goodsExample);
         return (int) total;
     }
@@ -52,6 +53,7 @@ public class GoodsServiceImpl implements GoodsService {
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");
         }
+        criteria.andDeletedNotEqualTo(true);
         List<Goods> goods = goodsMapper.selectByExample(goodsExample);
 
         return goods;
@@ -100,7 +102,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     @Transactional
-    public int CreateGoods(GoodsCreatedResVo goodsCreatedResVo) {
+    public int createGoods(GoodsCreatedResVo goodsCreatedResVo) {
         Goods goods = goodsCreatedResVo.getGoods();
         GoodsAttribute[] attributes = goodsCreatedResVo.getAttributes();
         GoodsProduct[] products = goodsCreatedResVo.getProducts();
@@ -111,6 +113,7 @@ public class GoodsServiceImpl implements GoodsService {
         if(goods1 == null||goods1.isEmpty()){
             Date date = new Date();
             goods.setAddTime(date);
+            goods.setDeleted(false);
             goodsMapper.insert(goods);
             List<Goods> goods2 = goodsMapper.selectByExample(goodsNE);
             Goods goods3 = goods2.get(0);
@@ -119,18 +122,21 @@ public class GoodsServiceImpl implements GoodsService {
                 Date date1 = new Date();
                 attribute.setAddTime(date1);
                 attribute.setGoodsId(goods_id);
+                attribute.setDeleted(false);
                 goodsAttributeMapper.insert(attribute);
             }
             for (GoodsProduct product : products) {
                 Date date2 = new Date();
                 product.setAddTime(date2);
                 product.setGoodsId(goods_id);
+                product.setDeleted(false);
                 goodsProductMapper.insert(product);
             }
             for (GoodsSpecification specification : specifications) {
                 Date date3 = new Date();
                 specification.setAddTime(date3);
                 specification.setGoodsId(goods_id);
+                specification.setDeleted(false);
                 goodsSpecificationMapper.insert(specification);
             }
             return 1;
@@ -185,7 +191,8 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public int UpdateGoods(GoodsCreatedResVo goodsCreatedResVo) {
+    @Transactional
+    public int updateGoods(GoodsCreatedResVo goodsCreatedResVo) {
         Goods goods = goodsCreatedResVo.getGoods();
         GoodsAttribute[] attributes = goodsCreatedResVo.getAttributes();
         GoodsProduct[] products = goodsCreatedResVo.getProducts();
@@ -196,6 +203,7 @@ public class GoodsServiceImpl implements GoodsService {
         if(goods1 == null||goods1.isEmpty()||goods.getName().equals(goods1.get(0).getName())){
             Date date = new Date();
             goods.setUpdateTime(date);
+            goods.setDeleted(false);
             goodsMapper.updateByPrimaryKey(goods);
             List<Goods> goods2 = goodsMapper.selectByExample(goodsNE);
             Goods goods3 = goods2.get(0);
@@ -217,22 +225,62 @@ public class GoodsServiceImpl implements GoodsService {
                 Date date1 = new Date();
                 attribute.setUpdateTime(date1);
                 attribute.setGoodsId(goods_id);
+                attribute.setDeleted(false);
                 goodsAttributeMapper.insert(attribute);
             }
             for (GoodsProduct product : products) {
                 Date date2 = new Date();
                 product.setUpdateTime(date2);
                 product.setGoodsId(goods_id);
+                product.setDeleted(false);
                 goodsProductMapper.insert(product);
             }
             for (GoodsSpecification specification : specifications) {
                 Date date3 = new Date();
                 specification.setUpdateTime(date3);
                 specification.setGoodsId(goods_id);
+                specification.setDeleted(false);
                 goodsSpecificationMapper.insert(specification);
             }
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    @Transactional
+    public int deleteGoods(Goods goods) {
+        Integer id = goods.getId();
+        goods.setUpdateTime(new Date());
+        goods.setDeleted(true);
+        goodsMapper.updateByPrimaryKey(goods);
+        //Attribute
+        GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
+        goodsAttributeExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsAttribute> goodsAttributes = goodsAttributeMapper.selectByExample(goodsAttributeExample);
+        for (GoodsAttribute goodsAttribute : goodsAttributes) {
+            goodsAttribute.setUpdateTime(new Date());
+            goodsAttribute.setDeleted(true);
+            goodsAttributeMapper.updateByPrimaryKey(goodsAttribute);
+        }
+        //goodsSpecification
+        GoodsSpecificationExample goodsSpecificationExample = new GoodsSpecificationExample();
+        goodsSpecificationExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsSpecification> goodsSpecifications = goodsSpecificationMapper.selectByExample(goodsSpecificationExample);
+        for (GoodsSpecification goodsSpecification : goodsSpecifications) {
+            goodsSpecification.setUpdateTime(new Date());
+            goodsSpecification.setDeleted(true);
+            goodsSpecificationMapper.updateByPrimaryKey(goodsSpecification);
+        }
+        //goodsProduct
+        GoodsProductExample goodsProductExample = new GoodsProductExample();
+        goodsProductExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsProduct> goodsProducts = goodsProductMapper.selectByExample(goodsProductExample);
+        for (GoodsProduct goodsProduct : goodsProducts) {
+            goodsProduct.setUpdateTime(new Date());
+            goodsProduct.setDeleted(true);
+            goodsProductMapper.updateByPrimaryKey(goodsProduct);
+        }
+        return 1;
     }
 }
