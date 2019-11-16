@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserMapper {
 
-    long countByExample(UserExample example);
+    Long countByExample(UserExample example);
 
     int deleteByExample(UserExample example);
 
