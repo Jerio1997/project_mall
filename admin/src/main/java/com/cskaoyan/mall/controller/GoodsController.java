@@ -74,7 +74,7 @@ public class GoodsController {
         return goodsBaseReqVo;
     }
   @GetMapping("detail")
-    public BaseReqVo<GoodsDetailReqVo>GetGoodsDetail(Integer id){
+    public BaseReqVo<GoodsDetailReqVo>getGoodsDetail(Integer id){
       BaseReqVo<GoodsDetailReqVo> goodsBaseReqVo = new BaseReqVo<>();
       GoodsDetailReqVo goodsDetail = goodsService.getGoodsDetail(id);
       goodsBaseReqVo.setData(goodsDetail);
@@ -83,4 +83,15 @@ public class GoodsController {
       return goodsBaseReqVo;
 
   }
+
+    @PostMapping("update")
+    public BaseReqVo<GoodsCreatedResVo> updateGoodsDetail(@RequestBody GoodsCreatedResVo goods){
+        BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
+        int i = goodsService.UpdateGoods(goods);
+        goodsBaseReqVo.setErrno(0);
+        goodsBaseReqVo.setErrmsg("成功");
+        return goodsBaseReqVo;
+
+    }
+
 }
