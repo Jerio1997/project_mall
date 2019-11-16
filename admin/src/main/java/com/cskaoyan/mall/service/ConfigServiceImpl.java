@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.service;
 
+import com.cskaoyan.mall.bean.Express;
 import com.cskaoyan.mall.bean.Mall;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.bean.SystemExample;
@@ -7,9 +8,7 @@ import com.cskaoyan.mall.mapper.SystemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class ConfigServiceImpl implements ConfigService {
@@ -88,6 +87,41 @@ public class ConfigServiceImpl implements ConfigService {
             systemMapper.updateByExampleSelective(system, mallAddressExample);
         }
 
+        return 0;
+    }
+
+    @Override
+    public Express selectExpressInfo() {
+        Express express = new Express();
+        SystemExample systemExample = new SystemExample();
+        System expressMin = systemMapper.selectByPrimaryKey(5);
+        express.setLitemall_express_freight_min(expressMin.getKeyValue());//满减运费的最低消费
+
+        System expressValue = systemMapper.selectByPrimaryKey(7);
+        express.setLitemall_express_freight_value(expressValue.getKeyValue());//运费满减不足所需运费
+        return express;
+    }
+
+    @Override
+    public int updateExpressInfo(Express express) {
+        Date date = new Date();
+        String expressMin = express.getLitemall_express_freight_min();//运费满减所需最低消费
+        String expressValue = express.getLitemall_express_freight_value();//运费满减不足所需运费
+
+
+        System system = new System();
+        system.setUpdateTime(date);
+        //修改 运费满减所需最低消费
+        SystemExample expressMinExample = new SystemExample();
+        expressMinExample.createCriteria().andIdEqualTo(5);
+        system.setKeyValue(expressMin);
+        systemMapper.updateByExampleSelective(system,expressMinExample);
+
+        //修改 运费满减不足所需运费
+        SystemExample expressValueExample = new SystemExample();
+        expressValueExample.createCriteria().andIdEqualTo(7);
+        system.setKeyValue(expressValue);
+        systemMapper.updateByExampleSelective(system,expressValueExample);
         return 0;
     }
 }

@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.BaseReqVo;
+import com.cskaoyan.mall.bean.Express;
 import com.cskaoyan.mall.bean.Mall;
 import com.cskaoyan.mall.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,21 @@ public class ConfigController {
 
     @RequestMapping(value="express",method = RequestMethod.GET)
     public BaseReqVo getExpressInfo(){
+        BaseReqVo<Express> baseReqVo = new BaseReqVo<>();
+        Express express = configService.selectExpressInfo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(express);
+        return baseReqVo;
+    }
+
+    @RequestMapping(value = "express",method = RequestMethod.POST)
+    public BaseReqVo changeExpressInfo(@RequestBody Express express){
         BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
+        int result = configService.updateExpressInfo(express);
+
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
         return baseReqVo;
     }
 }

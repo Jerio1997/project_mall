@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.service;
 
+import com.cskaoyan.mall.bean.Express;
 import com.cskaoyan.mall.bean.Mall;
 
 public interface ConfigService {
@@ -8,4 +9,8 @@ public interface ConfigService {
     Mall selectMallInfo();
 
     int updateMallInfo(Mall mall);
+
+    Express selectExpressInfo();
+
+    int updateExpressInfo(Express express);
 }
