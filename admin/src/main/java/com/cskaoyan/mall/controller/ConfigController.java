@@ -16,12 +16,28 @@ public class ConfigController {
     ConfigService configService;
 
     @RequestMapping(value="mall",method=RequestMethod.GET)
-    public BaseReqVo mall(){
+    public BaseReqVo getMallInfo(){
         BaseReqVo<Mall> baseReqVo = new BaseReqVo<>();
         Mall mallResult = configService.selectMallInfo();
         baseReqVo.setData(mallResult);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @RequestMapping(value="mall",method = RequestMethod.POST)
+    public BaseReqVo changeMallInfo(@RequestBody Mall mall){
+        BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
+        int result = configService.updateMallInfo(mall);
+
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @RequestMapping(value="express",method = RequestMethod.GET)
+    public BaseReqVo getExpressInfo(){
+        BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
         return baseReqVo;
     }
 }
