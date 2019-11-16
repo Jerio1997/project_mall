@@ -28,4 +28,6 @@ public interface KeywordMapper {
     int updateByPrimaryKeySelective(Keyword record);
 
     int updateByPrimaryKey(Keyword record);
+
+    int insertSelectiveAndGetId(Keyword keyword);
 }
