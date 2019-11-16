@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     public List<User> queryUsers(Integer page, Integer limit) {
@@ -24,5 +24,11 @@ public class UserServiceImpl implements UserService {
         long total = userPageInfo.getTotal();
 
         return users;
+    }
+
+    @Override
+    public User getUserById(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        return user;
     }
 }
