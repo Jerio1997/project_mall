@@ -3,9 +3,7 @@ package com.cskaoyan.mall.controller;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,7 +44,7 @@ public class GoodsController {
     public BaseReqVo<CatAndBrandResVo> GetcatAndBrand(){
         BaseReqVo<CatAndBrandResVo> goodsBaseReqVo = new BaseReqVo<>();
         CatAndBrandResVo catAndBrandResVo = new CatAndBrandResVo();
-        List<Brand> brands = goodsService.queryBrands();
+        List<CatAndBrandResVo_CatElemChild> brands = goodsService.queryBrands();
         List<CatAndBrandResVo_CatElem> catAndBrandResVo_catElems = goodsService.queryNestedCategory();
         catAndBrandResVo.setBrandList(brands);
         catAndBrandResVo.setCategoryList(catAndBrandResVo_catElems);
@@ -55,4 +53,25 @@ public class GoodsController {
         goodsBaseReqVo.setData(catAndBrandResVo);
         return goodsBaseReqVo;
     }
+
+    /**
+     * 创建商品
+     * @return
+     */
+    @PostMapping("create")
+    public BaseReqVo<GoodsCreatedResVo> create(@RequestBody GoodsCreatedResVo goods ){
+        BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
+        int i = goodsService.CreateGoods(goods);
+        if(i == 1){
+            goodsBaseReqVo.setErrno(0);
+            goodsBaseReqVo.setErrmsg("成功");
+        }else{
+            goodsBaseReqVo.setErrno(611);
+            goodsBaseReqVo.setErrmsg("商品名已经存在");
+        }
+
+
+        return goodsBaseReqVo;
+    }
+
 }
