@@ -4,4 +4,6 @@ import com.cskaoyan.mall.bean.Mall;
 
 public interface ConfigService {
     void updateMallSystem(Mall mall);
+
+    Mall selectMallInfo();
 }

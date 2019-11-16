@@ -16,9 +16,12 @@ public class ConfigController {
     ConfigService configService;
 
     @RequestMapping(value="mall",method=RequestMethod.GET)
-    public BaseReqVo mall(@RequestBody Mall mall){
-        BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
-        configService.updateMallSystem(mall);
-
+    public BaseReqVo mall(){
+        BaseReqVo<Mall> baseReqVo = new BaseReqVo<>();
+        Mall mallResult = configService.selectMallInfo();
+        baseReqVo.setData(mallResult);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
     }
 }

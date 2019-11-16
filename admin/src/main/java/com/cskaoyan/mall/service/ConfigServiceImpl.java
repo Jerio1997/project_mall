@@ -13,10 +13,28 @@ import java.util.List;
 public class ConfigServiceImpl implements ConfigService {
     @Autowired
     SystemMapper systemMapper;
+
     @Override
     public void updateMallSystem(Mall mall) {
-        SystemExample examlpe1 = new SystemExample();
-        examlpe1.createCriteria().andKeyNameEqualTo(mall.getLitemallMallName());
-        List<System> systems = systemMapper.selectByExample(examlpe1);
+
+    }
+
+    @Override
+    public Mall selectMallInfo() {
+        Mall mall = new Mall();
+
+        System mallName = systemMapper.selectByPrimaryKey(6);
+        mall.setLitemall_mall_name(mallName.getKeyName());
+
+        System mallQQ = systemMapper.selectByPrimaryKey(8);
+        mall.setLitemall_mall_qq(mallQQ.getKeyValue());
+
+        System mallPhone = systemMapper.selectByPrimaryKey(12);
+        mall.setLitemall_mall_phone(mallPhone.getKeyValue());
+
+        System mallAddress = systemMapper.selectByPrimaryKey(14);
+        mall.setLitemall_mall_address(mallAddress.getKeyValue());
+
+        return mall;
     }
 }
