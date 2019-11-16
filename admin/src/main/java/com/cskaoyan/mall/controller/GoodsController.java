@@ -73,5 +73,14 @@ public class GoodsController {
 
         return goodsBaseReqVo;
     }
+  @GetMapping("detail")
+    public BaseReqVo<GoodsDetailReqVo>GetGoodsDetail(Integer id){
+      BaseReqVo<GoodsDetailReqVo> goodsBaseReqVo = new BaseReqVo<>();
+      GoodsDetailReqVo goodsDetail = goodsService.getGoodsDetail(id);
+      goodsBaseReqVo.setData(goodsDetail);
+      goodsBaseReqVo.setErrno(0);
+      goodsBaseReqVo.setErrmsg("成功");
+      return goodsBaseReqVo;
 
+  }
 }

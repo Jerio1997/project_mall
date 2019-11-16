@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -112,24 +109,78 @@ public class GoodsServiceImpl implements GoodsService {
         goodsNE.createCriteria().andNameEqualTo(goods.getName());
         List<Goods> goods1 = goodsMapper.selectByExample(goodsNE);
         if(goods1 == null||goods1.isEmpty()){
+            Date date = new Date();
+            goods.setAddTime(date);
             goodsMapper.insert(goods);
             List<Goods> goods2 = goodsMapper.selectByExample(goodsNE);
             Goods goods3 = goods2.get(0);
             Integer goods_id = goods3.getId();
             for (GoodsAttribute attribute : attributes) {
+                Date date1 = new Date();
+                attribute.setAddTime(date1);
                 attribute.setGoodsId(goods_id);
                 goodsAttributeMapper.insert(attribute);
             }
             for (GoodsProduct product : products) {
+                Date date2 = new Date();
+                product.setAddTime(date2);
                 product.setGoodsId(goods_id);
                 goodsProductMapper.insert(product);
             }
             for (GoodsSpecification specification : specifications) {
+                Date date3 = new Date();
+                specification.setAddTime(date3);
                 specification.setGoodsId(goods_id);
                 goodsSpecificationMapper.insert(specification);
             }
             return 1;
         }
         return 0;
+    }
+
+    /**
+     * 获得商品详情
+     * @param id
+     * @return
+     */
+    @Override
+    public GoodsDetailReqVo getGoodsDetail(Integer id) {
+        //goods
+        GoodsDetailReqVo goodsDetailReqVo = new GoodsDetailReqVo();
+        GoodsExample goodsExample = new GoodsExample();
+        goodsExample.createCriteria().andIdEqualTo(id);
+        List<Goods> goods = goodsMapper.selectByExample(goodsExample);
+        Goods goods1 = goods.get(0);
+        goodsDetailReqVo.setGoods(goods1);
+        Integer categoryId = goods1.getCategoryId();
+        // categoryIds
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.createCriteria().andIdEqualTo(categoryId);
+        List<Category> categories = categoryMapper.selectByExample(categoryExample);
+        Category category = categories.get(0);
+        Integer[] categoryIds = new Integer[2];
+        categoryIds[0] = category.getPid();
+        categoryIds[1] = category.getId();
+        goodsDetailReqVo.setCategoryIds(categoryIds);
+        //attributes
+        GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
+        goodsAttributeExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsAttribute> goodsAttributes = goodsAttributeMapper.selectByExample(goodsAttributeExample);
+        GoodsAttribute[] attributes = goodsAttributes.toArray(new GoodsAttribute[goodsAttributes.size()]);
+        goodsDetailReqVo.setAttributes(attributes);
+        //
+        GoodsSpecificationExample goodsSpecificationExample = new GoodsSpecificationExample();
+        goodsSpecificationExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsSpecification> goodsSpecifications = goodsSpecificationMapper.selectByExample(goodsSpecificationExample);
+        GoodsSpecification[] specifications = goodsSpecifications.toArray(new GoodsSpecification[goodsSpecifications.size()]);
+        goodsDetailReqVo.setSpecifications(specifications);
+
+        GoodsProductExample goodsProductExample = new GoodsProductExample();
+        goodsProductExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsProduct> goodsProducts = goodsProductMapper.selectByExample(goodsProductExample);
+        GoodsProduct[] products = goodsProducts.toArray(new GoodsProduct[goodsProducts.size()]);
+        goodsDetailReqVo.setProducts(products);
+
+        return goodsDetailReqVo;
     }
 }
