@@ -32,6 +32,7 @@ public class StorageController {
     public BaseReqVo createStorage(@RequestParam("file") MultipartFile file) {
         //通过此文件获取static文件夹的绝对路径
         File utilFile = new File("admin\\target\\classes\\static");
+        System.out.println(utilFile.getAbsolutePath());
         //访问路径
         String urlPrefix = "http://localhost:8080/wx/storage/fetch/";
         UUID uuid = UUID.randomUUID();

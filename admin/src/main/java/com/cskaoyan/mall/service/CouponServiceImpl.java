@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,4 +47,36 @@ public class CouponServiceImpl implements CouponService{
         List<Coupon> coupons = couponMapper.selectByExample(couponExample);
         return coupons;
     }
+
+    @Override
+    public int createCoupon(Coupon coupon) {
+        CouponExample example = new CouponExample();
+        example.setOrderByClause("id desc");
+        List<Coupon> couponList = couponMapper.selectByExample(example);
+        Integer id;
+        if(couponList == null || couponList.size() == 0){
+            id = 0;
+        } else {
+            id = couponList.get(0).getId();
+        }
+        coupon.setId(++id);
+        int result = couponMapper.insertSelective(coupon);
+        return result;
+    }
+
+    @Override
+    public int deleteCoupon(Coupon coupon) {
+        coupon.setDeleted(true);
+        coupon.setUpdateTime(new Date());
+        int result = couponMapper.updateByPrimaryKey(coupon);
+        return result;
+    }
+
+    @Override
+    public int updateCoupon(Coupon coupon) {
+        int result = couponMapper.updateByPrimaryKey(coupon);
+        return result;
+    }
+
+
 }

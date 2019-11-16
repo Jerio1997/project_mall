@@ -56,11 +56,25 @@ public class CategoryController {
 
     @RequestMapping("delete")
     public BaseReqVo deleteCategory(@RequestBody Category category) {
-        categoryService.deleteCategoryByPid(category.getId());
+        //直接删除，并删除其子类目
+//        categoryService.deleteCategoryByPid(category.getId());
         categoryService.deleteCategory(category);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         return baseReqVo;
     }
+
+    @RequestMapping("create")
+    public BaseReqVo createCategory(@RequestBody Category category) {
+        category.setUpdateTime(new Date());
+        category.setAddTime(new Date());
+        int status = categoryService.addCategory(category);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(category);
+        return baseReqVo;
+    }
+
 }

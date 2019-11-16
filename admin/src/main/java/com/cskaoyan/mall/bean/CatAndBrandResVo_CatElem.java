@@ -8,5 +8,5 @@ import java.util.List;
 public class CatAndBrandResVo_CatElem {
     private Integer value;
     private String label;
-    private List<Category> children;
+    private List<CatAndBrandResVo_CatElemChild> children;
 }

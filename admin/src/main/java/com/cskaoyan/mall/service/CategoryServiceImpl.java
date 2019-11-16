@@ -19,11 +19,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getCategoryList() {
         CategoryExample example = new CategoryExample();
-        example.createCriteria().andPidEqualTo(0); // 一级商品目录查询
+        example.createCriteria().andPidEqualTo(0).andDeletedEqualTo(false); // 一级商品目录查询
         List<Category> categories = categoryMapper.selectByExample(example);
         for (Category category : categories) {
             CategoryExample example1 = new CategoryExample();
-            example1.createCriteria().andPidEqualTo(category.getId()); //查询一级商品目录下的二级目录
+            example1.createCriteria().andPidEqualTo(category.getId()).andDeletedEqualTo(false); //查询一级商品目录下的二级目录
             List<Category> categories1 = categoryMapper.selectByExample(example1);
             category.setChildren(categories1);
         }
@@ -50,7 +50,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int deleteCategory(Category category) {
-        int i = categoryMapper.deleteByPrimaryKey(category.getId());
+        // 直接删除
+//        int i = categoryMapper.deleteByPrimaryKey(category.getId());
+        // 修改 删除的标志位
+        category.setDeleted(true);
+        category.setUpdateTime(new Date());
+        int i = categoryMapper.updateByPrimaryKey(category);
+        return i;
+    }
+
+    @Override
+    public int addCategory(Category category) {
+        CategoryExample example = new CategoryExample();
+        example.createCriteria().andPidEqualTo(category.getPid());
+        example.setOrderByClause("sort_order desc");
+        List<Category> categoryList = categoryMapper.selectByExample(example);
+        Byte sortOrder;
+        if (categoryList == null || categoryList.size() == 0) {
+            sortOrder = 0;
+        } else {
+            sortOrder = categoryList.get(0).getSortOrder();
+        }
+        category.setSortOrder((byte) (sortOrder+1));
+        int i = categoryMapper.insertSelectiveAndGetId(category);
         return i;
     }
 

@@ -64,4 +64,16 @@ public class BrandController {
         return baseReqVo;
     }
 
+    @RequestMapping("create")
+    public BaseReqVo createBrand(@RequestBody Brand brand) {
+        brand.setUpdateTime(new Date());
+        brand.setAddTime(new Date());
+        int status = brandService.addBrand(brand);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(brand);
+        return baseReqVo;
+    }
+
 }

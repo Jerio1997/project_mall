@@ -17,4 +17,9 @@ public interface AdService {
     List<Ad> queryAd(Integer page, Integer limit, String name, String content, String sort, String order);
 
     int updateAd(Ad ad);
+
+    int createAd(Ad ad);
+
+    int deleteAd(Ad ad);
+
 }

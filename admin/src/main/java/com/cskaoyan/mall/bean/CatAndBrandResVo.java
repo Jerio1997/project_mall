@@ -6,6 +6,6 @@ import java.util.List;
 
 @Data
 public class CatAndBrandResVo {
-    private List<Brand> brandList;
+    private List<CatAndBrandResVo_CatElemChild> brandList;
     private List<CatAndBrandResVo_CatElem > categoryList;
 }

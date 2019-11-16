@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.service;
+/*package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.bean.UserExample;
@@ -31,4 +31,173 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByPrimaryKey(userId);
         return user;
     }
+}*/
+package com.cskaoyan.mall.service;
+
+import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.mapper.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class UserServiceImpl implements UserService {
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    AddressMapper addressMapper;
+    @Autowired
+    CollectMapper collectMapper;
+    @Autowired
+    FootprintMapper footprintMapper;
+    @Autowired
+    SearchHistoryMapper searchHistoryMapper;
+    @Autowired
+    FeedbackMapper feedbackMapper;
+    //会员管理1
+    @Override
+    public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
+        if (mobile != null) {
+            criteria.andMobileLike(mobile);
+            criteria.andMobileLike("%"+mobile+"%");
+        }
+        if (username != null) {
+            criteria.andUsernameLike("%" + username + "%");
+        }
+        example.setOrderByClause("add_time desc");
+        List<User> userList = userMapper.selectByExample(example);
+        PageInfo<User> userPageInfo = new PageInfo<>(userList);
+        long total = userPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", userList);
+        return data;
+    }
+    //收货地址
+    @Override
+    public Map<String, Object> getAddresslist(Integer page, Integer limit, Integer userId, String name, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        AddressExample example = new AddressExample();
+        AddressExample.Criteria criteria = example.createCriteria();
+        if (userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        if (name != null){
+            criteria.andNameLike("%" + name + "%");
+        }
+        example.setOrderByClause("add_time desc");
+        List<Address> addresses = addressMapper.selectByExample(example);
+        PageInfo<Address> addressPageInfo = new PageInfo<>(addresses);
+        long total = addressPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", addresses);
+        return data;
+    }
+    //会员收藏
+    @Override
+    public Map<String, Object> getCollectlist(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        CollectExample example = new CollectExample();
+        CollectExample.Criteria criteria = example.createCriteria();
+        if (userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        if (valueId != null){
+            criteria.andValueIdEqualTo(valueId);
+        }
+        example.setOrderByClause("add_time desc");
+        List<Collect> collectList = collectMapper.selectByExample(example);
+        PageInfo<Collect> collectPageInfo = new PageInfo<>(collectList);
+        long total = collectPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", collectList);
+        return data;
+    }
+    //会员足迹
+    @Override
+    public Map<String, Object> getFootlist(Integer page, Integer limit,Integer userId, Integer goodsId, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        FootprintExample example = new FootprintExample();
+        FootprintExample.Criteria criteria = example.createCriteria();
+        if (userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        if (goodsId != null){
+            criteria.andGoodsIdEqualTo(goodsId);
+        }
+        example.setOrderByClause("add_time desc");
+        List<Footprint> footprintList = footprintMapper.selectByExample(example);
+        PageInfo<Footprint> cartPageInfo = new PageInfo<>(footprintList);
+        long total = cartPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", footprintList);
+        return data;
+    }
+    //搜索历史
+    @Override
+    public Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        SearchHistoryExample example = new SearchHistoryExample();
+        SearchHistoryExample.Criteria criteria = example.createCriteria();
+        if (userId != null){
+            criteria.andUserIdEqualTo(userId);
+        }
+        if (keyword != null){
+            criteria.andKeywordLike("%" + keyword + "%");
+        }
+        example.setOrderByClause("add_time desc");
+        List<SearchHistory> searchHistoryList = searchHistoryMapper.selectByExample(example);
+        PageInfo<SearchHistory> searchHistoryPageInfo = new PageInfo<>(searchHistoryList);
+        long total = searchHistoryPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", searchHistoryList);
+        return data;
+    }
+
+    //意见反馈
+    @Override
+    public Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        FeedbackExample example = new FeedbackExample();
+        FeedbackExample.Criteria criteria = example.createCriteria();
+        if (id != null){
+            criteria.andIdEqualTo(id);
+        }
+        if (username != null){
+            criteria.andUsernameLike("%" + username + "%");
+        }
+        example.setOrderByClause("add_time desc");
+        List<Feedback> feedbackList = feedbackMapper.selectByExample(example);
+        PageInfo<Feedback> feedbackPageInfo = new PageInfo<>(feedbackList);
+        long total = feedbackPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", feedbackList);
+        return data;
+    }
+
+    @Override
+    public Long queryUsers() {
+        Long users = userMapper.countByExample(new UserExample());
+        return users;
+    }
+
+    @Override
+    public User getUserById(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        return user;
+    }
 }
+

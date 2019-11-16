@@ -141,7 +141,7 @@
         name,
       </if>
       <if test="desc != null">
-        desc,
+        `desc`,
       </if>
       <if test="tag != null">
         tag,
@@ -156,7 +156,7 @@
         min,
       </if>
       <if test="limit != null">
-        limit,
+        `limit`,
       </if>
       <if test="type != null">
         type,
@@ -424,12 +424,12 @@
   <update id="updateByPrimaryKey" parameterType="com.cskaoyan.mall.bean.Coupon">
     update cskaoyan_mall_coupon
     set name = #{name,jdbcType=VARCHAR},
-      desc = #{desc,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR},
       total = #{total,jdbcType=INTEGER},
       discount = #{discount,jdbcType=DECIMAL},
       min = #{min,jdbcType=DECIMAL},
-      limit = #{limit,jdbcType=SMALLINT},
+      `limit` = #{limit,jdbcType=SMALLINT},
       type = #{type,jdbcType=SMALLINT},
       status = #{status,jdbcType=SMALLINT},
       goods_type = #{goodsType,jdbcType=SMALLINT},

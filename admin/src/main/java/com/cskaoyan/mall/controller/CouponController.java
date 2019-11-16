@@ -5,10 +5,9 @@ import com.cskaoyan.mall.bean.Coupon;
 import com.cskaoyan.mall.bean.CouponListResVo;
 import com.cskaoyan.mall.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,4 +34,37 @@ public class CouponController {
         couponListResVoBaseReqVo.setData(couponListResVo);
         return couponListResVoBaseReqVo;
     }
+
+    @PostMapping("create")
+    public BaseReqVo<Coupon> createCoupon(@RequestBody Coupon coupon){
+//        System.out.println(coupon);
+        int result = couponService.createCoupon(coupon);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(coupon);
+        return baseReqVo;
+    }
+
+    @PostMapping("delete")
+    public BaseReqVo deleteCoupon(@RequestBody Coupon coupon){
+        int result = couponService.deleteCoupon(coupon);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @PostMapping("update")
+    public BaseReqVo updateCoupon(@RequestBody Coupon coupon){
+        coupon.setUpdateTime(new Date());
+        int result = couponService.updateCoupon(coupon);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(coupon);
+        return baseReqVo;
+    }
+
+
 }
