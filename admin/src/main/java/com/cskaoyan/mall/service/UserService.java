@@ -31,5 +31,7 @@ public interface UserService {
 
     Map<String, Object> getFootlist(Integer page, Integer limit,Integer userId, Integer goodsId, String sort, String order);
 
-    //Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order);
+    Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order);
+
+    Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order);
 }

@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
     FootprintMapper footprintMapper;
     @Autowired
     SearchHistoryMapper searchHistoryMapper;
+    @Autowired
+    FeedbackMapper feedbackMapper;
     //会员管理1
     @Override
     public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order) {
@@ -143,7 +145,7 @@ public class UserServiceImpl implements UserService {
         return data;
     }
     //搜索历史
-    /*@Override
+    @Override
     public Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order) {
         PageHelper.startPage(page,limit);
         SearchHistoryExample example = new SearchHistoryExample();
@@ -162,7 +164,29 @@ public class UserServiceImpl implements UserService {
         data.put("total", total);
         data.put("items", searchHistoryList);
         return data;
-    }*/
+    }
+
+    //意见反馈
+    @Override
+    public Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order) {
+        PageHelper.startPage(page,limit);
+        FeedbackExample example = new FeedbackExample();
+        FeedbackExample.Criteria criteria = example.createCriteria();
+        if (id != null){
+            criteria.andIdEqualTo(id);
+        }
+        if (username != null){
+            criteria.andUsernameLike("%" + username + "%");
+        }
+        example.setOrderByClause("add_time desc");
+        List<Feedback> feedbackList = feedbackMapper.selectByExample(example);
+        PageInfo<Feedback> feedbackPageInfo = new PageInfo<>(feedbackList);
+        long total = feedbackPageInfo.getTotal();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", total);
+        data.put("items", feedbackList);
+        return data;
+    }
 
     @Override
     public Long queryUsers() {
