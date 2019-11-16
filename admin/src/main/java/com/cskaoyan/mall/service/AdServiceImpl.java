@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,7 +47,21 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public int updateAd(Ad ad) {
-        int i = adMapper.updateByPrimaryKey(ad);
-        return i;
+        int result = adMapper.updateByPrimaryKey(ad);
+        return result;
+    }
+
+    @Override
+    public int createAd(Ad ad) {
+        int result = adMapper.insert(ad);
+        return result;
+    }
+
+    @Override
+    public int deleteAd(Ad ad) {
+        ad.setDeleted(true);
+        ad.setUpdateTime(new Date());
+        int result = adMapper.updateByPrimaryKey(ad);
+        return result;
     }
 }
