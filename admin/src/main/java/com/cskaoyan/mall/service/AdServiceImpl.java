@@ -43,4 +43,10 @@ public class AdServiceImpl implements AdService {
         List<Ad> ads = adMapper.selectByExample(adExample);
         return ads;
     }
+
+    @Override
+    public int updateAd(Ad ad) {
+        int i = adMapper.updateByPrimaryKey(ad);
+        return i;
+    }
 }

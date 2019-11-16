@@ -7,6 +7,7 @@ import com.cskaoyan.mall.service.AdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +33,17 @@ public class AdController {
         adListResVoBaseReqVo.setErrmsg("成功");
         adListResVoBaseReqVo.setData(adListResVo);
         return adListResVoBaseReqVo;
+    }
+
+    @PostMapping("update")
+    public BaseReqVo updateAd(@RequestBody Ad ad){
+        ad.setUpdateTime(new Date());
+        int result = adService.updateAd(ad);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(ad);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
     }
 
    /* @PostMapping("create")
