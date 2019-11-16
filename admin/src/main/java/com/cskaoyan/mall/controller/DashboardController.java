@@ -22,14 +22,19 @@ public class DashboardController {
         Long goodsTotal = dashboardService.selectGoodsCount();
         Long orderTotal = dashboardService.selectOrdersCount();
         Long productTotal = dashboardService.selectProductsCount();
+
         Map<String, Long> data = new HashMap<>();
+
         data.put("goodsTotal",goodsTotal);
         data.put("userTotal",userTotal);
         data.put("orderTotal",orderTotal);
         data.put("productTotal",productTotal);
+
+
         baseReqVo.setData(data);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
+
         return baseReqVo;
     }
 }
