@@ -424,12 +424,12 @@
   <update id="updateByPrimaryKey" parameterType="com.cskaoyan.mall.bean.Coupon">
     update cskaoyan_mall_coupon
     set name = #{name,jdbcType=VARCHAR},
-      desc = #{desc,jdbcType=VARCHAR},
+      `desc` = #{desc,jdbcType=VARCHAR},
       tag = #{tag,jdbcType=VARCHAR},
       total = #{total,jdbcType=INTEGER},
       discount = #{discount,jdbcType=DECIMAL},
       min = #{min,jdbcType=DECIMAL},
-      limit = #{limit,jdbcType=SMALLINT},
+      `limit` = #{limit,jdbcType=SMALLINT},
       type = #{type,jdbcType=SMALLINT},
       status = #{status,jdbcType=SMALLINT},
       goods_type = #{goodsType,jdbcType=SMALLINT},
