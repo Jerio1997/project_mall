@@ -46,6 +46,8 @@ public class AdController {
         return baseReqVo;
     }
 
+
+
    /* @PostMapping("create")
     public BaseReqVo<Ad> createAd (@RequestBody Ad ad){
         System.out.println(ad);
