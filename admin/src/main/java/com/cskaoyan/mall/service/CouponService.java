@@ -13,4 +13,5 @@ public interface CouponService {
 
     List<Coupon> queryCoupon(Integer page, Integer limit, String name, Short type, Short status, String sort, String order);
 
+    int createCoupon(Coupon coupon);
 }

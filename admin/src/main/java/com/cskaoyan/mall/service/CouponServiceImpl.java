@@ -46,4 +46,20 @@ public class CouponServiceImpl implements CouponService{
         List<Coupon> coupons = couponMapper.selectByExample(couponExample);
         return coupons;
     }
+
+    @Override
+    public int createCoupon(Coupon coupon) {
+        CouponExample example = new CouponExample();
+        example.setOrderByClause("id desc");
+        List<Coupon> couponList = couponMapper.selectByExample(example);
+        Integer id;
+        if(couponList == null || couponList.size() == 0){
+            id = 0;
+        } else {
+            id = couponList.get(0).getId();
+        }
+        coupon.setId(++id);
+        int result = couponMapper.insertSelective(coupon);
+        return result;
+    }
 }
