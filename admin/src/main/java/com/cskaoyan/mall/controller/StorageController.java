@@ -51,7 +51,7 @@ public class StorageController {
         storage.setKey(newFilename);
         storage.setUpdateTime(new Date());
         storage.setName(file.getOriginalFilename());
-        storage.setSize((int) file.getSize());
+        storage.setSize(file.getSize());
         storage.setUrl(urlPrefix + newFilename);
         storage.setType(file.getContentType());
         int status = storageService.addStorage(storage);
