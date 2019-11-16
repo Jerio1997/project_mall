@@ -183,4 +183,56 @@ public class GoodsServiceImpl implements GoodsService {
 
         return goodsDetailReqVo;
     }
+
+    @Override
+    public int UpdateGoods(GoodsCreatedResVo goodsCreatedResVo) {
+        Goods goods = goodsCreatedResVo.getGoods();
+        GoodsAttribute[] attributes = goodsCreatedResVo.getAttributes();
+        GoodsProduct[] products = goodsCreatedResVo.getProducts();
+        GoodsSpecification[] specifications = goodsCreatedResVo.getSpecifications();
+        GoodsExample goodsNE = new GoodsExample();
+        goodsNE.createCriteria().andNameEqualTo(goods.getName());
+        List<Goods> goods1 = goodsMapper.selectByExample(goodsNE);
+        if(goods1 == null||goods1.isEmpty()||goods.getName().equals(goods1.get(0).getName())){
+            Date date = new Date();
+            goods.setUpdateTime(date);
+            goodsMapper.updateByPrimaryKey(goods);
+            List<Goods> goods2 = goodsMapper.selectByExample(goodsNE);
+            Goods goods3 = goods2.get(0);
+            Integer goods_id = goods3.getId();
+
+            GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
+            goodsAttributeExample.createCriteria().andGoodsIdEqualTo(goods_id);
+            goodsAttributeMapper.deleteByExample(goodsAttributeExample);
+
+            GoodsSpecificationExample goodsSpecificationExample = new GoodsSpecificationExample();
+            goodsSpecificationExample.createCriteria().andGoodsIdEqualTo(goods_id);
+            goodsSpecificationMapper.deleteByExample(goodsSpecificationExample);
+
+            GoodsProductExample goodsProductExample = new GoodsProductExample();
+            goodsProductExample.createCriteria().andGoodsIdEqualTo(goods_id);
+            goodsProductMapper.deleteByExample(goodsProductExample);
+
+            for (GoodsAttribute attribute : attributes) {
+                Date date1 = new Date();
+                attribute.setUpdateTime(date1);
+                attribute.setGoodsId(goods_id);
+                goodsAttributeMapper.insert(attribute);
+            }
+            for (GoodsProduct product : products) {
+                Date date2 = new Date();
+                product.setUpdateTime(date2);
+                product.setGoodsId(goods_id);
+                goodsProductMapper.insert(product);
+            }
+            for (GoodsSpecification specification : specifications) {
+                Date date3 = new Date();
+                specification.setUpdateTime(date3);
+                specification.setGoodsId(goods_id);
+                goodsSpecificationMapper.insert(specification);
+            }
+            return 1;
+        }
+        return 0;
+    }
 }

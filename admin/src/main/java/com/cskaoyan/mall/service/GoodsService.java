@@ -11,5 +11,6 @@ public interface GoodsService {
     List<CatAndBrandResVo_CatElem > queryNestedCategory();
     int CreateGoods(GoodsCreatedResVo goodsCreatedResVo);
     GoodsDetailReqVo getGoodsDetail(Integer id);
+    int UpdateGoods(GoodsCreatedResVo goodsCreatedResVo);
 
 }
