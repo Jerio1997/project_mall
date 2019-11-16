@@ -28,4 +28,6 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+    int insertSelectiveAndGetId(Category category);
 }

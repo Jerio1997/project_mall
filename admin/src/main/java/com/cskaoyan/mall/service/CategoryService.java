@@ -16,4 +16,6 @@ public interface CategoryService {
     int deleteCategoryByPid(Integer pid);
 
     int deleteCategory(Category category);
+
+    int addCategory(Category category);
 }

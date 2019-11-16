@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ public class BrandServiceImpl implements BrandService {
         if (name != null) {
             criteria.andNameLike("%" + name + "%");
         }
+        // 根据标志位做筛选
+        criteria.andDeletedEqualTo(false);
         example.setOrderByClause(sort + " " + order);
         List<Brand> brandList = brandMapper.selectByExample(example);
         PageInfo<Brand> brandPageInfo = new PageInfo<>(brandList);
@@ -48,16 +51,35 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public int deleteBrand(Brand brand) {
-        int i = brandMapper.deleteByPrimaryKey(brand.getId());
-        // 删除应该是修改一个 delete 标志位？ 前端不是靠标志位来判断的
-//        brand.setDeleted(true);
-//        int i = brandMapper.updateByPrimaryKey(brand);
+        // 直接删除
+//        int i = brandMapper.deleteByPrimaryKey(brand.getId());
+        // 删除应该是修改一个 delete 标志位？ 前端不是靠标志位来判断的, 应该后端做筛选
+        // 不直接删除， 修改delete字段属性
+        brand.setDeleted(true);
+        brand.setUpdateTime(new Date());
+        int i = brandMapper.updateByPrimaryKey(brand);
         return i;
     }
 
     @Override
     public int updateBrand(Brand brand) {
         int i = brandMapper.updateByPrimaryKey(brand);
+        return i;
+    }
+
+    @Override
+    public int addBrand(Brand brand) {
+        BrandExample example = new BrandExample();
+        example.setOrderByClause("sort_order desc");
+        List<Brand> brandList = brandMapper.selectByExample(example);
+        Byte sortOrder;
+        if (brandList == null || brandList.size() == 0) {
+            sortOrder = 0;
+        } else {
+            sortOrder = brandList.get(0).getSortOrder();
+        }
+        brand.setSortOrder((byte) (sortOrder+1));
+        int i = brandMapper.insertSelectiveAndGetId(brand);
         return i;
     }
 }

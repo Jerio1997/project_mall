@@ -13,4 +13,5 @@ public interface BrandService {
 
     int updateBrand(Brand brand);
 
+    int addBrand(Brand brand);
 }

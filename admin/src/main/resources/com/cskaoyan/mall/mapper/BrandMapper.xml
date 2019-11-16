@@ -272,4 +272,70 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <insert id="insertSelectiveAndGetId" parameterType="com.cskaoyan.mall.bean.Brand">
+    <selectKey order="AFTER" keyColumn="id" keyProperty="id" resultType="com.cskaoyan.mall.bean.Brand">
+      select LAST_INSERT_ID() as id
+    </selectKey>
+    insert into cskaoyan_mall_brand
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="desc != null">
+        `desc`,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="sortOrder != null">
+        sort_order,
+      </if>
+      <if test="floorPrice != null">
+        floor_price,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sortOrder != null">
+        #{sortOrder,jdbcType=TINYINT},
+      </if>
+      <if test="floorPrice != null">
+        #{floorPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
 </mapper>

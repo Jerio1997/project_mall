@@ -13,7 +13,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public int addStorage(Storage storage) {
-        int i = storageMapper.insertSelective(storage);
+        int i = storageMapper.insertSelectiveAndGetId(storage);
         return i;
     }
 }
