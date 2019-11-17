@@ -24,7 +24,7 @@
     <result column="deleted" jdbcType="BIT" property="deleted" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.cskaoyan.mall.bean.Goods">
-    <result column="detail" jdbcType="LONGVARCHAR" property="detail" />
+    <result column="detail" jdbcType="LONGVARCHAR" property="detail" typeHandler="com.cskaoyan.mall.handler.Blob2StringTypeHandler" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
