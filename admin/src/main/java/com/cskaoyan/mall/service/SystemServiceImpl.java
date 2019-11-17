@@ -124,11 +124,11 @@ public class SystemServiceImpl implements SystemService {
         PageHelper.startPage(page, limit, sort + " " + order);
         StorageExample example = new StorageExample();
         StorageExample.Criteria criteria = example.createCriteria();
-        if (key != null) {
-            criteria.andKeyLike(key);
+        if (key != null ) {
+            criteria.andKeyLike("%" +key + "%");
         }
         if (name != null) {
-            criteria.andNameLike(name);
+            criteria.andNameLike("%" +name + "%");
         }
         List<Storage> storageList = storageMapper.selectByExample(example);
         PageInfo<Storage> pageInfo = new PageInfo<>(storageList);

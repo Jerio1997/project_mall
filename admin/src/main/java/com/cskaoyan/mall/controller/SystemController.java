@@ -145,6 +145,7 @@ public class SystemController {
     @RequestMapping("role/update")
     public Map<String, Object> updateRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
+        role.setUpdateTime(new Date());
         systemService.updateRole(role);
         map.put("errmsg", "成功");
         map.put("errno", 0);
