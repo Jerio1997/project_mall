@@ -11,6 +11,11 @@ spring:
       enabled: true
   mvc:
     static-path-pattern: /wx/storage/fetch/**
+
+#   将图片路径改为文件系统路径
+#  resources:
+#    static-locations: file:D:/picture/
+
 pagehelper:
   helper-dialect: mysql
 logging:
