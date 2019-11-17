@@ -5,9 +5,7 @@ import com.cskaoyan.mall.service.CommentService;
 import com.cskaoyan.mall.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,4 +38,14 @@ public class CommentController {
         commentResVoBaseReqVo.setData(commentListResVo);
         return commentResVoBaseReqVo;
     }
+    @PostMapping("delete")
+    public BaseReqVo<CommentListResVo> delete(@RequestBody Comment comment){
+        BaseReqVo<CommentListResVo> commentResVoBaseReqVo = new BaseReqVo<>();
+        commentService.deleteComment(comment);
+        commentResVoBaseReqVo.setErrno(0);
+        commentResVoBaseReqVo.setErrmsg("成功");
+        return commentResVoBaseReqVo;
+
+    }
+
 }
