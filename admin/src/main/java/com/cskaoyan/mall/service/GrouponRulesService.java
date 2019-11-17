@@ -15,4 +15,10 @@ public interface GrouponRulesService {
 
     List<GrouponRules> queryGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order);
 
+    int createGrouponRules(GrouponRules grouponRules);
+
+    int updateGrouponRules(GrouponRules grouponRules);
+
+    int deleteGrouponRules(GrouponRules grouponRules);
+
 }

@@ -35,6 +35,7 @@ public class CouponServiceImpl implements CouponService{
         CouponExample couponExample = new CouponExample();
         couponExample.setOrderByClause(orderByClause);
         CouponExample.Criteria criteria = couponExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");
         }
@@ -44,6 +45,7 @@ public class CouponServiceImpl implements CouponService{
         if(!StringUtils.isEmpty(status)){
             criteria.andStatusEqualTo(status);
         }
+        //这里如何加一个判断deleted
         List<Coupon> coupons = couponMapper.selectByExample(couponExample);
         return coupons;
     }
@@ -67,16 +69,23 @@ public class CouponServiceImpl implements CouponService{
     @Override
     public int deleteCoupon(Coupon coupon) {
         coupon.setDeleted(true);
-        coupon.setUpdateTime(new Date());
+//        coupon.setUpdateTime(new Date());
+        //删除时要不要更新时间？
         int result = couponMapper.updateByPrimaryKey(coupon);
         return result;
     }
 
     @Override
     public int updateCoupon(Coupon coupon) {
+        coupon.setUpdateTime(new Date());
         int result = couponMapper.updateByPrimaryKey(coupon);
         return result;
     }
 
+    @Override
+    public Coupon getCouponById(Integer id) {
+        Coupon coupon = couponMapper.selectByPrimaryKey(id);
+        return coupon;
+    }
 
 }

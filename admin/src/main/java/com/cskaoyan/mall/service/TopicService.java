@@ -12,4 +12,10 @@ public interface TopicService {
     int queryTopicCounts();
 
     List<Topic> queryTopic(Integer page, Integer limit, String title, String subtitle, String sort, String order);
+
+    int updateTopic(Topic topic);
+
+    int deleteTopic(Topic topic);
+
+    int createTopic(Topic topic);
 }

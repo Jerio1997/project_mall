@@ -72,15 +72,6 @@ public class AdController {
 
 
 
-   /* @PostMapping("create")
-    public BaseReqVo<Ad> createAd (@RequestBody Ad ad){
-        System.out.println(ad);
-        BaseReqVo<Ad> adBaseReqVo = new BaseReqVo<>();
-        adBaseReqVo.setErrno(0);
-        adBaseReqVo.setData(ad);
-        adBaseReqVo.setErrmsg("只是尝试");
-        return adBaseReqVo;
-//        int result = adService.createAd(ad);
-    }*/
+
 
 }

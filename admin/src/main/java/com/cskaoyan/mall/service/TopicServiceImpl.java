@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,13 +36,44 @@ public class TopicServiceImpl implements TopicService{
         TopicExample topicExample = new TopicExample();
         topicExample.setOrderByClause(orderByClause);
         TopicExample.Criteria criteria = topicExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
         if(!StringUtils.isEmpty(title)){
-            criteria.andTitleLike(title);
+            criteria.andTitleLike("%" + title + "%");
         }
         if (!StringUtils.isEmpty(subtitle)) {
-            criteria.andSubtitleLike(subtitle);
+            criteria.andSubtitleLike("%" + subtitle + "%");
         }
         List<Topic> topics = topicMapper.selectByExample(topicExample);
         return topics;
+    }
+
+    @Override
+    public int updateTopic(Topic topic) {
+        int result = topicMapper.updateByPrimaryKey(topic);
+        return result;
+    }
+
+    @Override
+    public int deleteTopic(Topic topic) {
+        topic.setDeleted(true);
+        topic.setUpdateTime(new Date());
+        int result = topicMapper.updateByPrimaryKey(topic);
+        return result;
+    }
+
+    @Override
+    public int createTopic(Topic topic) {
+        TopicExample example = new TopicExample();
+        example.setOrderByClause("id desc");
+        List<Topic> topicList = topicMapper.selectByExample(example);
+        Integer id;
+        if(topicList == null || topicList.size() == 0){
+            id = 0;
+        } else {
+            id = topicList.get(0).getId();
+        }
+        topic.setId(++id);
+        int result = topicMapper.insertSelective(topic);
+        return result;
     }
 }

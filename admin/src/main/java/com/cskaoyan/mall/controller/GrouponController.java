@@ -6,9 +6,7 @@ import com.cskaoyan.mall.bean.GrouponRules;
 import com.cskaoyan.mall.bean.GrouponRulesListResVo;
 import com.cskaoyan.mall.service.GrouponRulesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +34,35 @@ public class GrouponController {
         grouponRulesListResVoBaseReqVo.setErrmsg("成功");
         grouponRulesListResVoBaseReqVo.setData(grouponRulesListResVo);
         return grouponRulesListResVoBaseReqVo;
+    }
+
+    @PostMapping("create")
+    public BaseReqVo createGrouponRules(@RequestBody GrouponRules grouponRules){
+        int result = grouponRulesService.createGrouponRules(grouponRules);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(grouponRules);
+        return baseReqVo;
+    }
+
+    @PostMapping("update")
+    public BaseReqVo updateGrouponRules(@RequestBody GrouponRules grouponRules){
+        int result = grouponRulesService.updateGrouponRules(grouponRules);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(grouponRules);
+        return baseReqVo;
+    }
+
+    @PostMapping("delete")
+    public BaseReqVo deleteGrouponRules(@RequestBody GrouponRules grouponRules){
+        int result = grouponRulesService.deleteGrouponRules(grouponRules);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
     }
 
 

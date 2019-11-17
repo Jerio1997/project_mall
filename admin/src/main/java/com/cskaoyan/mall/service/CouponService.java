@@ -18,4 +18,6 @@ public interface CouponService {
     int deleteCoupon(Coupon coupon);
 
     int updateCoupon(Coupon coupon);
+
+    Coupon getCouponById(Integer id);
 }

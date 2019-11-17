@@ -5,10 +5,9 @@ import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.TopicListResVo;
 import com.cskaoyan.mall.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,5 +34,35 @@ public class TopicController {
         topicListResVoBaseReqVo.setErrmsg("成功");
         topicListResVoBaseReqVo.setData(topicListResVo);
         return topicListResVoBaseReqVo;
+    }
+
+    @PostMapping("update")
+    public BaseReqVo updateTopic(@RequestBody Topic topic){
+        topic.setUpdateTime(new Date());
+        int result = topicService.updateTopic(topic);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(topic);
+        return baseReqVo;
+    }
+
+    @PostMapping("delete")
+    public BaseReqVo deleteTopic(@RequestBody Topic topic){
+        int result = topicService.deleteTopic(topic);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @PostMapping("create")
+    public BaseReqVo createTopic(@RequestBody Topic topic){
+        int result = topicService.createTopic(topic);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(topic);
+        return baseReqVo;
     }
 }

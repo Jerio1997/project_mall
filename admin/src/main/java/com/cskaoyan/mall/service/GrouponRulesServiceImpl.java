@@ -1,13 +1,16 @@
 package com.cskaoyan.mall.service;
 
+import com.cskaoyan.mall.bean.Goods;
 import com.cskaoyan.mall.bean.GrouponRules;
 import com.cskaoyan.mall.bean.GrouponRulesExample;
+import com.cskaoyan.mall.mapper.GoodsMapper;
 import com.cskaoyan.mall.mapper.GrouponRulesMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +22,9 @@ public class GrouponRulesServiceImpl implements GrouponRulesService{
 
     @Autowired
     GrouponRulesMapper grouponRulesMapper;
+
+    @Autowired
+    GoodsMapper goodsMapper;
 
     @Override
     public int queryGrouponRulesCounts() {
@@ -34,10 +40,47 @@ public class GrouponRulesServiceImpl implements GrouponRulesService{
         GrouponRulesExample grouponRulesExample = new GrouponRulesExample();
         grouponRulesExample.setOrderByClause(orderByClause);
         GrouponRulesExample.Criteria criteria = grouponRulesExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
         if(!StringUtils.isEmpty(goodsId)){
             criteria.andGoodsIdEqualTo(goodsId);
         }
         List<GrouponRules> grouponRules = grouponRulesMapper.selectByExample(grouponRulesExample);
         return grouponRules;
+    }
+
+    @Override
+    public int createGrouponRules(GrouponRules grouponRules) {
+        GrouponRulesExample example = new GrouponRulesExample();
+        example.setOrderByClause("id desc");
+        List<GrouponRules> grouponRulesList = grouponRulesMapper.selectByExample(example);
+        Integer id;
+        if(grouponRulesList == null || grouponRulesList.size() == 0){
+            id = 0;
+        } else {
+            id = grouponRulesList.get(0).getId();
+        }
+        grouponRules.setId(++id);
+        Goods goods = goodsMapper.selectByPrimaryKey(grouponRules.getGoodsId());
+        grouponRules.setGoodsName(goods.getName());
+        grouponRules.setPicUrl(goods.getPicUrl());
+        grouponRules.setAddTime(new Date());
+        grouponRules.setUpdateTime(new Date());
+
+        int result = grouponRulesMapper.insertSelective(grouponRules);
+        return result;
+    }
+
+    @Override
+    public int updateGrouponRules(GrouponRules grouponRules) {
+        grouponRules.setUpdateTime(new Date());
+        int result = grouponRulesMapper.updateByPrimaryKey(grouponRules);
+        return result;
+    }
+
+    @Override
+    public int deleteGrouponRules(GrouponRules grouponRules) {
+        grouponRules.setDeleted(true);
+        int result = grouponRulesMapper.updateByPrimaryKey(grouponRules);
+        return result;
     }
 }

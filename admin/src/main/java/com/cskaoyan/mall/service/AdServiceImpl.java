@@ -35,6 +35,7 @@ public class AdServiceImpl implements AdService {
         AdExample adExample = new AdExample();
         adExample.setOrderByClause(orderByClause);
         AdExample.Criteria criteria = adExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
         if(!StringUtils.isEmpty(name)){
             criteria.andNameLike("%" + name + "%");
         }

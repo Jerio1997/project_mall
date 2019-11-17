@@ -48,6 +48,7 @@ public class CouponController {
 
     @PostMapping("delete")
     public BaseReqVo deleteCoupon(@RequestBody Coupon coupon){
+
         int result = couponService.deleteCoupon(coupon);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
@@ -65,6 +66,30 @@ public class CouponController {
         baseReqVo.setData(coupon);
         return baseReqVo;
     }
+
+    @GetMapping("read")
+    public BaseReqVo readCoupon(Integer id){
+        Coupon coupon = couponService.getCouponById(id);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(coupon);
+        return baseReqVo;
+    }
+
+    /*
+
+    这个接口的没有返回参数的格式，需要给到前台才能够继续写
+    这个接口位于优惠券->详情->listuser接口（下面那个）
+
+
+    @GetMapping("listuser")
+    public BaseReqVo listuserCoupon(){
+
+    }*/
+
+
+
 
 
 }
