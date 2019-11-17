@@ -62,9 +62,13 @@ public class ConfigController {
     public BaseReqVo changeExpressInfo(@RequestBody Express express) {
         BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
         int result = configService.updateExpressInfo(express);
-
-        baseReqVo.setErrno(0);
-        baseReqVo.setErrmsg("成功");
+        if (result == 0) {
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功");
+        } else if (result == -1) {
+            baseReqVo.setErrno(514);
+            baseReqVo.setErrmsg("数值格式错误");
+        }
         return baseReqVo;
     }
 
@@ -82,8 +86,13 @@ public class ConfigController {
     public BaseReqVo changeOrderInfo(@RequestBody OrderConfig orderConfig) {
         BaseReqVo<OrderConfig> baseReqVo = new BaseReqVo<>();
         int result = configService.updateOrderConfigInfo(orderConfig);
-        baseReqVo.setErrno(0);
-        baseReqVo.setErrmsg("成功");
+        if (result == 0) {
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功");
+        } else if (result == -1) {
+            baseReqVo.setErrno(514);
+            baseReqVo.setErrmsg("数值格式错误");
+        }
         return baseReqVo;
     }
 
@@ -101,8 +110,13 @@ public class ConfigController {
     public BaseReqVo ChangeWechatInfo(@RequestBody WechatConfig wechatConfig) {
         BaseReqVo<WechatConfig> baseReqVo = new BaseReqVo<>();
         int result = configService.updateWechatConfigInfo(wechatConfig);
-        baseReqVo.setErrno(0);
-        baseReqVo.setErrmsg("成功");
+        if (result == 0) {
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功");
+        } else if (result == -1) {
+            baseReqVo.setErrno(514);
+            baseReqVo.setErrmsg("数值格式错误");
+        }
         return baseReqVo;
     }
 }

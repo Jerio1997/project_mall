@@ -1,5 +1,7 @@
 package com.cskaoyan.mall.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +23,9 @@ public class Category {
     private String level;
 
     private Byte sortOrder;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date addTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
 
     private Boolean deleted;

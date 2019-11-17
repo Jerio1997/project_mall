@@ -86,6 +86,8 @@ public class SystemController {
         String key = s + "." + urlSuffix;
         // 存储文件
         File filePath = new File("admin\\target\\classes\\static", key);
+        //        修改为文件系统路径
+//        File filePath = new File("D:/picture");
         String absolutePath = filePath.getAbsolutePath();
         try {
             file.transferTo(new File(absolutePath));

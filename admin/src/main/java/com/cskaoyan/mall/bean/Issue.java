@@ -1,5 +1,7 @@
 package com.cskaoyan.mall.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Issue {
@@ -8,9 +10,9 @@ public class Issue {
     private String question;
 
     private String answer;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date addTime;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
 
     private Boolean deleted;
