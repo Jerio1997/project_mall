@@ -66,24 +66,24 @@ public class RegexUtils {
     }
 
     /**
-     * 验证整数（正整数和负整数）
+     * 验证非负整数
      *
      * @param digit 一位或多位0-9之间的整数
      * @return 验证成功返回true，验证失败返回false
      */
-    public static boolean checkDigit(String digit) {
-        String regex = "\\-?[1-9]\\d+";
+    public static boolean checkPositiveDigit(String digit) {
+        String regex = "^[1-9][0-9]*$";
         return Pattern.matches(regex, digit);
     }
 
     /**
-     * 验证整数和浮点数（正负整数和正负浮点数）
+     * 验证非负浮点数
      *
      * @param decimals 一位或多位0-9之间的浮点数，如：1.23，233.30
      * @return 验证成功返回true，验证失败返回false
      */
-    public static boolean checkDecimals(String decimals) {
-        String regex = "\\-?[1-9]\\d+(\\.\\d+)?";
+    public static boolean checkPositiveDecimals(String decimals) {
+        String regex = "^(?:[1-9][0-9]*\\.[0-9]+|0\\.(?!0+$)[0-9]+)$";
         return Pattern.matches(regex, decimals);
     }
 

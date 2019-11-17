@@ -50,13 +50,13 @@ public class ConfigServiceImpl implements ConfigService {
         if ("".equals(mallName) || "".equals(mallAddress) || "".equals(mallPhone) || "".equals(mallQQ)) {
             return -1;
         }
-        if((!RegexUtils.checkMobile(mallPhone))||(!RegexUtils.checkPhone(mallPhone))){
+        if ((!RegexUtils.checkMobile(mallPhone)) || (!RegexUtils.checkPhone(mallPhone))) {
             return -2;
         }
-        if(!RegexUtils.checkChinese(mallAddress)){
+        if (!RegexUtils.checkChinese(mallAddress)) {
             return -3;
         }
-        if(!RegexUtils.checkqq(mallQQ)){
+        if (!RegexUtils.checkqq(mallQQ)) {
             return -4;
         }
 
@@ -112,6 +112,10 @@ public class ConfigServiceImpl implements ConfigService {
         String expressMin = express.getLitemall_express_freight_min();//运费满减所需最低消费
         String expressValue = express.getLitemall_express_freight_value();//运费满减不足所需运费
 
+        if ((!RegexUtils.checkPositiveDecimals(expressMin))&&(!RegexUtils.checkPositiveDigit(expressValue))&&
+                (!RegexUtils.checkPositiveDecimals(expressValue))&&(!RegexUtils.checkPositiveDigit(expressMin))) {
+            return -1;
+        }
 
         System system = new System();
         system.setUpdateTime(date);
@@ -150,6 +154,15 @@ public class ConfigServiceImpl implements ConfigService {
         String unconfirm = orderConfig.getLitemall_order_unconfirm();//未确认收货，则订单自动确认收货
         String unpaid = orderConfig.getLitemall_order_unpaid();//用户未付款，则订单自动取消
 
+        if(!RegexUtils.checkPositiveDigit(comment)){
+            return -1;
+        }
+        if(!RegexUtils.checkPositiveDigit(unconfirm)){
+            return -1;
+        }
+        if(!RegexUtils.checkPositiveDigit(unpaid)){
+            return -1;
+        }
 
         System system = new System();
         system.setUpdateTime(date);
@@ -214,6 +227,11 @@ public class ConfigServiceImpl implements ConfigService {
         String indexTopic = wechatConfig.getLitemall_wx_index_topic();
         String wxShare = wechatConfig.getLitemall_wx_share();
 
+        if((!RegexUtils.checkPositiveDigit(catlogGoods))||(!RegexUtils.checkPositiveDigit(catlogList))||
+                (!RegexUtils.checkPositiveDigit(indexBrand))||(!RegexUtils.checkPositiveDigit(indexHot))||
+                (!RegexUtils.checkPositiveDigit(indexNew))||(!RegexUtils.checkPositiveDigit(indexTopic))){
+            return -1;
+        }
         System system = new System();
         system.setUpdateTime(date);
 
