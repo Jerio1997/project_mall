@@ -54,7 +54,7 @@ public class GoodsServiceImpl implements GoodsService {
             criteria.andNameLike("%" + name + "%");
         }
         criteria.andDeletedNotEqualTo(true);
-        List<Goods> goods = goodsMapper.selectByExample(goodsExample);
+        List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
 
         return goods;
     }
@@ -109,7 +109,7 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsSpecification[] specifications = goodsCreatedResVo.getSpecifications();
         GoodsExample goodsNE = new GoodsExample();
         goodsNE.createCriteria().andNameEqualTo(goods.getName());
-        List<Goods> goods1 = goodsMapper.selectByExample(goodsNE);
+        List<Goods> goods1 = goodsMapper.selectByExampleWithBLOBs(goodsNE);
         if(goods1 == null||goods1.isEmpty()){
             Date date = new Date();
             goods.setAddTime(date);
@@ -155,7 +155,7 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsDetailReqVo goodsDetailReqVo = new GoodsDetailReqVo();
         GoodsExample goodsExample = new GoodsExample();
         goodsExample.createCriteria().andIdEqualTo(id);
-        List<Goods> goods = goodsMapper.selectByExample(goodsExample);
+        List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
         Goods goods1 = goods.get(0);
         goodsDetailReqVo.setGoods(goods1);
         Integer categoryId = goods1.getCategoryId();
@@ -199,13 +199,13 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsSpecification[] specifications = goodsCreatedResVo.getSpecifications();
         GoodsExample goodsNE = new GoodsExample();
         goodsNE.createCriteria().andNameEqualTo(goods.getName());
-        List<Goods> goods1 = goodsMapper.selectByExample(goodsNE);
+        List<Goods> goods1 = goodsMapper.selectByExampleWithBLOBs(goodsNE);
         if(goods1 == null||goods1.isEmpty()||goods.getName().equals(goods1.get(0).getName())){
             Date date = new Date();
             goods.setUpdateTime(date);
             goods.setDeleted(false);
             goodsMapper.updateByPrimaryKey(goods);
-            List<Goods> goods2 = goodsMapper.selectByExample(goodsNE);
+            List<Goods> goods2 = goodsMapper.selectByExampleWithBLOBs(goodsNE);
             Goods goods3 = goods2.get(0);
             Integer goods_id = goods3.getId();
 

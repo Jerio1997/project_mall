@@ -15,7 +15,15 @@ public class Comment {
 
     private Boolean hasPicture;
 
-    private String picUrls;
+    private String[] picUrls;
+
+    public String[] getPicUrls() {
+        return picUrls;
+    }
+
+    public void setPicUrls(String[] picUrls) {
+        this.picUrls = picUrls;
+    }
 
     private Short star;
 
@@ -73,13 +81,14 @@ public class Comment {
         this.hasPicture = hasPicture;
     }
 
-    public String getPicUrls() {
+  /*  public String getPicUrls() {
         return picUrls;
     }
 
     public void setPicUrls(String picUrls) {
         this.picUrls = picUrls == null ? null : picUrls.trim();
-    }
+    }*/
+
 
     public Short getStar() {
         return star;
