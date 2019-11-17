@@ -3,6 +3,7 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.mapper.SystemMapper;
+import com.cskaoyan.mall.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,18 @@ public class ConfigServiceImpl implements ConfigService {
 
         String mallAddress = mall.getLitemall_mall_address();
 
+        if ("".equals(mallName) || "".equals(mallAddress) || "".equals(mallPhone) || "".equals(mallQQ)) {
+            return -1;
+        }
+        if((!RegexUtils.checkMobile(mallPhone))||(!RegexUtils.checkPhone(mallPhone))){
+            return -2;
+        }
+        if(!RegexUtils.checkChinese(mallAddress)){
+            return -3;
+        }
+        if(!RegexUtils.checkqq(mallQQ)){
+            return -4;
+        }
 
         SystemExample mallNameExample = new SystemExample();
         mallNameExample.createCriteria().andIdEqualTo(6);
@@ -53,37 +66,31 @@ public class ConfigServiceImpl implements ConfigService {
         system.setUpdateTime(date);
 
 
-        if (!mallName.equals("")) {
-            systemMapper.updateByExampleSelective(system, mallNameExample);
-        }
-
+        systemMapper.updateByExampleSelective(system, mallNameExample);
 
         SystemExample mallPhoneExample = new SystemExample();
         mallPhoneExample.createCriteria().andIdEqualTo(12);
         system.setKeyValue(mallPhone);
 
-        if (!mallPhone.equals("")) {
 
-            systemMapper.updateByExampleSelective(system, mallPhoneExample);
-        }
+        systemMapper.updateByExampleSelective(system, mallPhoneExample);
+
 
         SystemExample mallQQExample = new SystemExample();
         mallQQExample.createCriteria().andIdEqualTo(8);
         system.setKeyValue(mallQQ);
 
-        if (!mallQQ.equals("")) {
 
-            systemMapper.updateByExampleSelective(system, mallQQExample);
-        }
+        systemMapper.updateByExampleSelective(system, mallQQExample);
+
 
         SystemExample mallAddressExample = new SystemExample();
         mallAddressExample.createCriteria().andIdEqualTo(14);
         system.setKeyValue(mallAddress);
 
-        if (!mallAddress.equals("")) {
 
-            systemMapper.updateByExampleSelective(system, mallAddressExample);
-        }
+        systemMapper.updateByExampleSelective(system, mallAddressExample);
+
 
         return 0;
     }
@@ -112,12 +119,12 @@ public class ConfigServiceImpl implements ConfigService {
         SystemExample expressMinExample = new SystemExample();
         expressMinExample.createCriteria().andIdEqualTo(5);
         system.setKeyValue(expressMin);
-        systemMapper.updateByExampleSelective(system,expressMinExample);
+        systemMapper.updateByExampleSelective(system, expressMinExample);
         //修改 运费满减不足所需运费
         SystemExample expressValueExample = new SystemExample();
         expressValueExample.createCriteria().andIdEqualTo(7);
         system.setKeyValue(expressValue);
-        systemMapper.updateByExampleSelective(system,expressValueExample);
+        systemMapper.updateByExampleSelective(system, expressValueExample);
         return 0;
     }
 
@@ -151,19 +158,19 @@ public class ConfigServiceImpl implements ConfigService {
         SystemExample commentExample = new SystemExample();
         commentExample.createCriteria().andIdEqualTo(10);
         system.setKeyValue(comment);
-        systemMapper.updateByExampleSelective(system,commentExample);
+        systemMapper.updateByExampleSelective(system, commentExample);
 
         //修改 未确认收货，则订单自动确认收货 功能对应数据库的值
         SystemExample unconfirmExample = new SystemExample();
         unconfirmExample.createCriteria().andIdEqualTo(3);
         system.setKeyValue(unconfirm);
-        systemMapper.updateByExampleSelective(system,unconfirmExample);
+        systemMapper.updateByExampleSelective(system, unconfirmExample);
 
         //修改 用户未付款，则订单自动取消 功能对应数据库的值
         SystemExample unpaidExample = new SystemExample();
         unpaidExample.createCriteria().andIdEqualTo(1);
         system.setKeyValue(unpaid);
-        systemMapper.updateByExampleSelective(system,unpaidExample);
+        systemMapper.updateByExampleSelective(system, unpaidExample);
 
         return 0;
     }
@@ -213,37 +220,37 @@ public class ConfigServiceImpl implements ConfigService {
         SystemExample catlogGoodsExample = new SystemExample();
         catlogGoodsExample.createCriteria().andIdEqualTo(11);
         system.setKeyValue(catlogGoods);
-        systemMapper.updateByExampleSelective(system,catlogGoodsExample);
+        systemMapper.updateByExampleSelective(system, catlogGoodsExample);
 
         SystemExample catlogListExample = new SystemExample();
         catlogListExample.createCriteria().andIdEqualTo(13);
         system.setKeyValue(catlogList);
-        systemMapper.updateByExampleSelective(system,catlogListExample);
+        systemMapper.updateByExampleSelective(system, catlogListExample);
 
         SystemExample indexBrandExample = new SystemExample();
         indexBrandExample.createCriteria().andIdEqualTo(15);
         system.setKeyValue(indexBrand);
-        systemMapper.updateByExampleSelective(system,indexBrandExample);
+        systemMapper.updateByExampleSelective(system, indexBrandExample);
 
         SystemExample indexHotExample = new SystemExample();
         indexHotExample.createCriteria().andIdEqualTo(9);
         system.setKeyValue(indexHot);
-        systemMapper.updateByExampleSelective(system,indexHotExample);
+        systemMapper.updateByExampleSelective(system, indexHotExample);
 
         SystemExample indexNewExample = new SystemExample();
         indexNewExample.createCriteria().andIdEqualTo(2);
         system.setKeyValue(indexNew);
-        systemMapper.updateByExampleSelective(system,indexNewExample);
+        systemMapper.updateByExampleSelective(system, indexNewExample);
 
         SystemExample indexTopicExample = new SystemExample();
         indexTopicExample.createCriteria().andIdEqualTo(16);
         system.setKeyValue(indexTopic);
-        systemMapper.updateByExampleSelective(system,indexTopicExample);
+        systemMapper.updateByExampleSelective(system, indexTopicExample);
 
         SystemExample wxShareExample = new SystemExample();
         wxShareExample.createCriteria().andIdEqualTo(4);
         system.setKeyValue(wxShare);
-        systemMapper.updateByExampleSelective(system,wxShareExample);
+        systemMapper.updateByExampleSelective(system, wxShareExample);
 
         return 0;
     }
