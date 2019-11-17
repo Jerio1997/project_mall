@@ -54,6 +54,17 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public int createAd(Ad ad) {
+        AdExample example = new AdExample();
+        example.setOrderByClause("id desc");
+        List<Ad> adList = adMapper.selectByExample(example);
+        Integer id;
+        if(adList == null || adList.size() == 0){
+            id = 0;
+        } else {
+            id = adList.get(0).getId();
+        }
+        ad.setId(++id);
+        ad.setDeleted(false);
         int result = adMapper.insert(ad);
         return result;
     }
