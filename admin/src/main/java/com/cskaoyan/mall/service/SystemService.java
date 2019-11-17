@@ -12,7 +12,7 @@ public interface SystemService {
      * 查询所有的管理员并分页且排序
      * @return 需要返回的 data
      */
-    Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order);
+    Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order, String username);
 
     /**
      * 查询所有管理员角色列表
@@ -70,4 +70,14 @@ public interface SystemService {
      * 删除管理员角色
      */
     void deleteStorage(Storage storage);
+
+    /**
+     * 创建管理员
+     */
+    Admin createAdmin(Admin admin);
+
+    /**
+     * 删除系统管理员
+     */
+    void deleteAdmin(Admin admin);
 }

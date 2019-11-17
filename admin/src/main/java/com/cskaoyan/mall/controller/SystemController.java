@@ -22,9 +22,9 @@ public class SystemController {
     private SystemService systemService;
 
     @RequestMapping("admin/list")
-    public BaseReqVo<Map<String, Object>> findAllAdmins(Integer page, Integer limit, String sort, String order) {
+    public BaseReqVo<Map<String, Object>> findAllAdmins(Integer page, Integer limit, String sort, String order, String username) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
-        Map<String, Object> map = systemService.findAllAdmin(page, limit, sort, order);
+        Map<String, Object> map = systemService.findAllAdmin(page, limit, sort, order, username);
         baseReqVo.setData(map);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
@@ -44,6 +44,7 @@ public class SystemController {
     @RequestMapping("admin/update")
     public BaseReqVo<Admin> updateAdmin(@RequestBody Admin admin) {
         BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
+        admin.setUpdateTime(new Date());
         Admin updateAdmin = systemService.updateAdmin(admin);
         baseReqVo.setData(updateAdmin);
         baseReqVo.setErrmsg("成功");
@@ -51,16 +52,43 @@ public class SystemController {
         return baseReqVo;
     }
 
-    /*@RequestMapping("storage/create")
+    @RequestMapping("admin/create")
+    public BaseReqVo<Admin> createAdmin(@RequestBody Admin admin) {
+        BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
+        admin.setAddTime(new Date());
+        admin.setUpdateTime(new Date());
+        Admin updateAdmin = systemService.createAdmin(admin);
+        baseReqVo.setData(updateAdmin);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @RequestMapping("admin/delete")
+    public Map<String, Object> deleteAdmin(@RequestBody Admin admin) {
+        HashMap<String, Object> map = new HashMap<>();
+        systemService.deleteAdmin(admin);
+        map.put("errmsg", "成功");
+        map.put("errno", 0);
+        return map;
+    }
+
+    @RequestMapping("storage/create")
     public BaseReqVo<Storage> createStorage(MultipartFile file, HttpServletRequest request) {
+        // 不需要 fileupload 组件
+        // 拼接 url 前缀与后缀，并且已经在 yml 文件中添加 url 前缀映射路径
+        String urlPrefix = "http://" + request.getServerName() + ":" + request.getServerPort() + "/wx/storage/fetch/";
+        String[] split = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
+        String urlSuffix = split[split.length - 1];
         // 生成随机文件名
         UUID uuid = UUID.randomUUID();
         String s = uuid.toString().replace("-", "");
-        String key = s + file.getOriginalFilename();
+        String key = s + "." + urlSuffix;
         // 存储文件
         File filePath = new File("admin\\target\\classes\\static", key);
+        String absolutePath = filePath.getAbsolutePath();
         try {
-            file.transferTo(filePath);
+            file.transferTo(new File(absolutePath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,10 +98,7 @@ public class SystemController {
         storage.setName(file.getOriginalFilename());
         storage.setType(file.getContentType());
         storage.setSize(file.getSize());
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-        System.out.println(filePath);
-        storage.setUrl(serverName + ":" +serverPort + "\\" + key);
+        storage.setUrl(urlPrefix + key);
         storage.setAddTime(new Date());
         storage.setUpdateTime(new Date());
         storage.setDeleted(false);
@@ -83,7 +108,7 @@ public class SystemController {
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         return baseReqVo;
-    }*/
+    }
 
     @RequestMapping("log/list")
     public BaseReqVo<Map<String, Object>> logList(Integer page, Integer limit, String sort, String order, String name) {

@@ -31,9 +31,12 @@ public class SystemServiceImpl implements SystemService {
     private LogMapper logMapper;
 
     @Override
-    public Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order) {
+    public Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order, String username) {
         PageHelper.startPage(page, limit, sort + " " + order);
         AdminExample example = new AdminExample();
+        if (username != null) {
+            example.createCriteria().andUsernameLike("%" +username + "%");
+        }
         List<Admin> admins = adminMapper.selectByExample(example);
         PageInfo<Admin> pageInfo = new PageInfo<>(admins);
         long total = pageInfo.getTotal();
@@ -64,7 +67,7 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Storage createStorage(Storage storage) {
-        storageMapper.insertSelective(storage);
+        storageMapper.insertSelective(storage); // 此处用了 selectKey 插入了 id，故可直接返回
         return storage;
     }
 
@@ -145,5 +148,16 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public void deleteStorage(Storage storage) {
         storageMapper.deleteByPrimaryKey(storage.getId());
+    }
+
+    @Override
+    public Admin createAdmin(Admin admin) {
+        adminMapper.insertSelective(admin); // 利用 selectKey 返回了 id
+        return admin;
+    }
+
+    @Override
+    public void deleteAdmin(Admin admin) {
+        adminMapper.deleteByPrimaryKey(admin.getId());
     }
 }
