@@ -116,6 +116,9 @@
       #{roleIds,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.cskaoyan.mall.bean.Admin">
+    <selectKey order="AFTER" keyColumn="id" keyProperty="id" resultType="int">
+      select last_insert_id() as id
+    </selectKey>
     insert into cskaoyan_mall_admin
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

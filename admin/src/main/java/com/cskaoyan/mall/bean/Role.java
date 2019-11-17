@@ -1,36 +1,40 @@
 package com.cskaoyan.mall.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Role {
-    private Integer value;
+    private Integer id;
 
-    private String label;
+    private String name;
 
     private String desc;
 
     private Boolean enabled;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private Boolean deleted;
 
-    public Integer getValue() {
-        return value;
+    public Integer getId() {
+        return id;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getName() {
+        return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDesc() {
