@@ -1,10 +1,8 @@
 package com.cskaoyan.mall.controller;
 
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.GrouponListResVo;
-import com.cskaoyan.mall.bean.GrouponRules;
-import com.cskaoyan.mall.bean.GrouponRulesListResVo;
+import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.GrouponRulesService;
+import com.cskaoyan.mall.service.GrouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +19,9 @@ public class GrouponController {
 
     @Autowired
     GrouponRulesService grouponRulesService;
+
+    @Autowired
+    GrouponService grouponService;
 
     @GetMapping("list")
     public BaseReqVo<GrouponRulesListResVo> listGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order){
@@ -63,6 +64,17 @@ public class GrouponController {
     }
 
 
+    @GetMapping("listRecord")
+    public BaseReqVo<GrouponRecordListResVo> listRecord(Integer page, Integer limit, Integer goodsId, String sort, String order){
+        GrouponRecordListResVo grouponRecordListResVo;
+        grouponRecordListResVo = grouponService.getGrouponRecord(page,limit,goodsId,sort,order);
+        BaseReqVo<GrouponRecordListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setData(grouponRecordListResVo);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+
+    }
 
 
 

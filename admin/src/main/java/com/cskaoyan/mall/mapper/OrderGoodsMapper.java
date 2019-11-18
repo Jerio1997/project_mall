@@ -22,6 +22,8 @@ public interface OrderGoodsMapper {
 
     OrderGoods selectByPrimaryKey(Integer id);
 
+    OrderGoods selectByOrderId(Integer id);
+
     int updateByExampleSelective(@Param("record") OrderGoods record, @Param("example") OrderGoodsExample example);
 
     int updateByExample(@Param("record") OrderGoods record, @Param("example") OrderGoodsExample example);
