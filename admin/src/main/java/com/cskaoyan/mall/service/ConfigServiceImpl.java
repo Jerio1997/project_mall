@@ -64,33 +64,24 @@ public class ConfigServiceImpl implements ConfigService {
         mallNameExample.createCriteria().andIdEqualTo(6);
         system.setKeyValue(mallName);
         system.setUpdateTime(date);
-
-
         systemMapper.updateByExampleSelective(system, mallNameExample);
 
         SystemExample mallPhoneExample = new SystemExample();
         mallPhoneExample.createCriteria().andIdEqualTo(12);
         system.setKeyValue(mallPhone);
-
-
         systemMapper.updateByExampleSelective(system, mallPhoneExample);
 
 
         SystemExample mallQQExample = new SystemExample();
         mallQQExample.createCriteria().andIdEqualTo(8);
         system.setKeyValue(mallQQ);
-
-
         systemMapper.updateByExampleSelective(system, mallQQExample);
 
 
         SystemExample mallAddressExample = new SystemExample();
         mallAddressExample.createCriteria().andIdEqualTo(14);
         system.setKeyValue(mallAddress);
-
-
         systemMapper.updateByExampleSelective(system, mallAddressExample);
-
 
         return 0;
     }
