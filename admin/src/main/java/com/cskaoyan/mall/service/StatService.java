@@ -1,6 +1,9 @@
 package com.cskaoyan.mall.service;
 
+import com.cskaoyan.mall.bean.GoodsStatVo;
 import com.cskaoyan.mall.bean.StatisticUsers;
+
+import java.util.List;
 
 /**
  * Author Jerio
@@ -8,5 +11,7 @@ import com.cskaoyan.mall.bean.StatisticUsers;
  **/
 public interface StatService {
     StatisticUsers queryStatUser();
+
+    GoodsStatVo queryStatGoods();
 
 }

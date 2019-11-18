@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.BaseReqVo;
+import com.cskaoyan.mall.bean.GoodsStatVo;
 import com.cskaoyan.mall.bean.StatisticUsers;
 import com.cskaoyan.mall.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,13 @@ public class StatController {
         baseReqVo.setErrmsg("成功");
         baseReqVo.setData(statisticUsers);
         return baseReqVo;
+    }
+
+    @RequestMapping("goods")
+    public GoodsStatVo viewGoods(){
+        GoodsStatVo goodsStatVo = statService.queryStatGoods();
+        goodsStatVo.setErrno(0);
+        goodsStatVo.setErrmsg("成功");
+        return goodsStatVo;
     }
 }
