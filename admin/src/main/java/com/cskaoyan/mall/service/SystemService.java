@@ -3,9 +3,11 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.Admin;
 import com.cskaoyan.mall.bean.Role;
 import com.cskaoyan.mall.bean.Storage;
+import com.cskaoyan.mall.bean.System;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SystemService {
     /**
@@ -80,4 +82,17 @@ public interface SystemService {
      * 删除系统管理员
      */
     void deleteAdmin(Admin admin);
+
+    /**
+     * 根据角色 id 查找该角色已经分配的权限列表
+     * @param roleId
+     * @return
+     */
+    Set<String> selectAssignedPermissions(String roleId);
+
+    /**
+     * 查找系统所有的权限列表
+     * @return
+     */
+    List<System> selectSystemPermissions();
 }

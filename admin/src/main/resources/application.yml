@@ -11,10 +11,9 @@ spring:
       enabled: true
   mvc:
     static-path-pattern: /wx/storage/fetch/**
-
-#   将图片路径改为文件系统路径
-#  resources:
-#    static-locations: file:D:/picture/
+  aop:
+    auto: true
+# spring.servlet.multipart.enable 和 spring.aop.auto 的默认值为 true，故可不引入
 
 pagehelper:
   helper-dialect: mysql

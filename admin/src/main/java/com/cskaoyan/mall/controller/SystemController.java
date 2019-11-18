@@ -1,18 +1,15 @@
 package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.lang.System;
-import java.net.URL;
 import java.util.*;
 
 @RestController
@@ -162,6 +159,23 @@ public class SystemController {
         map.put("errno", 0);
         return map;
     }
+
+    @RequestMapping(value = "role/permissions", method = RequestMethod.GET)
+    public BaseReqVo<Map<String, Object>> rolePermissions(String roleId) {
+        BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
+
+        Set<String> assignedPermissions = systemService.selectAssignedPermissions(roleId);
+        List<System> systemPermissions = systemService.selectSystemPermissions();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("assignedPermissions", assignedPermissions);
+        map.put("systemPermissions", systemPermissions);
+        baseReqVo.setData(map);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
 
     @RequestMapping("storage/list")
     public BaseReqVo<Map<String, Object>> storageList(Integer page, Integer limit, String sort,

@@ -1,19 +1,14 @@
 package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.*;
-import com.cskaoyan.mall.mapper.AdminMapper;
-import com.cskaoyan.mall.mapper.LogMapper;
-import com.cskaoyan.mall.mapper.RoleMapper;
-import com.cskaoyan.mall.mapper.StorageMapper;
+import com.cskaoyan.mall.bean.System;
+import com.cskaoyan.mall.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("systemService")
 public class SystemServiceImpl implements SystemService {
@@ -29,6 +24,9 @@ public class SystemServiceImpl implements SystemService {
 
     @Autowired
     private LogMapper logMapper;
+
+    @Autowired
+    private PermissionMapper permissionMapper;
 
     @Override
     public Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order, String username) {
@@ -159,5 +157,15 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public void deleteAdmin(Admin admin) {
         adminMapper.deleteByPrimaryKey(admin.getId());
+    }
+
+    @Override
+    public Set<String> selectAssignedPermissions(String roleId) {
+        return permissionMapper.selectPermissionsByRoleId(roleId);
+    }
+
+    @Override
+    public List<System> selectSystemPermissions() {
+        return null;
     }
 }
