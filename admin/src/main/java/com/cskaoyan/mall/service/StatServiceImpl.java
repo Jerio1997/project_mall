@@ -1,9 +1,7 @@
 package com.cskaoyan.mall.service;
 
-import com.cskaoyan.mall.bean.StatisticProperty;
-import com.cskaoyan.mall.bean.StatisticUsers;
-import com.cskaoyan.mall.bean.User;
-import com.cskaoyan.mall.bean.UserExample;
+import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.mapper.OrderGoodsMapper;
 import com.cskaoyan.mall.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,8 @@ public class StatServiceImpl implements StatService{
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    OrderGoodsMapper orderGoodsMapper;
 
     @Override
     public StatisticUsers queryStatUser() {
@@ -36,6 +36,27 @@ public class StatServiceImpl implements StatService{
         statisticUsers.setRows(rows);
         return statisticUsers;
     }
+
+    @Override
+    public GoodsStatVo queryStatGoods() {
+        GoodsStatVo goodsStatVo = new GoodsStatVo();
+        GoodsStatVo.DataBean dataBean = new GoodsStatVo.DataBean();
+        List<String> list = new ArrayList<>();
+        list.add("day");
+        list.add("orders");
+        list.add("products");
+        list.add("amount");
+        dataBean.setColumns(list);
+
+        List<GoodsStatVo.DataBean.RowsBean> rowsBeanList = orderGoodsMapper.selectGoodsStatInfo();
+        dataBean.setRows(rowsBeanList);
+        goodsStatVo.setData(dataBean);
+        return goodsStatVo;
+    }
+
+
+
+
 
 
 }
