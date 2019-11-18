@@ -161,9 +161,8 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Set<String> selectAssignedPermissions(String roleId) {
-        return permissionMapper.selectPermissionsByRoleId(roleId);
+        return (Set<String>) permissionMapper.selectPermissionsByRoleId(roleId);
     }
-
     @Override
     public List<System> selectSystemPermissions() {
         return null;
