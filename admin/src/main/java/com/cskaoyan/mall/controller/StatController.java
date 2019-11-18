@@ -2,6 +2,7 @@ package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.GoodsStatVo;
+import com.cskaoyan.mall.bean.OrderStatResVo;
 import com.cskaoyan.mall.bean.StatisticUsers;
 import com.cskaoyan.mall.service.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class StatController {
     StatService statService;
 
     @GetMapping("user")
-    public BaseReqVo<StatisticUsers> viewUser(){
+    public BaseReqVo<StatisticUsers> viewUser() {
         StatisticUsers statisticUsers = statService.queryStatUser();
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
@@ -31,10 +32,18 @@ public class StatController {
     }
 
     @RequestMapping("goods")
-    public GoodsStatVo viewGoods(){
+    public GoodsStatVo viewGoods() {
         GoodsStatVo goodsStatVo = statService.queryStatGoods();
         goodsStatVo.setErrno(0);
         goodsStatVo.setErrmsg("成功");
         return goodsStatVo;
+    }
+
+    @RequestMapping("order")
+    public OrderStatResVo viewOrder() {
+        OrderStatResVo orderStatResVo = statService.queryStatOrder();
+        orderStatResVo.setErrno(0);
+        orderStatResVo.setErrmsg("成功");
+        return orderStatResVo;
     }
 }

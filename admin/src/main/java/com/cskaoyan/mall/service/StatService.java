@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.GoodsStatVo;
+import com.cskaoyan.mall.bean.OrderStatResVo;
 import com.cskaoyan.mall.bean.StatisticUsers;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface StatService {
 
     GoodsStatVo queryStatGoods();
 
+    OrderStatResVo queryStatOrder();
 }

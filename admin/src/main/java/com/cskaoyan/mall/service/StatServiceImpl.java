@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.mapper.OrderGoodsMapper;
+import com.cskaoyan.mall.mapper.OrderMapper;
 import com.cskaoyan.mall.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,14 @@ import java.util.TreeSet;
  * CreateTime 2019/11/17 23:23
  **/
 @Service
-public class StatServiceImpl implements StatService{
+public class StatServiceImpl implements StatService {
 
     @Autowired
     UserMapper userMapper;
     @Autowired
     OrderGoodsMapper orderGoodsMapper;
+    @Autowired
+    OrderMapper orderMapper;
 
     @Override
     public StatisticUsers queryStatUser() {
@@ -41,16 +44,34 @@ public class StatServiceImpl implements StatService{
     public GoodsStatVo queryStatGoods() {
         GoodsStatVo goodsStatVo = new GoodsStatVo();
         GoodsStatVo.DataBean dataBean = new GoodsStatVo.DataBean();
-        List<String> list = new ArrayList<>();
-        list.add("day");
-        list.add("orders");
-        list.add("products");
-        list.add("amount");
-        dataBean.setColumns(list);
+        List<String> rowslist = new ArrayList<>();
+        rowslist.add("day");
+        rowslist.add("orders");
+        rowslist.add("products");
+        rowslist.add("amount");
+        dataBean.setColumns(rowslist);
 
         List<GoodsStatVo.DataBean.RowsBean> rowsBeanList = orderGoodsMapper.selectGoodsStatInfo();
         dataBean.setRows(rowsBeanList);
         goodsStatVo.setData(dataBean);
         return goodsStatVo;
+    }
+
+    @Override
+    public OrderStatResVo queryStatOrder() {
+        OrderStatResVo orderStatResVo = new OrderStatResVo();
+        OrderStatResVo.DataBean dataBean = new OrderStatResVo.DataBean();
+        List<String> rowslist = new ArrayList<>();
+        rowslist.add("day");
+        rowslist.add("orders");
+        rowslist.add("customers");
+        rowslist.add("amount");
+        rowslist.add("pcr");
+        dataBean.setColumns(rowslist);
+
+        List<OrderStatResVo.DataBean.RowsBean> rowsBeanList = orderMapper.selectOrderStatInfo();
+        dataBean.setRows(rowsBeanList);
+        orderStatResVo.setData(dataBean);
+        return orderStatResVo;
     }
 }
