@@ -41,6 +41,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
     FeedbackMapper feedbackMapper;
     //会员管理1
     @Override
-    public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order) {
+    public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order,User user) {
         PageHelper.startPage(page,limit,sort + " " + order);
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
         if (username != null) {
             criteria.andUsernameLike("%" + username + "%");
         }
-        //example.setOrderByClause("add_time desc");
+        user.setBirthday(new Date());
         List<User> userList = userMapper.selectByExample(example);
         PageInfo<User> userPageInfo = new PageInfo<>(userList);
         long total = userPageInfo.getTotal();
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
         if (name != null){
             criteria.andNameLike("%" + name + "%");
         }
-        //example.setOrderByClause("add_time desc");
+
         List<Address> addresses = addressMapper.selectByExample(example);
         PageInfo<Address> addressPageInfo = new PageInfo<>(addresses);
         long total = addressPageInfo.getTotal();
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
     }
     //会员收藏
     @Override
-    public Map<String, Object> getCollectlist(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order) {
+    public Map<String, Object> getCollectlist(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order,Collect collect) {
         PageHelper.startPage(page,limit,sort + " " + order);
         CollectExample example = new CollectExample();
         CollectExample.Criteria criteria = example.createCriteria();
@@ -113,7 +114,7 @@ public class UserServiceImpl implements UserService {
         if (valueId != null){
             criteria.andValueIdEqualTo(valueId);
         }
-        //example.setOrderByClause("add_time desc");
+        collect.setAddTime(new Date());
         List<Collect> collectList = collectMapper.selectByExample(example);
         PageInfo<Collect> collectPageInfo = new PageInfo<>(collectList);
         long total = collectPageInfo.getTotal();
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService {
     }
     //会员足迹
     @Override
-    public Map<String, Object> getFootlist(Integer page, Integer limit,Integer userId, Integer goodsId, String sort, String order) {
+    public Map<String, Object> getFootlist(Integer page, Integer limit,Integer userId, Integer goodsId, String sort, String order,Footprint footprint) {
         PageHelper.startPage(page,limit,sort + " " + order);
         FootprintExample example = new FootprintExample();
         FootprintExample.Criteria criteria = example.createCriteria();
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
         if (goodsId != null){
             criteria.andGoodsIdEqualTo(goodsId);
         }
-        //example.setOrderByClause("add_time desc");
+        footprint.setAddTime(new Date());
         List<Footprint> footprintList = footprintMapper.selectByExample(example);
         PageInfo<Footprint> cartPageInfo = new PageInfo<>(footprintList);
         long total = cartPageInfo.getTotal();
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
     }
     //搜索历史
     @Override
-    public Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order) {
+    public Map<String, Object> getSearchHistorylist(Integer page, Integer limit,Integer userId, String keyword, String sort, String order,SearchHistory searchHistory) {
         PageHelper.startPage(page,limit,sort + " " + order);
         SearchHistoryExample example = new SearchHistoryExample();
         SearchHistoryExample.Criteria criteria = example.createCriteria();
@@ -155,7 +156,7 @@ public class UserServiceImpl implements UserService {
         if (keyword != null){
             criteria.andKeywordLike("%" + keyword + "%");
         }
-        //example.setOrderByClause("add_time desc");
+        searchHistory.setAddTime(new Date());
         List<SearchHistory> searchHistoryList = searchHistoryMapper.selectByExample(example);
         PageInfo<SearchHistory> searchHistoryPageInfo = new PageInfo<>(searchHistoryList);
         long total = searchHistoryPageInfo.getTotal();
@@ -167,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
     //意见反馈
     @Override
-    public Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order) {
+    public Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order,Feedback feedback) {
         PageHelper.startPage(page,limit,sort + " " + order);
         FeedbackExample example = new FeedbackExample();
         FeedbackExample.Criteria criteria = example.createCriteria();
@@ -177,7 +178,7 @@ public class UserServiceImpl implements UserService {
         if (username != null){
             criteria.andUsernameLike("%" + username + "%");
         }
-        //example.setOrderByClause("add_time desc");
+        feedback.setUpdateTime(new Date());
         List<Feedback> feedbackList = feedbackMapper.selectByExample(example);
         PageInfo<Feedback> feedbackPageInfo = new PageInfo<>(feedbackList);
         long total = feedbackPageInfo.getTotal();
