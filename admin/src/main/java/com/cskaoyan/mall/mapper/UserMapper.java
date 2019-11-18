@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.mapper;
 
+import com.cskaoyan.mall.bean.StatisticProperty;
 import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.bean.UserExample;
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +30,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    List<StatisticProperty> queryUserAndDayList();
 }
