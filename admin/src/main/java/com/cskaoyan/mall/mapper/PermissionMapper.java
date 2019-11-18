@@ -3,6 +3,7 @@ package com.cskaoyan.mall.mapper;
 import com.cskaoyan.mall.bean.Permission;
 import com.cskaoyan.mall.bean.PermissionExample;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -28,4 +29,7 @@ public interface PermissionMapper {
     int updateByPrimaryKeySelective(Permission record);
 
     int updateByPrimaryKey(Permission record);
+
+    @Select("select permission from cskaoyan_mall_permission where role_id = #{roleId} ")
+    List<String> selectPermissionsByRoleId(@Param("roleId") String roleId);
 }
