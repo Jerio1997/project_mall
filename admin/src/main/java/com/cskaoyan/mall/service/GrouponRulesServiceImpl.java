@@ -3,6 +3,7 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.Goods;
 import com.cskaoyan.mall.bean.GrouponRules;
 import com.cskaoyan.mall.bean.GrouponRulesExample;
+import com.cskaoyan.mall.bean.GrouponRulesListResVo;
 import com.cskaoyan.mall.mapper.GoodsMapper;
 import com.cskaoyan.mall.mapper.GrouponRulesMapper;
 import com.github.pagehelper.PageHelper;
@@ -34,7 +35,8 @@ public class GrouponRulesServiceImpl implements GrouponRulesService{
     }
 
     @Override
-    public List<GrouponRules> queryGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order) {
+    public GrouponRulesListResVo queryGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order) {
+        GrouponRulesListResVo grouponRulesListResVo = new GrouponRulesListResVo();
         PageHelper.startPage(page,limit);
         String orderByClause = sort + " " + order.toUpperCase();
         GrouponRulesExample grouponRulesExample = new GrouponRulesExample();
@@ -45,7 +47,9 @@ public class GrouponRulesServiceImpl implements GrouponRulesService{
             criteria.andGoodsIdEqualTo(goodsId);
         }
         List<GrouponRules> grouponRules = grouponRulesMapper.selectByExample(grouponRulesExample);
-        return grouponRules;
+        grouponRulesListResVo.setItems(grouponRules);
+        grouponRulesListResVo.setTotal(grouponRules.size());
+        return grouponRulesListResVo;
     }
 
     @Override

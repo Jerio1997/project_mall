@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Ad;
 import com.cskaoyan.mall.bean.AdExample;
+import com.cskaoyan.mall.bean.AdListResVo;
 import com.cskaoyan.mall.mapper.AdMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class AdServiceImpl implements AdService {
         return (int)total;
     }
 
-    @Override
+    /*@Override
     public List<Ad> queryAd(Integer page, Integer limit, String name, String content, String sort, String order) {
         PageHelper.startPage(page,limit);
         String orderByClause = sort + " " + order.toUpperCase();
@@ -44,7 +45,7 @@ public class AdServiceImpl implements AdService {
         }
         List<Ad> ads = adMapper.selectByExample(adExample);
         return ads;
-    }
+    }*/
 
     @Override
     public int updateAd(Ad ad) {
@@ -75,5 +76,26 @@ public class AdServiceImpl implements AdService {
         ad.setUpdateTime(new Date());
         int result = adMapper.updateByPrimaryKey(ad);
         return result;
+    }
+
+    @Override
+    public AdListResVo queryListAd(Integer page, Integer limit, String name, String content, String sort, String order) {
+        AdListResVo adListResVo = new AdListResVo();
+        PageHelper.startPage(page,limit);
+        String orderByClause = sort + " " + order.toUpperCase();
+        AdExample adExample = new AdExample();
+        adExample.setOrderByClause(orderByClause);
+        AdExample.Criteria criteria = adExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        if(!StringUtils.isEmpty(name)){
+            criteria.andNameLike("%" + name + "%");
+        }
+        if(!StringUtils.isEmpty(content)){
+            criteria.andContentLike("%" + content + "%");
+        }
+        List<Ad> ads = adMapper.selectByExample(adExample);
+        adListResVo.setTotal(ads.size());
+        adListResVo.setItems(ads);
+        return adListResVo;
     }
 }

@@ -23,16 +23,13 @@ public class CouponController {
 
     @GetMapping("list")
     public BaseReqVo<CouponListResVo> listCoupon(Integer page, Integer limit, String name, Short type,Short status, String sort, String order){
-        BaseReqVo<CouponListResVo> couponListResVoBaseReqVo = new BaseReqVo<>();
-        int total = couponService.queryCouponCounts();
-        List<Coupon> coupons = couponService.queryCoupon(page,limit,name,type,status,sort,order);
-        CouponListResVo couponListResVo = new CouponListResVo();
-        couponListResVo.setItems(coupons);
-        couponListResVo.setTotal(total);
-        couponListResVoBaseReqVo.setErrmsg("成功");
-        couponListResVoBaseReqVo.setErrno(0);
-        couponListResVoBaseReqVo.setData(couponListResVo);
-        return couponListResVoBaseReqVo;
+        CouponListResVo couponListResVo;
+        couponListResVo = couponService.queryCoupon(page,limit,name,type,status,sort,order);
+        BaseReqVo<CouponListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(couponListResVo);
+        return baseReqVo;
     }
 
     @PostMapping("create")

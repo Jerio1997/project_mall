@@ -32,7 +32,8 @@ public class CouponServiceImpl implements CouponService{
     }
 
     @Override
-    public List<Coupon> queryCoupon(Integer page, Integer limit, String name, Short type, Short status, String sort, String order) {
+    public CouponListResVo queryCoupon(Integer page, Integer limit, String name, Short type, Short status, String sort, String order) {
+        CouponListResVo couponListResVo = new CouponListResVo();
         PageHelper.startPage(page,limit);
         String orderByClause = sort + " " + order.toUpperCase();
         CouponExample couponExample = new CouponExample();
@@ -48,9 +49,10 @@ public class CouponServiceImpl implements CouponService{
         if(!StringUtils.isEmpty(status)){
             criteria.andStatusEqualTo(status);
         }
-        //这里如何加一个判断deleted
-        List<Coupon> coupons = couponMapper.selectByExample(couponExample);
-        return coupons;
+        List<Coupon> couponList = couponMapper.selectByExample(couponExample);
+        couponListResVo.setItems(couponList);
+        couponListResVo.setTotal(couponList.size());
+        return couponListResVo;
     }
 
     @Override

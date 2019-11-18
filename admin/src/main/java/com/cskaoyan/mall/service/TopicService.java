@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Topic;
+import com.cskaoyan.mall.bean.TopicListResVo;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface TopicService {
     int queryTopicCounts();
 
-    List<Topic> queryTopic(Integer page, Integer limit, String title, String subtitle, String sort, String order);
+    TopicListResVo queryTopic(Integer page, Integer limit, String title, String subtitle, String sort, String order);
 
     int updateTopic(Topic topic);
 

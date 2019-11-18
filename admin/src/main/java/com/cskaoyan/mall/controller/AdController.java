@@ -24,16 +24,13 @@ public class AdController {
 
     @GetMapping("list")
     public BaseReqVo<AdListResVo> listAd(Integer page, Integer limit, String name, String content, String sort, String order){
-        BaseReqVo<AdListResVo> adListResVoBaseReqVo = new BaseReqVo<>();
-        int total = adService.queryAdCounts();
-        List<Ad> ads = adService.queryAd(page,limit,name,content,sort,order);
-        AdListResVo adListResVo = new AdListResVo();
-        adListResVo.setItems(ads);
-        adListResVo.setTotal(total);
-        adListResVoBaseReqVo.setErrno(0);
-        adListResVoBaseReqVo.setErrmsg("成功");
-        adListResVoBaseReqVo.setData(adListResVo);
-        return adListResVoBaseReqVo;
+        AdListResVo adListResVo;
+        adListResVo = adService.queryListAd(page,limit,name,content,sort,order);
+        BaseReqVo<AdListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(adListResVo);
+        return baseReqVo;
     }
 
     @PostMapping("create")

@@ -10,6 +10,8 @@ import java.util.List;
  **/
 @Data
 public class AdListResVo {
+
     private Integer total;
+
     private List<Ad> items;
 }
