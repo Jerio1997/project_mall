@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Groupon;
 import com.cskaoyan.mall.bean.GrouponRules;
+import com.cskaoyan.mall.bean.GrouponRulesListResVo;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface GrouponRulesService {
 
     int queryGrouponRulesCounts();
 
-    List<GrouponRules> queryGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order);
+    GrouponRulesListResVo queryGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order);
 
     int createGrouponRules(GrouponRules grouponRules);
 

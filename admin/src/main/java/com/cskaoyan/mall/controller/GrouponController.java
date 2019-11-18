@@ -24,16 +24,13 @@ public class GrouponController {
 
     @GetMapping("list")
     public BaseReqVo<GrouponRulesListResVo> listGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order){
-        BaseReqVo<GrouponRulesListResVo> grouponRulesListResVoBaseReqVo = new BaseReqVo<>();
-        int total = grouponRulesService.queryGrouponRulesCounts();
-        List<GrouponRules> groupons = grouponRulesService.queryGrouponRules(page,limit,goodsId,sort,order);
-        GrouponRulesListResVo grouponRulesListResVo = new GrouponRulesListResVo();
-        grouponRulesListResVo.setItems(groupons);
-        grouponRulesListResVo.setTotal(total);
-        grouponRulesListResVoBaseReqVo.setErrno(0);
-        grouponRulesListResVoBaseReqVo.setErrmsg("成功");
-        grouponRulesListResVoBaseReqVo.setData(grouponRulesListResVo);
-        return grouponRulesListResVoBaseReqVo;
+        GrouponRulesListResVo grouponRulesListResVo;
+        grouponRulesListResVo = grouponRulesService.queryGrouponRules(page,limit,goodsId,sort,order);
+        BaseReqVo<GrouponRulesListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(grouponRulesListResVo);
+        return baseReqVo;
     }
 
     @PostMapping("create")

@@ -29,12 +29,8 @@ public class StatServiceImpl implements StatService {
     @Override
     public StatisticUsers queryStatUser() {
         StatisticUsers statisticUsers = new StatisticUsers();
-        //查询所有的user
-        UserExample example = new UserExample();
-        UserExample.Criteria criteria = example.createCriteria();
-        /*criteria.andDeletedEqualTo(false);*/
-        //删除的用户还要不要？
-        List<StatisticProperty> rows = new ArrayList<>();
+        //删除的用户还要不要？我的做法里面delete的用户也计算在内
+        List<StatisticProperty> rows;
         rows = userMapper.queryUserAndDayList();
         statisticUsers.setRows(rows);
         return statisticUsers;
@@ -57,7 +53,6 @@ public class StatServiceImpl implements StatService {
         return goodsStatVo;
     }
 
-<<<<<<< HEAD
     @Override
     public OrderStatResVo queryStatOrder() {
         OrderStatResVo orderStatResVo = new OrderStatResVo();
@@ -75,11 +70,4 @@ public class StatServiceImpl implements StatService {
         orderStatResVo.setData(dataBean);
         return orderStatResVo;
     }
-=======
-
-
-
-
-
->>>>>>> 45dc9297d005c7bb197a07a00ce8e4c731d687c6
 }

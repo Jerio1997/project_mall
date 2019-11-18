@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Topic;
 import com.cskaoyan.mall.bean.TopicExample;
+import com.cskaoyan.mall.bean.TopicListResVo;
 import com.cskaoyan.mall.mapper.TopicMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,8 @@ public class TopicServiceImpl implements TopicService{
     }
 
     @Override
-    public List<Topic> queryTopic(Integer page, Integer limit, String title, String subtitle, String sort, String order) {
+    public TopicListResVo queryTopic(Integer page, Integer limit, String title, String subtitle, String sort, String order) {
+        TopicListResVo topicListResVo = new TopicListResVo();
         PageHelper.startPage(page,limit);
         String orderByClause = sort + " " + order.toUpperCase();
         TopicExample topicExample = new TopicExample();
@@ -44,7 +46,9 @@ public class TopicServiceImpl implements TopicService{
             criteria.andSubtitleLike("%" + subtitle + "%");
         }
         List<Topic> topics = topicMapper.selectByExample(topicExample);
-        return topics;
+        topicListResVo.setItems(topics);
+        topicListResVo.setTotal(topics.size());
+        return topicListResVo;
     }
 
     @Override

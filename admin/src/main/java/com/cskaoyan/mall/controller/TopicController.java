@@ -24,16 +24,13 @@ public class TopicController {
 
     @GetMapping("list")
     public BaseReqVo<TopicListResVo> listTopic (Integer page, Integer limit, String title, String subtitle, String sort, String order){
-        BaseReqVo<TopicListResVo> topicListResVoBaseReqVo = new BaseReqVo<>();
-        int total = topicService.queryTopicCounts();
-        List<Topic> topics = topicService.queryTopic(page,limit,title,subtitle,sort,order);
-        TopicListResVo topicListResVo = new TopicListResVo();
-        topicListResVo.setTotal(total);
-        topicListResVo.setItems(topics);
-        topicListResVoBaseReqVo.setErrno(0);
-        topicListResVoBaseReqVo.setErrmsg("成功");
-        topicListResVoBaseReqVo.setData(topicListResVo);
-        return topicListResVoBaseReqVo;
+        TopicListResVo topicListResVo;
+        topicListResVo = topicService.queryTopic(page,limit,title,subtitle,sort,order);
+        BaseReqVo<TopicListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(topicListResVo);
+        return baseReqVo;
     }
 
     @PostMapping("update")
