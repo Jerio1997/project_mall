@@ -1,13 +1,12 @@
 package com.cskaoyan.mall.controller;
 
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.Order;
-import com.cskaoyan.mall.bean.OrderGoods;
-import com.cskaoyan.mall.bean.User;
+import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.service.CommentReplyService;
 import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +24,9 @@ public class OrderController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CommentReplyService commentReplyService;
 
     @RequestMapping("list")
     public BaseReqVo listOrder(int page, int limit, Short[] orderStatusArray, Integer userId, String orderSn, String sort, String order) {
@@ -52,6 +54,23 @@ public class OrderController {
         data.put("user", user1);
         data.put("order", order);
         baseReqVo.setData(data);
+        return baseReqVo;
+    }
+
+    @PostMapping("reply")
+    public BaseReqVo replyComment(@RequestBody CommentReplyResVo commentReplyResVo ){
+        BaseReqVo baseReqVo = new BaseReqVo();
+        int commentId = commentReplyResVo.getCommentId();
+        String content = commentReplyResVo.getContent();
+        int i = commentReplyService.addCommentReply(commentId, content);
+        if(i == 0){
+            baseReqVo.setErrno(622);
+            baseReqVo.setErrmsg("订单商品已回复！");
+        }else if (i == 1){
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功");
+        }
+
         return baseReqVo;
     }
 }

@@ -1,8 +1,8 @@
 package com.cskaoyan.mall.service;
 
-import com.cskaoyan.mall.bean.Coupon;
-import com.cskaoyan.mall.bean.CouponExample;
+import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.mapper.CouponMapper;
+import com.cskaoyan.mall.mapper.CouponUserMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,9 @@ public class CouponServiceImpl implements CouponService{
 
     @Autowired
     CouponMapper couponMapper;
+
+    @Autowired
+    CouponUserMapper couponUserMapper;
 
     @Override
     public int queryCouponCounts() {
@@ -86,6 +89,38 @@ public class CouponServiceImpl implements CouponService{
     public Coupon getCouponById(Integer id) {
         Coupon coupon = couponMapper.selectByPrimaryKey(id);
         return coupon;
+    }
+
+    /*@Override
+    public int queryCouponCountsByCouponId(Integer couponId) {
+        CouponExample example = new CouponExample();
+        CouponExample.Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(couponId);
+        long total = couponMapper.countByExample(example);
+        return (int) total;
+    }*/
+
+    @Override
+    public CouponUserListResVo listUserCoupon(Integer page, Integer limit, Integer couponId, Integer userId, Short status, String sort, String order) {
+        CouponUserListResVo couponUserListResVo = new CouponUserListResVo();
+        PageHelper.startPage(page,limit);
+        String orderByClause = sort + " " + order.toUpperCase();
+//        CouponExample example = new CouponExample();
+        CouponUserExample example = new CouponUserExample();
+        example.setOrderByClause(orderByClause);
+        CouponUserExample.Criteria criteria = example.createCriteria();
+        criteria.andIdEqualTo(couponId);
+        if(!StringUtils.isEmpty(userId)){
+            criteria.andUserIdEqualTo(userId);
+        }
+        if(!StringUtils.isEmpty(status)){
+            criteria.andStatusEqualTo(status);
+        }
+        List<CouponUser> couponUserList = couponUserMapper.selectByExample(example);
+        int total = couponUserList.size();
+        couponUserListResVo.setTotal(total);
+        couponUserListResVo.setItems(couponUserList);
+        return couponUserListResVo;
     }
 
 }

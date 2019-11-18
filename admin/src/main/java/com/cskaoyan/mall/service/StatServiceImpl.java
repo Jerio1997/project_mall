@@ -57,6 +57,7 @@ public class StatServiceImpl implements StatService {
         return goodsStatVo;
     }
 
+<<<<<<< HEAD
     @Override
     public OrderStatResVo queryStatOrder() {
         OrderStatResVo orderStatResVo = new OrderStatResVo();
@@ -74,4 +75,11 @@ public class StatServiceImpl implements StatService {
         orderStatResVo.setData(dataBean);
         return orderStatResVo;
     }
+=======
+
+
+
+
+
+>>>>>>> 45dc9297d005c7bb197a07a00ce8e4c731d687c6
 }

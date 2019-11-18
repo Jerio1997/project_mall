@@ -1,14 +1,14 @@
 package com.cskaoyan.mall.controller;
 
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.Coupon;
-import com.cskaoyan.mall.bean.CouponListResVo;
+import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author Jerio
@@ -74,6 +74,17 @@ public class CouponController {
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setData(coupon);
+        return baseReqVo;
+    }
+
+    @GetMapping("listuser")
+    public BaseReqVo<CouponUserListResVo> listUserCoupon(Integer page, Integer limit, Integer couponId, Integer userId, Short status, String sort, String order){
+        CouponUserListResVo couponUserListResVo;
+        couponUserListResVo = couponService.listUserCoupon(page,limit,couponId,userId,status,sort,order);
+        BaseReqVo<CouponUserListResVo> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setData(couponUserListResVo);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
         return baseReqVo;
     }
 
