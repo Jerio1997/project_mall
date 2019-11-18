@@ -1,6 +1,9 @@
 package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Coupon;
+import com.cskaoyan.mall.bean.CouponListResVo;
+import com.cskaoyan.mall.bean.CouponUserListResVo;
+import com.cskaoyan.mall.bean.Groupon;
 
 import java.util.List;
 
@@ -20,4 +23,6 @@ public interface CouponService {
     int updateCoupon(Coupon coupon);
 
     Coupon getCouponById(Integer id);
+
+    CouponUserListResVo listUserCoupon(Integer page, Integer limit, Integer couponId, Integer userId, Short status, String sort, String order);
 }

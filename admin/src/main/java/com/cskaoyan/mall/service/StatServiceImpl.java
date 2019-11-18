@@ -36,4 +36,6 @@ public class StatServiceImpl implements StatService{
         statisticUsers.setRows(rows);
         return statisticUsers;
     }
+
+
 }
