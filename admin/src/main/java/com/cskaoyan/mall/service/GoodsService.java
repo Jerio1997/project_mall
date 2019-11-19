@@ -14,4 +14,11 @@ public interface GoodsService {
     int updateGoods(GoodsCreatedResVo goodsCreatedResVo);
     int deleteGoods(Goods goods);
 
+    List<Goods> getNewGoodsList(int page, int limit);
+
+    List<Goods> getHotGoodsList(int page, int limit);
+
+    Goods queryGoodsById(Integer goodsId);
+
+    List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id);
 }
