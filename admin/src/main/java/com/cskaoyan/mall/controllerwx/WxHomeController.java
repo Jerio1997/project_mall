@@ -48,9 +48,6 @@ public class WxHomeController {
         CouponListResVo couponListResVo = couponService.queryCoupon(1, 10, null, null, null, "add_time", "desc");
         // couponList
         data.put("couponList", couponListResVo.getItems());
-        baseReqVo.setErrno(0);
-        baseReqVo.setErrmsg("成功");
-        baseReqVo.setData(data);
         AdListResVo adListResVo = adService.queryListAd(1, 10, null, null, "add_time", "desc");
         // banner
         data.put("banner", adListResVo.getItems());
@@ -87,6 +84,9 @@ public class WxHomeController {
             floorGoodsList.add(floorGoodsResVo);
         }
         data.put("floorGoodsList", floorGoodsList);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(data);
         return baseReqVo;
     }
 }
