@@ -336,4 +336,13 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return goodsList;
     }
+
+    @Override
+    public List<Goods> queryGoodsByBrandId(Integer brandId, Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        GoodsExample goodsExample = new GoodsExample();
+        goodsExample.createCriteria().andBrandIdEqualTo(brandId);
+        List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
+        return goods;
+    }
 }

@@ -21,4 +21,6 @@ public interface GoodsService {
     Goods queryGoodsById(Integer goodsId);
 
     List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id);
+
+    List<Goods> queryGoodsByBrandId(Integer brandId, Integer page, Integer size);
 }

@@ -20,4 +20,6 @@ public interface CategoryService {
     int addCategory(Category category);
 
     List<Category> getCategoryList(int page, int limit);
+
+    Category getCategoryById(Integer id);
 }
