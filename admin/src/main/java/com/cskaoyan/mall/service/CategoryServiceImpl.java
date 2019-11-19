@@ -92,4 +92,13 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryMapper.selectByExample(example);
         return categories;
     }
+
+    @Override
+    public Category getCategoryById(Integer id) {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.createCriteria().andIdEqualTo(id);
+        List<Category> categories = categoryMapper.selectByExample(categoryExample);
+        Category category = categories.get(0);
+        return category;
+    }
 }
