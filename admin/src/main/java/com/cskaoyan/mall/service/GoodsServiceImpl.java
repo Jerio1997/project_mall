@@ -283,4 +283,57 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return 1;
     }
+
+    @Override
+    public List<Goods> getNewGoodsList(int page, int limit) {
+        PageHelper.startPage(page, limit);
+        GoodsExample example = new GoodsExample();
+        example.createCriteria().andIsNewEqualTo(true);
+        List<Goods> goodsList = goodsMapper.selectByExample(example);
+        return goodsList;
+    }
+
+    @Override
+    public List<Goods> getHotGoodsList(int page, int limit) {
+        PageHelper.startPage(page, limit);
+        GoodsExample example = new GoodsExample();
+        example.createCriteria().andIsHotEqualTo(true);
+        List<Goods> goodsList = goodsMapper.selectByExample(example);
+        return goodsList;
+    }
+
+    @Override
+    public Goods queryGoodsById(Integer goodsId) {
+        Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+        return goods;
+    }
+
+    @Override
+    public List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id) {
+        GoodsExample example = new GoodsExample();
+        example.createCriteria().andCategoryIdEqualTo(id);
+        List<Goods> goodsList = goodsMapper.selectByExample(example);
+        if (goodsList == null) {
+            goodsList = new ArrayList<>();
+        }
+        CategoryExample example1 = new CategoryExample();
+        example1.createCriteria().andPidEqualTo(id);
+        List<Category> categories = categoryMapper.selectByExample(example1);
+        for (Category category : categories) {
+            GoodsExample example2 = new GoodsExample();
+            example2.createCriteria().andCategoryIdEqualTo(category.getId());
+            List<Goods> goodsList1 = goodsMapper.selectByExample(example2);
+            for (Goods goods : goodsList1) {
+                goodsList.add(goods);
+            }
+        }
+        if (limit != 0 && goodsList.size() > limit) {
+            List<Goods> goodsLimitList = new ArrayList<>();
+            for (int i = 0; i < limit; i++) {
+                goodsLimitList.add(goodsList.get(i));
+            }
+            return goodsLimitList;
+        }
+        return goodsList;
+    }
 }

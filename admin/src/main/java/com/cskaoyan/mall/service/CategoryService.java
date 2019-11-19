@@ -18,4 +18,6 @@ public interface CategoryService {
     int deleteCategory(Category category);
 
     int addCategory(Category category);
+
+    List<Category> getCategoryList(int page, int limit);
 }

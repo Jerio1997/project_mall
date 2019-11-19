@@ -3,6 +3,7 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.Category;
 import com.cskaoyan.mall.bean.CategoryExample;
 import com.cskaoyan.mall.mapper.CategoryMapper;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,5 +82,14 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryExample example = new CategoryExample();
         example.createCriteria().andPidEqualTo(0);// 一级商品目录查询
         return categoryMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<Category> getCategoryList(int page, int limit) {
+        PageHelper.startPage(page, limit);
+        CategoryExample example = new CategoryExample();
+        example.createCriteria().andLevelEqualTo("L1");
+        List<Category> categories = categoryMapper.selectByExample(example);
+        return categories;
     }
 }

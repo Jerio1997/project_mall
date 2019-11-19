@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.controller.wx;
+package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.BaseRespVo;
 import com.cskaoyan.mall.utils.UserInfo;
