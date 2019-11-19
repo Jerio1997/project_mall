@@ -24,6 +24,13 @@ public class GoodsServiceImpl implements GoodsService {
     GoodsSpecificationMapper goodsSpecificationMapper;
     @Autowired
     GoodsProductMapper goodsProductMapper;
+    @Autowired
+    CommentMapper commentMapper;
+    @Autowired
+    GrouponRulesMapper grouponRulesMapper;
+    @Autowired
+    IssueMapper issueMapper;
+
 
     @Override
     public int queryGoodsCounts(Integer goodsSn, String name) {
@@ -344,5 +351,93 @@ public class GoodsServiceImpl implements GoodsService {
         goodsExample.createCriteria().andBrandIdEqualTo(brandId);
         List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
         return goods;
+    }
+    // 查询 categoryId 相同的商品并按 sort_order递减排序（大的优先）
+    @Override
+    public List<Goods> queryRelateGoods(Integer id) {
+        Goods goods = this.queryGoodsById(id);
+        Integer categoryId = goods.getCategoryId();
+        GoodsExample goodsExample = new GoodsExample();
+        goodsExample.createCriteria().andCategoryIdEqualTo(categoryId);
+        goodsExample.setOrderByClause("sort_order DESC");
+        List<Goods> relatedGoods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
+        List<Goods> res = new ArrayList<>();
+        if(relatedGoods.size()>6){
+            for (int i = 0; i <6; i++) {
+                Goods goods1 = relatedGoods.get(i);
+                res.add(goods1);
+            }
+        }else{
+            res = relatedGoods;
+        }
+        return res;
+    }
+
+    @Override
+    public GoodsDetailResVo_Wx queryGoodsDetail(Integer id) {
+        GoodsDetailResVo_Wx goodsDetailResVo_wx = new GoodsDetailResVo_Wx();
+        Goods goods = queryGoodsById(id);
+        Integer categoryId = goods.getCategoryId();
+        Integer brandId = goods.getBrandId();
+        goodsDetailResVo_wx.setInfo(goods);
+
+        CommentExample commentExample = new CommentExample();
+        commentExample.createCriteria().andValueIdEqualTo(id).andTypeEqualTo((byte) 0);
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        int size = comments.size();
+        GoodsDetailResVo_Wx.CommentBean commentBean = new GoodsDetailResVo_Wx.CommentBean();
+        commentBean.setCount(size);
+        commentBean.setData(comments);
+        goodsDetailResVo_wx.setComment(commentBean);
+
+        Brand brand = brandMapper.selectByPrimaryKey(brandId);
+        goodsDetailResVo_wx.setBrand(brand);
+
+        GoodsSpecificationExample goodsSpecificationExample = new GoodsSpecificationExample();
+        goodsSpecificationExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsSpecification> goodsSpecifications = goodsSpecificationMapper.selectByExample(goodsSpecificationExample);
+        List<GoodsDetailResVo_Wx.SpecificationListBean> specificationList = new ArrayList<>();
+        HashSet<String> goodsSpecificationName = new HashSet<>();
+        for (GoodsSpecification goodsSpecification : goodsSpecifications) {
+           goodsSpecificationName.add(goodsSpecification.getSpecification());
+        }
+        for (String s : goodsSpecificationName) {
+            GoodsDetailResVo_Wx.SpecificationListBean specificationListBean = new GoodsDetailResVo_Wx.SpecificationListBean();
+            specificationListBean.setName(s);
+            List<GoodsSpecification> goodsSpecificationList = new ArrayList<>();
+            for (GoodsSpecification goodsSpecification : goodsSpecifications) {
+                if(s.equals(goodsSpecification.getSpecification())){
+                    goodsSpecificationList.add(goodsSpecification);
+                }
+            }
+            specificationListBean.setValueList(goodsSpecificationList);
+            specificationList.add(specificationListBean);
+        }
+
+
+        goodsDetailResVo_wx.setSpecificationList(specificationList);
+
+        GrouponRulesExample grouponRulesExample = new GrouponRulesExample();
+        grouponRulesExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GrouponRules> grouponRules = grouponRulesMapper.selectByExample(grouponRulesExample);
+        goodsDetailResVo_wx.setGroupon(grouponRules);
+
+        IssueExample issueExample = new IssueExample();
+        List<Issue> issues = issueMapper.selectByExample(issueExample);
+        goodsDetailResVo_wx.setIssue(issues);
+
+        GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
+        goodsAttributeExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsAttribute> goodsAttributes = goodsAttributeMapper.selectByExample(goodsAttributeExample);
+        goodsDetailResVo_wx.setAttribute(goodsAttributes);
+
+        GoodsProductExample goodsProductExample = new GoodsProductExample();
+        goodsProductExample.createCriteria().andGoodsIdEqualTo(id);
+        List<GoodsProduct> goodsProducts = goodsProductMapper.selectByExample(goodsProductExample);
+        goodsDetailResVo_wx.setProductList(goodsProducts);
+
+        goodsDetailResVo_wx.setShareImage("");
+        goodsDetailResVo_wx.setUserHasCollect(0);
+        return goodsDetailResVo_wx;
     }
 }

@@ -23,4 +23,8 @@ public interface GoodsService {
     List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id);
 
     List<Goods> queryGoodsByBrandId(Integer brandId, Integer page, Integer size);
+
+    List<Goods> queryRelateGoods(Integer id );
+
+    GoodsDetailResVo_Wx queryGoodsDetail(Integer id);
 }
