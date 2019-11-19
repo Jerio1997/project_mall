@@ -39,13 +39,13 @@ public class WxHomeController {
     public BaseReqVo index() {
         BaseReqVo baseReqVo = new BaseReqVo();
         HashMap<String, Object> data = new HashMap<>();
-        List<Goods> newGoodsList = goodsService.getNewGoodsList(1, 50);
+        List<Goods> newGoodsList = goodsService.getNewGoodsList(1, 10);
         // newGoodsList
         data.put("newGoodsList", newGoodsList);
-        List<Goods> hotGoodsList = goodsService.getHotGoodsList(1, 50);
+        List<Goods> hotGoodsList = goodsService.getHotGoodsList(1, 10);
         // hotGoodsList
         data.put("hotGoodsList", hotGoodsList);
-        CouponListResVo couponListResVo = couponService.queryCoupon(1, 50, null, null, null, "add_time", "desc");
+        CouponListResVo couponListResVo = couponService.queryCoupon(1, 10, null, null, null, "add_time", "desc");
         // couponList
         data.put("couponList", couponListResVo.getItems());
         baseReqVo.setErrno(0);
@@ -57,7 +57,7 @@ public class WxHomeController {
         List<Category> categoryList = categoryService.getCategoryList(1, 12);
         // channel
         data.put("channel", categoryList);
-        GrouponRulesListResVo grouponRulesListResVo = grouponRulesService.queryGrouponRules(1, 50, null, "add_time", "desc");
+        GrouponRulesListResVo grouponRulesListResVo = grouponRulesService.queryGrouponRules(1, 10, null, "add_time", "desc");
         List<GrouponRules> items = grouponRulesListResVo.getItems();
         List<Map<String, Object>> grouponList = new ArrayList<>();
         for (GrouponRules groupon : items) {
