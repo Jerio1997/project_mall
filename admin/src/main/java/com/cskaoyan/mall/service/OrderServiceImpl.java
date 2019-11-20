@@ -1,15 +1,12 @@
 package com.cskaoyan.mall.service;
 
-import com.cskaoyan.mall.bean.Order;
-import com.cskaoyan.mall.bean.OrderExample;
-import com.cskaoyan.mall.bean.OrderGoods;
-import com.cskaoyan.mall.bean.OrderGoodsExample;
-import com.cskaoyan.mall.mapper.OrderGoodsMapper;
-import com.cskaoyan.mall.mapper.OrderMapper;
-import com.cskaoyan.mall.mapper.UserMapper;
+import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.mapper.*;
+import com.cskaoyan.mall.utils.OrderStatusUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.OrderUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -25,6 +22,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     OrderGoodsMapper orderGoodsMapper;
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    GrouponRulesMapper grouponRulesMapper;
+
+    @Autowired
+    GrouponMapper grouponMapper;
 
 
     @Override
@@ -65,4 +71,52 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    @Override
+    public int InsertOrders(List<Order> orderList) {
+        for (Order order : orderList) {
+            int i = orderMapper.insertSelective(order);
+        }
+        return orderList.size();
+    }
+
+    @Override
+    public OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username) {
+        OrderReqVo orderReqVo = new OrderReqVo();
+        OrderExample orderExample = new OrderExample();
+        // 查询用户的id
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(username);
+        List<User> users = userMapper.selectByExample(userExample);
+        PageHelper.startPage(page, size);
+        // 用户id
+        OrderExample.Criteria criteria = orderExample.createCriteria().andUserIdEqualTo(users.get(0).getId());
+        // 判断要查看的订单订单状态
+        if (codeByType.length != 0) {
+            criteria.andOrderStatusIn(Arrays.asList(codeByType));
+        }
+        List<Order> orders = orderMapper.selectByExample(orderExample);
+        for (Order order : orders) {
+            order.setOrderStatusText(OrderStatusUtils.getTextByCode(order.getOrderStatus()));
+            GrouponExample grouponExample = new GrouponExample();
+            grouponExample.createCriteria().andOrderIdEqualTo(order.getId());
+            List<Groupon> groupons = grouponMapper.selectByExample(grouponExample);
+            if (groupons.size() > 0) {
+                order.setIsGroupin(true);
+            } else {
+                order.setIsGroupin(false);
+            }
+            OrderGoodsExample orderGoodsExample = new OrderGoodsExample();
+            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId());
+            List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(orderGoodsExample);
+            order.setGoodsList(orderGoods);
+            HandleOption status1Option = HandleOption.getStatus1Option();
+            order.setHandleOption(status1Option);
+        }
+
+        orderReqVo.setData(orders);
+        long l = orderMapper.countByExample(new OrderExample());
+        orderReqVo.setCount((int) l);
+        orderReqVo.setTotalPages((int) (l/size));
+        return orderReqVo;
+    }
 }

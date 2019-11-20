@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BrandListReqVo_Wx {
+public class BrandListResVo_Wx {
     private Integer totalPages;
     private List<Brand> brandList;
 }

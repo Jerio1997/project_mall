@@ -30,7 +30,7 @@ public class CommentController {
     @GetMapping("list")
     public BaseReqVo<CommentListResVo> listGoods(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order){
         BaseReqVo<CommentListResVo> commentResVoBaseReqVo = new BaseReqVo<>();
-        int total = commentService.queryCommentCounts(userId, valueId);
+        int total = commentService.queryCommentCountsByCondition(userId, valueId,null,null);
         List<Comment> comments = commentService.queryComment(page, limit, userId, valueId, sort, order);
         CommentListResVo commentListResVo = new CommentListResVo();
         commentListResVo.setTotal(total);

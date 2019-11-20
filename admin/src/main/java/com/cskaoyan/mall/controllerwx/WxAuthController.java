@@ -1,15 +1,20 @@
 package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.BaseRespVo;
+import com.cskaoyan.mall.bean.User;
+import com.cskaoyan.mall.mapper.UserMapper;
+import com.cskaoyan.mall.service.UserService;
 import com.cskaoyan.mall.utils.UserInfo;
 import com.cskaoyan.mall.utils.UserToken;
 import com.cskaoyan.mall.utils.UserTokenManager;
 import org.apache.tomcat.util.http.ResponseUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,13 +25,26 @@ import java.util.Map;
 @RequestMapping("/wx")
 public class WxAuthController {
 
+	@Autowired
+	private UserService userService;
+
 	@RequestMapping("/auth/login")
 	@ResponseBody
-	public Object login(@RequestBody String body, HttpServletRequest request) {
+	public Object login(@RequestBody User user, HttpServletRequest request) {
 //		String username = JacksonUtil.parseString(body, "username");
 //		String password = JacksonUtil.parseString(body, "password");
-		String username = "lanzhao";
-		String password = "123";
+
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		List<User> loginUser = userService.authUser(user);
+
+		if (loginUser.size() == 0) {
+			// 登录失败
+			result.put("token", null);
+			return result;
+		}
+
+		// 登录成功，将登录成功的 User 加入到 session 域中
+		request.getSession().setAttribute("user", loginUser.get(0));
 
 		//*******************************
 		//根据username和password查询user信息
@@ -34,8 +52,9 @@ public class WxAuthController {
 
 		// userInfo
 		UserInfo userInfo = new UserInfo();
-		userInfo.setNickName(username);
+		userInfo.setNickName(user.getUsername());
 		//userInfo.setAvatarUrl(user.getAvatar());
+
 
 
 		//********************************
@@ -45,7 +64,6 @@ public class WxAuthController {
 		// token
 		UserToken userToken = UserTokenManager.generateToken(userId);
 
-		Map<Object, Object> result = new HashMap<Object, Object>();
 		result.put("token", userToken.getToken());
 		result.put("tokenExpire", userToken.getExpireTime().toString());
 		result.put("userInfo", userInfo);

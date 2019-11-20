@@ -3,6 +3,7 @@ package com.cskaoyan.mall.mapper;
 import com.cskaoyan.mall.bean.Keyword;
 import com.cskaoyan.mall.bean.KeywordExample;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -30,4 +31,7 @@ public interface KeywordMapper {
     int updateByPrimaryKey(Keyword record);
 
     int insertSelectiveAndGetId(Keyword keyword);
+
+    @Select("select keyword from cskaoyan_mall_keyword where keyword like #{keyword}  limit 7")
+    List<String> selectKeywordStringList(String keyword);
 }

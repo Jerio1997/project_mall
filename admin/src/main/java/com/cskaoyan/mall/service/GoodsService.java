@@ -21,4 +21,16 @@ public interface GoodsService {
     Goods queryGoodsById(Integer goodsId);
 
     List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id);
+
+    List<Category> queryCategoryByGoodsCodition(String keyword,Integer brandId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size);
+
+    List<Goods> queryGoodsByCondition(String keyword,Integer brandId,Integer categoryId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size);
+
+    List<Goods> queryRelateGoods(Integer id );
+
+    GoodsDetailResVo_Wx queryGoodsDetail(Integer id);
+
+    Goods getGoodsById(int goodsId);
+
+    GoodsProduct getGoodsProductById(int productId);
 }

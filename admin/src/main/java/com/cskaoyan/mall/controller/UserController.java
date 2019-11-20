@@ -33,6 +33,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -98,7 +99,7 @@ public class UserController {
         return baseReqVo;
     }
     //意见反馈
-    @RequestMapping("feedback/list")
+    @RequestMapping(value = "feedback/list")
     public BaseReqVo feedBack(Integer page,Integer limit,Integer id,String username,String sort,String order,Feedback feedback) {
         Map<String, Object> data = userService.getFeetBacklist(page, limit, id, username, sort, order,feedback);
         BaseReqVo baseReqVo = new BaseReqVo();

@@ -189,6 +189,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> authUser(User user) {
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(user.getUsername()).andPasswordEqualTo(user.getPassword());
+        return userMapper.selectByExample(example);
+    }
+
+    @Override
     public Long queryUsers() {
         Long users = userMapper.countByExample(new UserExample());
         return users;
@@ -198,6 +205,14 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer userId) {
         User user = userMapper.selectByPrimaryKey(userId);
         return user;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(username);
+        List<User> users = userMapper.selectByExample(userExample);
+        return users.get(0);
     }
 }
 

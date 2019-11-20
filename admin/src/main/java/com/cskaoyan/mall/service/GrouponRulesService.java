@@ -22,4 +22,5 @@ public interface GrouponRulesService {
 
     int deleteGrouponRules(GrouponRules grouponRules);
 
+    GrouponRules getGrouponRulesById(Integer grouponRulesId);
 }

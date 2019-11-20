@@ -13,8 +13,6 @@ public class BaseRespVo {
 	String errmsg;
 	Integer errno;
 
-
-
 	public Object getData() {
 		return data;
 	}
