@@ -3,6 +3,8 @@ package com.cskaoyan.mall.controller;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.GrouponRulesService;
 import com.cskaoyan.mall.service.GrouponService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class GrouponController {
     GrouponService grouponService;
 
     @GetMapping("list")
+    @RequiresPermissions(value={"admin:groupon:list"},logical = Logical.OR)
     public BaseReqVo<GrouponRulesListResVo> listGrouponRules(Integer page, Integer limit, Integer goodsId, String sort, String order){
         GrouponRulesListResVo grouponRulesListResVo;
         grouponRulesListResVo = grouponRulesService.queryGrouponRules(page,limit,goodsId,sort,order);
@@ -35,6 +38,7 @@ public class GrouponController {
     }
 
     @PostMapping("create")
+    @RequiresPermissions(value={"admin:groupon:create"},logical = Logical.OR)
     public BaseReqVo createGrouponRules(@RequestBody GrouponRules grouponRules){
         int result = grouponRulesService.createGrouponRules(grouponRules);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -45,6 +49,7 @@ public class GrouponController {
     }
 
     @PostMapping("update")
+    @RequiresPermissions(value={"admin:groupon:update"},logical = Logical.OR)
     public BaseReqVo updateGrouponRules(@RequestBody GrouponRules grouponRules){
         int result = grouponRulesService.updateGrouponRules(grouponRules);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -55,6 +60,7 @@ public class GrouponController {
     }
 
     @PostMapping("delete")
+    @RequiresPermissions(value={"admin:groupon:delete"},logical = Logical.OR)
     public BaseReqVo deleteGrouponRules(@RequestBody GrouponRules grouponRules){
         int result = grouponRulesService.deleteGrouponRules(grouponRules);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -65,6 +71,7 @@ public class GrouponController {
 
 
     @GetMapping("listRecord")
+    @RequiresPermissions(value={"admin:groupon:listRecord"},logical = Logical.OR)
     public BaseReqVo<GrouponRecordListResVo> listRecord(Integer page, Integer limit, Integer goodsId, String sort, String order){
         GrouponRecordListResVo grouponRecordListResVo;
         grouponRecordListResVo = grouponService.getGrouponRecord(page,limit,goodsId,sort,order);

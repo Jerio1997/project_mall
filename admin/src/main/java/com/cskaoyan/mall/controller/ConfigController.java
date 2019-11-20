@@ -2,6 +2,8 @@ package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.ConfigService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,7 @@ public class ConfigController {
     @Autowired
     ConfigService configService;
 
-    @RequestMapping(value = "mall", method = RequestMethod.GET)
+    @RequestMapping(value = {"mall"}, method = RequestMethod.GET)
     public BaseReqVo getMallInfo() {
         BaseReqVo<Mall> baseReqVo = new BaseReqVo<>();
         Mall mallResult = configService.selectMallInfo();

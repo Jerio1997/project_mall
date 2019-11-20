@@ -28,4 +28,8 @@ public interface AdminMapper {
     int updateByPrimaryKeySelective(Admin record);
 
     int updateByPrimaryKey(Admin record);
+
+    Integer[] selectRoleIdsByUsername(String username);
+
+    Admin selectAdminByUsername(String username);
 }

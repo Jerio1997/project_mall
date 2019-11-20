@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cskaoyan.mall.mapper.SystemPermissionsMapper">
+
+    <select id="selectApiByRoleId" resultType="java.lang.String">
+        SELECT sp.api FROM `cskaoyan_mall_system_permissions` sp LEFT JOIN cskaoyan_mall_permission p on sp.id = p.permission
+        WHERE p.role_id = #{roleId}
+    </select>
+</mapper>

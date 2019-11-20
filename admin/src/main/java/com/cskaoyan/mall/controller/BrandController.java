@@ -3,6 +3,8 @@ package com.cskaoyan.mall.controller;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Brand;
 import com.cskaoyan.mall.service.BrandService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ public class BrandController {
      * @return
      */
     @RequestMapping("list")
+    @RequiresPermissions(value={"admin:brand:list"},logical = Logical.OR)
     public BaseReqVo listBrand(int page, int limit, Integer id, String name, String sort, String order) {
         //通过brandService获得的map中包含一个brand列表和 查询的总数
         Map<String, Object> data = brandService.getBrandList(page, limit, id, name, sort, order);
@@ -45,6 +48,7 @@ public class BrandController {
      * @return
      */
     @RequestMapping("delete")
+    @RequiresPermissions(value={"admin:brand:delete"},logical = Logical.OR)
     public BaseReqVo deleteBrand(@RequestBody Brand brand) {
         int result = brandService.deleteBrand(brand);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -54,6 +58,7 @@ public class BrandController {
     }
 
     @RequestMapping("update")
+    @RequiresPermissions(value={"admin:brand:update"},logical = Logical.OR)
     public BaseReqVo updateBrand(@RequestBody Brand brand) {
         brand.setUpdateTime(new Date());
         int result = brandService.updateBrand(brand);
@@ -65,6 +70,7 @@ public class BrandController {
     }
 
     @RequestMapping("create")
+    @RequiresPermissions(value={"admin:brand:create"},logical = Logical.OR)
     public BaseReqVo createBrand(@RequestBody Brand brand) {
         brand.setUpdateTime(new Date());
         brand.setAddTime(new Date());
