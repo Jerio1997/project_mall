@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author Jerio
@@ -105,4 +102,28 @@ public class TopicServiceImpl implements TopicService{
         map.put("goods",topic.getGoods());
         return map;
     }
+
+    @Override
+    public List<Topic> getRelatedTopic(Integer id) {
+        TopicExample example = new TopicExample();
+        TopicExample.Criteria criteria = example.createCriteria();
+        criteria.andIdNotEqualTo(id);
+        criteria.andDeletedEqualTo(false);
+        List<Topic> topicList = topicMapper.selectByExample(example);
+        if(topicList.size()<4){
+            return topicList;
+        }
+        //随机返回4个
+        List<Topic> myTopicList = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 4; i++) {
+            int ran = random.nextInt(topicList.size());
+            Topic topic = topicList.get(ran);
+            myTopicList.add(topic);
+            topicList.remove(ran);
+        }
+        return myTopicList;
+    }
+
+
 }

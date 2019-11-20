@@ -38,7 +38,7 @@ public class WxTopicController {
 
     @GetMapping("detail")
     public BaseReqVo detailTopic(Integer id){
-        BaseReqVo baseReqVo = new BaseReqVo();
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
         Map<String,Object> map = topicService.getDetailOfTopic(id);
         Topic topic = (Topic) map.get("topic");
         if(topic.getDeleted()){
@@ -52,9 +52,13 @@ public class WxTopicController {
         return baseReqVo;
     }
 
-    /*@GetMapping("related")
+    @GetMapping("related")
     public BaseReqVo relatedTopic(Integer id){
-        BaseReqVo baseReqVo = new BaseReqVo();
-
-    }*/
+        BaseReqVo<List> baseReqVo = new BaseReqVo<>();
+        List<Topic> topicList = topicService.getRelatedTopic(id);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(topicList);
+        return baseReqVo;
+    }
 }
