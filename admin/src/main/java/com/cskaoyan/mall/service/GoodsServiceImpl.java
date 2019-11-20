@@ -440,4 +440,16 @@ public class GoodsServiceImpl implements GoodsService {
         goodsDetailResVo_wx.setUserHasCollect(0);
         return goodsDetailResVo_wx;
     }
+
+    @Override
+    public Goods getGoodsById(int goodsId) {
+        Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+        return goods;
+    }
+
+    @Override
+    public GoodsProduct getGoodsProductById(int productId) {
+        GoodsProduct goodsProduct = goodsProductMapper.selectByPrimaryKey(productId);
+        return goodsProduct;
+    }
 }

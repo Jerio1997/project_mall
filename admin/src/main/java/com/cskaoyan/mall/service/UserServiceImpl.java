@@ -199,5 +199,13 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByPrimaryKey(userId);
         return user;
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(username);
+        List<User> users = userMapper.selectByExample(userExample);
+        return users.get(0);
+    }
 }
 

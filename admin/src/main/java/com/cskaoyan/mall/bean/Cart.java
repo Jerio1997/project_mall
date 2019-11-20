@@ -20,7 +20,7 @@ public class Cart {
 
     private Short number;
 
-    private String specifications;
+    private String[] specifications;
 
     private Boolean checked;
 
@@ -96,12 +96,12 @@ public class Cart {
         this.number = number;
     }
 
-    public String getSpecifications() {
+    public String[] getSpecifications() {
         return specifications;
     }
 
-    public void setSpecifications(String specifications) {
-        this.specifications = specifications == null ? null : specifications.trim();
+    public void setSpecifications(String[] specifications) {
+        this.specifications = specifications == null ? null : specifications;
     }
 
     public Boolean getChecked() {

@@ -27,4 +27,8 @@ public interface GoodsService {
     List<Goods> queryRelateGoods(Integer id );
 
     GoodsDetailResVo_Wx queryGoodsDetail(Integer id);
+
+    Goods getGoodsById(int goodsId);
+
+    GoodsProduct getGoodsProductById(int productId);
 }
