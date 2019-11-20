@@ -26,7 +26,7 @@ public class WxCatalogController {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         List<Category> categoryList = categoryService.selectCategoryList();
         Category currentCategory = categoryList.get(0);
-        List<Category> currentSubCategory = categoryService.selectCurrentSubCategoryByPid(currentCategory.getPid());
+        List<Category> currentSubCategory = categoryService.selectCurrentSubCategoryByPid(currentCategory.getId());
         HashMap<String, Object> data = new HashMap<>();
         data.put("categoryList", categoryList);
         data.put("currentCategory", currentCategory);
@@ -41,7 +41,7 @@ public class WxCatalogController {
     public BaseReqVo<Map<String, Object>> currentCatalog(@RequestParam("id") Integer id) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         Category currentCategory = categoryService.selectCurrentCategoryById(id);
-        List<Category> currentSubCategory = categoryService.selectCurrentSubCategoryByPid(currentCategory.getPid());
+        List<Category> currentSubCategory = categoryService.selectCurrentSubCategoryByPid(currentCategory.getId());
         HashMap<String, Object> data = new HashMap<>();
         data.put("currentCategory", currentCategory);
         data.put("currentSubCategory", currentSubCategory);
