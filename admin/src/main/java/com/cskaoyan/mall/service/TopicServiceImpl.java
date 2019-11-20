@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author Jerio
@@ -77,7 +79,30 @@ public class TopicServiceImpl implements TopicService{
             id = topicList.get(0).getId();
         }
         topic.setId(++id);
+        topic.setAddTime(new Date());
         int result = topicMapper.insertSelective(topic);
         return result;
+    }
+
+    @Override
+    public Map<String, Object> queryTopicOnWx(Integer page, Integer size) {
+        Map<String,Object> map = new HashMap<>();
+        PageHelper.startPage(page,size);
+        TopicExample topicExample = new TopicExample();
+        TopicExample.Criteria criteria = topicExample.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        List<Topic> topics = topicMapper.selectByExample(topicExample);
+        map.put("data",topics);
+        map.put("count",topics.size());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getDetailOfTopic(Integer id) {
+        Map<String,Object> map = new HashMap<>();
+        Topic topic = topicMapper.selectByPrimaryKey(id);
+        map.put("topic",topic);
+        map.put("goods",topic.getGoods());
+        return map;
     }
 }

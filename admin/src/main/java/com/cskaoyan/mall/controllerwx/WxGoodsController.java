@@ -37,7 +37,9 @@ public class WxGoodsController {
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         int i = goodsService.queryGoodsCounts(null, null);
-        baseReqVo.setData(i);
+        GoodsCountResVo_Wx goodsCountResVo_wx = new GoodsCountResVo_Wx();
+        goodsCountResVo_wx.setGoodsCount(i);
+        baseReqVo.setData(goodsCountResVo_wx);
         return baseReqVo;
     }
 

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author Jerio
@@ -60,5 +62,28 @@ public class GrouponServiceImpl implements GrouponService{
         grouponRecordListResVo.setItems(grouponRecordList);
         grouponRecordListResVo.setTotal(total);
         return grouponRecordListResVo;
+    }
+
+    @Override
+    public Map<String, Object> listGroupon(Integer page, Integer size) {
+        PageHelper.startPage(page,size);
+        GrouponExample example = new GrouponExample();
+        GrouponExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        List<Groupon> grouponList = grouponMapper.selectByExample(example);
+        List list = new ArrayList();
+        for (Groupon groupon : grouponList) {
+            Map<String,Object> mapCur = new HashMap<>();
+            GrouponRules grouponRules = grouponRulesMapper.selectByPrimaryKey(groupon.getRulesId());
+            mapCur.put("groupon_price",grouponRules.getDiscount());
+            Goods goods = goodsMapper.selectByPrimaryKey(grouponRules.getGoodsId());
+            mapCur.put("goods",goods);
+            mapCur.put("groupon_member",grouponRules.getDiscountMember());
+            list.add(mapCur);
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("data",list);
+        map.put("count",list.size());
+        return map;
     }
 }

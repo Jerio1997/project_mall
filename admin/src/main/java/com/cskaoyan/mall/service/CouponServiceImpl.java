@@ -71,8 +71,15 @@ public class CouponServiceImpl implements CouponService{
             id = couponList.get(0).getId();
         }
         coupon.setId(++id);
-        coupon.setAddTime(new Date());
-        coupon.setUpdateTime(new Date());
+        Date date = new Date();
+        coupon.setAddTime(date);
+        coupon.setUpdateTime(date);
+        //判断是否过期
+        if(coupon.getEndTime() != null){
+            if(date.after(coupon.getEndTime())){
+                coupon.setStatus((short) 1);
+            }
+        }
         int result = couponMapper.insertSelective(coupon);
         return result;
     }

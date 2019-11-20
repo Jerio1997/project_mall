@@ -32,7 +32,8 @@ public class GoodsServiceImpl implements GoodsService {
     IssueMapper issueMapper;
     @Autowired
     CategoryService categoryService;
-
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public int queryGoodsCounts(Integer goodsSn, String name) {
@@ -136,6 +137,7 @@ public class GoodsServiceImpl implements GoodsService {
             }
             for (GoodsProduct product : products) {
                 Date date2 = new Date();
+                product.setId(null);
                 product.setAddTime(date2);
                 product.setGoodsId(goods_id);
                 product.setDeleted(false);
@@ -428,7 +430,24 @@ public class GoodsServiceImpl implements GoodsService {
         int size = comments.size();
         GoodsDetailResVo_Wx.CommentBean commentBean = new GoodsDetailResVo_Wx.CommentBean();
         commentBean.setCount(size);
-        commentBean.setData(comments);
+        List<GoodsDetailResVo_Wx.CommentBean.DataBean> data = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            GoodsDetailResVo_Wx.CommentBean.DataBean dataBean = new GoodsDetailResVo_Wx.CommentBean.DataBean();
+            dataBean.setAddTime(comment.getAddTime());
+            dataBean.setContent(comment.getContent());
+            dataBean.setId(comment.getId());
+            dataBean.setPicList(comment.getPicUrls());
+            User user = userMapper.selectByPrimaryKey(comment.getUserId());
+            dataBean.setAvatar(user.getAvatar());
+            dataBean.setNickName(user.getNickname());
+            data.add(dataBean);
+        }
+
+        if(data.size()>2){
+            data = data.subList(0, 2);
+        }
+        commentBean.setData(data);
         goodsDetailResVo_wx.setComment(commentBean);
 
         Brand brand = brandMapper.selectByPrimaryKey(brandId);
