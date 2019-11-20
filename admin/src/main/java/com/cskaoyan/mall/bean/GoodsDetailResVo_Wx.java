@@ -1,7 +1,9 @@
 package com.cskaoyan.mall.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -23,7 +25,7 @@ public class GoodsDetailResVo_Wx {
          */
 
         private int count;
-        private List<Comment> data;
+        private List<DataBean> data;
 
         public int getCount() {
             return count;
@@ -33,12 +35,81 @@ public class GoodsDetailResVo_Wx {
             this.count = count;
         }
 
-        public List<Comment> getData() {
+        public List<DataBean> getData() {
             return data;
         }
 
-        public void setData(List<Comment> data) {
+        public void setData(List<DataBean> data) {
             this.data = data;
+        }
+
+        public static class DataBean {
+            /**
+             * userInfo : {"nickName":"dr lan","avatarUrl":""}
+             * addTime : 2019-11-20 01:04:19
+             * picList : ["http://192.168.2.100:8081/wx/storage/fetch/mlr2rohwtorehgnxykvv.png"]
+             * content : 生存战略
+             */
+            private Integer id;
+
+            private String nickName;
+
+            private String avatar;
+
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+            private Date addTime;
+
+            private String content;
+
+            private String [] picList;
+
+            public Integer getId() {
+                return id;
+            }
+
+            public void setId(Integer id) {
+                this.id = id;
+            }
+
+            public String getNickName() {
+                return nickName;
+            }
+
+            public void setNickName(String nickName) {
+                this.nickName = nickName;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
+            }
+
+            public Date getAddTime() {
+                return addTime;
+            }
+
+            public void setAddTime(Date addTime) {
+                this.addTime = addTime;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public String[] getPicList() {
+                return picList;
+            }
+
+            public void setPicList(String[] picList) {
+                this.picList = picList;
+            }
         }
     }
     public static class SpecificationListBean {

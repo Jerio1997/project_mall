@@ -20,15 +20,32 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
         return searchHistoryMapper.selectHistoryKeywordList();
     }
 
+
+
+
     @Override
     public int addHistoryKeyword(String keyword) {
-        SearchHistory searchHistory = new SearchHistory();
-        searchHistory.setUserId(1);
-        searchHistory.setAddTime(new Date());
-        searchHistory.setDeleted(false);
-        searchHistory.setKeyword(keyword);
-        searchHistory.setFrom("wx");
-        int insert = searchHistoryMapper.insert(searchHistory);
-        return insert;
+        SearchHistoryExample searchHistoryExample = new SearchHistoryExample();
+        searchHistoryExample.createCriteria().andKeywordEqualTo(keyword);
+        List<SearchHistory> searchHistories = searchHistoryMapper.selectByExample(searchHistoryExample);
+        int res = searchHistories.size();
+        if(res == 0){
+            SearchHistory searchHistory = new SearchHistory();
+            searchHistory.setUserId(1);
+            searchHistory.setAddTime(new Date());
+            searchHistory.setDeleted(false);
+            searchHistory.setKeyword(keyword);
+            searchHistory.setFrom("wx");
+            int insert = searchHistoryMapper.insert(searchHistory);
+            return insert;
+        }else{
+            for (SearchHistory searchHistory : searchHistories) {
+                searchHistory.setUpdateTime(new Date());
+                searchHistoryMapper.updateByPrimaryKey(searchHistory);
+            }
+           return 2;
+        }
+
+
     }
 }
