@@ -360,8 +360,8 @@
   </update>
 
     <select id="selectGoodsStatInfo" resultType="com.cskaoyan.mall.bean.GoodsStatVo$DataBean$RowsBean">
-  select sum(price * number) as amount, count(id) as orders, sum(number) as products,
-  date_format(add_time,'%Y-%m-%d') as day from cskaoyan_mall_order_goods
-  group by date_format(add_time,'%Y-%m-%d')
-  </select>
+      select sum(price * number) as amount, count(id) as orders, sum(number) as products,
+      date_format(add_time,'%Y-%m-%d') as day from cskaoyan_mall_order_goods
+      group by date_format(add_time,'%Y-%m-%d')
+    </select>
 </mapper>
