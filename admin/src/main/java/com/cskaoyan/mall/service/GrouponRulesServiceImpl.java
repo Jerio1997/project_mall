@@ -87,4 +87,10 @@ public class GrouponRulesServiceImpl implements GrouponRulesService{
         int result = grouponRulesMapper.updateByPrimaryKey(grouponRules);
         return result;
     }
+
+    @Override
+    public GrouponRules getGrouponRulesById(Integer grouponRulesId) {
+        GrouponRules grouponRules = grouponRulesMapper.selectByPrimaryKey(grouponRulesId);
+        return grouponRules;
+    }
 }

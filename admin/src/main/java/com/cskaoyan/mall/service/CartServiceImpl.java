@@ -6,6 +6,7 @@ import com.cskaoyan.mall.mapper.CartMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,20 +21,11 @@ public class CartServiceImpl implements CartService{
         return i;
     }
 
-    @Override
-    public int getTotalCount() {
-        List<Cart> carts = cartMapper.selectByExample(new CartExample());
-        int totalCount = 0;
-        for (Cart cart : carts) {
-            totalCount += cart.getNumber();
-        }
-        return totalCount;
-    }
 
     @Override
     public List<Cart> getCartListByUserId(Integer id) {
         CartExample cartExample = new CartExample();
-        cartExample.createCriteria().andUserIdEqualTo(id);
+        cartExample.createCriteria().andUserIdEqualTo(id).andDeletedEqualTo(false);
         List<Cart> carts = cartMapper.selectByExample(cartExample);
         return carts;
     }
@@ -41,7 +33,7 @@ public class CartServiceImpl implements CartService{
     @Override
     public Cart getCartByUserIdAndProductId(Integer id, Integer productId) {
         CartExample cartExample = new CartExample();
-        cartExample.createCriteria().andUserIdEqualTo(id).andProductIdEqualTo(productId);
+        cartExample.createCriteria().andUserIdEqualTo(id).andProductIdEqualTo(productId).andDeletedEqualTo(false);
         List<Cart> carts = cartMapper.selectByExample(cartExample);
         if (carts.size() != 0) {
             return carts.get(0);
@@ -51,7 +43,22 @@ public class CartServiceImpl implements CartService{
 
     @Override
     public int updateCart(Cart cart) {
-        int i = cartMapper.updateByPrimaryKey(cart);
+        int i = cartMapper.updateByPrimaryKeySelective(cart);
         return i;
+    }
+
+    @Override
+    public List<Cart> getCartListByUserIdAndCartId(Integer userId, Integer cartId) {
+        if (cartId == 0) {
+            CartExample cartExample = new CartExample();
+            cartExample.createCriteria().andDeletedEqualTo(false).andUserIdEqualTo(userId).andCheckedEqualTo(true);
+            List<Cart> carts = cartMapper.selectByExample(cartExample);
+            return carts;
+        } else {
+            Cart cart = cartMapper.selectByPrimaryKey(cartId);
+            List<Cart> carts = new ArrayList<>();
+            carts.add(cart);
+            return carts;
+        }
     }
 }

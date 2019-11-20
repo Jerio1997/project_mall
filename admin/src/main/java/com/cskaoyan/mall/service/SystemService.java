@@ -95,4 +95,8 @@ public interface SystemService {
      * @return
      */
     List<System> selectSystemPermissions();
+
+    Double getExpressFreightMin();
+
+    Double getExpressFreightValue();
 }

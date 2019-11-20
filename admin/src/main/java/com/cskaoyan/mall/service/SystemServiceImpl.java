@@ -28,6 +28,9 @@ public class SystemServiceImpl implements SystemService {
     @Autowired
     private PermissionMapper permissionMapper;
 
+    @Autowired
+    private SystemMapper systemMapper;
+
     @Override
     public Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order, String username) {
         PageHelper.startPage(page, limit, sort + " " + order);
@@ -166,5 +169,23 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public List<System> selectSystemPermissions() {
         return null;
+    }
+
+    @Override
+    public Double getExpressFreightMin() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_express_freight_min");
+        List<System> systems = systemMapper.selectByExample(example);
+        Double keyValue = Double.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Double getExpressFreightValue() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_express_freight_value");
+        List<System> systems = systemMapper.selectByExample(example);
+        Double keyValue = Double.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
     }
 }
