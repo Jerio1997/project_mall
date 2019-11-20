@@ -296,72 +296,72 @@ public class SearchHistoryExample {
         }
 
         public Criteria andFromIsNull() {
-            addCriterion("from is null");
+            addCriterion("`from` is null");
             return (Criteria) this;
         }
 
         public Criteria andFromIsNotNull() {
-            addCriterion("from is not null");
+            addCriterion("`from` is not null");
             return (Criteria) this;
         }
 
         public Criteria andFromEqualTo(String value) {
-            addCriterion("from =", value, "from");
+            addCriterion("`from` =", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromNotEqualTo(String value) {
-            addCriterion("from <>", value, "from");
+            addCriterion("`from` <>", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromGreaterThan(String value) {
-            addCriterion("from >", value, "from");
+            addCriterion("`from` >", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromGreaterThanOrEqualTo(String value) {
-            addCriterion("from >=", value, "from");
+            addCriterion("`from` >=", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromLessThan(String value) {
-            addCriterion("from <", value, "from");
+            addCriterion("`from` <", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromLessThanOrEqualTo(String value) {
-            addCriterion("from <=", value, "from");
+            addCriterion("`from` <=", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromLike(String value) {
-            addCriterion("from like", value, "from");
+            addCriterion("`from` like", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromNotLike(String value) {
-            addCriterion("from not like", value, "from");
+            addCriterion("`from` not like", value, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromIn(List<String> values) {
-            addCriterion("from in", values, "from");
+            addCriterion("`from` in", values, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromNotIn(List<String> values) {
-            addCriterion("from not in", values, "from");
+            addCriterion("`from` not in", values, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromBetween(String value1, String value2) {
-            addCriterion("from between", value1, value2, "from");
+            addCriterion("`from` between", value1, value2, "`from`");
             return (Criteria) this;
         }
 
         public Criteria andFromNotBetween(String value1, String value2) {
-            addCriterion("from not between", value1, value2, "from");
+            addCriterion("`from` not between", value1, value2, "`from`");
             return (Criteria) this;
         }
 

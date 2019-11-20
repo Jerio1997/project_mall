@@ -3,6 +3,7 @@ package com.cskaoyan.mall.mapper;
 import com.cskaoyan.mall.bean.SearchHistory;
 import com.cskaoyan.mall.bean.SearchHistoryExample;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -28,4 +29,7 @@ public interface SearchHistoryMapper {
     int updateByPrimaryKeySelective(SearchHistory record);
 
     int updateByPrimaryKey(SearchHistory record);
+
+    @Select("select * from cskaoyan_mall_search_history limit 8")
+    List<SearchHistory> selectHistoryKeywordList();
 }

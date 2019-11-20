@@ -15,6 +15,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.*;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -34,4 +35,6 @@ public interface UserService {
     Map<String, Object> getSearchHistorylist(Integer page, Integer limit, Integer userId, String keyword, String sort, String order, SearchHistory searchHistory);
 
     Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order, Feedback feedback);
+
+    List<User> authUser(User user);
 }
