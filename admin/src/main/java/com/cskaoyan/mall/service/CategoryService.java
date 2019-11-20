@@ -25,4 +25,10 @@ public interface CategoryService {
     Category getCategoryById(Integer id);
 
     CategoryResVo_Wx queryNestedCategory(Integer id);
+
+    List<Category> selectCategoryList();
+
+    List<Category> selectCurrentSubCategoryByPid(Integer pid);
+
+    Category selectCurrentCategoryById(Integer id);
 }
