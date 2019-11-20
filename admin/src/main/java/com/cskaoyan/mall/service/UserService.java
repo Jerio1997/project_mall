@@ -37,4 +37,5 @@ public interface UserService {
     Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order, Feedback feedback);
     User getUserByUsername(String username);
     List<User> authUser(User user);
+
 }

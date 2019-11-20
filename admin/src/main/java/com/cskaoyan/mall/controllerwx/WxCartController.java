@@ -1,14 +1,14 @@
 package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.*;
-import com.cskaoyan.mall.service.CartService;
-import com.cskaoyan.mall.service.GoodsService;
-import com.cskaoyan.mall.service.UserService;
+import com.cskaoyan.mall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +26,21 @@ public class WxCartController {
     @Autowired
     GoodsService goodsService;
 
+    @Autowired
+    GrouponRulesService grouponRulesService;
 
-    @RequestMapping("add")
-    public BaseReqVo addCart(@RequestBody CartReqTo cartReqTo) {
+//    @Autowired  // 应该自动注入一个 addressService
+
+    @Autowired
+    CouponService couponService;
+
+    @Autowired
+    SystemService systemService;
+
+
+
+    @RequestMapping(value = {"add", "fastadd"})
+    public BaseReqVo addCart(@RequestBody CartReqTo cartReqTo, HttpServletRequest request) {
         Integer goodsId = cartReqTo.getGoodsId();
         Short number = cartReqTo.getNumber();
         Integer productId = cartReqTo.getProductId();
@@ -56,11 +68,15 @@ public class WxCartController {
             cart.setId(cartByUserIdAndProductId.getId());
             cart.setNumber((short) (cart.getNumber() + cartByUserIdAndProductId.getNumber()));
             cart.setChecked(cartByUserIdAndProductId.getChecked());
+            if (request.getRequestURI().contains("fastadd")) {
+                cart.setNumber(number);
+            }
             int status = cartService.updateCart(cart);
         } else {
             int status = cartService.addCart(cart);
         }
-        int totalCount = cartService.getTotalCount();
+
+        int totalCount = (int) getgoodsCount().getData();
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
@@ -101,20 +117,121 @@ public class WxCartController {
     }
 
     @RequestMapping("checked")
-    public BaseReqVo updateChecked(@RequestBody CartCheckedReqTo cartCheckedReqTo) {
+    public BaseReqVo updateChecked(@RequestBody CartCheckedReqDTO cartCheckedReqDTO) {
         String username = "lanzhao";
         Boolean checked = false;
         User userByUsername = userService.getUserByUsername(username);
-        if (cartCheckedReqTo.getIsChecked() == 1) {
+        if (cartCheckedReqDTO.getIsChecked() == 1) {
             checked = true;
         }
-        Integer[] productIds = cartCheckedReqTo.getProductIds();
+        Integer[] productIds = cartCheckedReqDTO.getProductIds();
         for (Integer productId : productIds) {
             Cart cartByUserIdAndProductId = cartService.getCartByUserIdAndProductId(userByUsername.getId(), productId);
             cartByUserIdAndProductId.setChecked(checked);
             int i = cartService.updateCart(cartByUserIdAndProductId);
         }
         BaseReqVo baseReqVo = listCart();
+        return baseReqVo;
+    }
+
+    @RequestMapping("update")
+    public BaseReqVo updateCart(@RequestBody CartUpdateReqDTO cartUpdateReqDTO) {
+        String username = "lanzhao";
+        User user = userService.getUserByUsername(username);
+        Integer productId = cartUpdateReqDTO.getProductId();
+        GoodsProduct goodsProductById = goodsService.getGoodsProductById(productId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        if (goodsProductById.getNumber() < cartUpdateReqDTO.getNumber()) {
+            baseReqVo.setErrmsg("库存不足");
+            baseReqVo.setErrno(710);
+            return baseReqVo;
+        }
+        Cart cart = new Cart();
+        cart.setId(cartUpdateReqDTO.getId());
+        cart.setNumber(cartUpdateReqDTO.getNumber().shortValue());
+        cartService.updateCart(cart);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @RequestMapping("delete")
+    public BaseReqVo deleteCart(@RequestBody CartDeleteReqDTO cartDeleteReqDTO) {
+        String username = "lanzhao";
+        User user = userService.getUserByUsername(username);
+        Integer[] productIds = cartDeleteReqDTO.getProductIds();
+        for (Integer productId : productIds) {
+            Cart cart = cartService.getCartByUserIdAndProductId(user.getId(), productId);
+            cart.setDeleted(true);
+            int i = cartService.updateCart(cart);
+        }
+        BaseReqVo baseReqVo = listCart();
+        return baseReqVo;
+    }
+
+    @RequestMapping("goodscount")
+    public BaseReqVo getgoodsCount() {
+        String username = "lanzhao";
+        User user = userService.getUserByUsername(username);
+        List<Cart> cartListByUserId = cartService.getCartListByUserId(user.getId());
+        Integer goodsCount = 0;
+        for (Cart cart : cartListByUserId) {
+            goodsCount += cart.getNumber();
+        }
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(goodsCount);
+        return baseReqVo;
+    }
+
+    @RequestMapping("checkout")
+    public BaseReqVo checkout(Integer cartId, Integer addressId, Integer couponId, Integer grouponRulesId) {
+        String username = "lanzhao";
+        User user = userService.getUserByUsername(username);
+        double grouponPrice = 0;
+        if (grouponRulesId != 0) {
+            GrouponRules grouponRulesById = grouponRulesService.getGrouponRulesById(grouponRulesId);
+            grouponPrice = grouponRulesById.getDiscount().doubleValue();
+        }
+        // 此处查询address
+        double couponPrice = 0;
+        if (couponId != 0 && couponId != -1) {
+            Coupon couponById = couponService.getCouponById(couponId);
+            couponPrice = couponById.getDiscount().doubleValue();
+        }
+        List<Cart> cartListByUserIdAndCartId = cartService.getCartListByUserIdAndCartId(user.getId(), cartId);
+        Double goodsTotalPrice = 0.0;
+        for (Cart cart : cartListByUserIdAndCartId) {
+            goodsTotalPrice += cart.getPrice().doubleValue() * cart.getNumber().doubleValue();
+        }
+        Double actualPrice = goodsTotalPrice - grouponPrice - couponPrice;
+        Double expressFreightMin = systemService.getExpressFreightMin();
+        Double expressFreightValue = systemService.getExpressFreightValue();
+        Double orderTotalPrice = actualPrice;
+        Double freightPrice = 0.0;
+        if (actualPrice < expressFreightMin) {
+            orderTotalPrice += expressFreightValue;
+            freightPrice = expressFreightValue;
+        }
+        CartCheckoutRespVO cartCheckoutRespVO = new CartCheckoutRespVO();
+        cartCheckoutRespVO.setGrouponPrice(grouponPrice);
+        cartCheckoutRespVO.setGrouponRulesId(grouponRulesId);
+//        cartCheckoutRespVO.setCheckedAddress();
+//        cartCheckoutRespVO.setActualPrice(actualPrice);
+        cartCheckoutRespVO.setActualPrice(orderTotalPrice); //什么意思
+        cartCheckoutRespVO.setOrderTotalPrice(orderTotalPrice);
+        cartCheckoutRespVO.setCouponPrice(couponPrice);
+//        cartCheckoutRespVO.setAvailableCouponLength();
+        cartCheckoutRespVO.setCouponId(couponId);
+        cartCheckoutRespVO.setFreightPrice(freightPrice);
+        cartCheckoutRespVO.setCheckedGoodsList(cartListByUserIdAndCartId);
+        cartCheckoutRespVO.setGoodsTotalPrice(goodsTotalPrice);
+        cartCheckoutRespVO.setAddressId(addressId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(cartCheckoutRespVO);
         return baseReqVo;
     }
 

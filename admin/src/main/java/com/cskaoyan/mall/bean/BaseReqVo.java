@@ -7,4 +7,12 @@ public class BaseReqVo<T> {
     T data;
     String errmsg;
     int errno;
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

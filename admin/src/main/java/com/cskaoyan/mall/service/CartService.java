@@ -7,12 +7,11 @@ import java.util.List;
 public interface CartService {
     int addCart(Cart cart);
 
-    //获取购物车总数
-    int getTotalCount();
-
     List<Cart> getCartListByUserId(Integer id);
 
     Cart getCartByUserIdAndProductId(Integer id, Integer productId);
 
     int updateCart(Cart cart);
+
+    List<Cart> getCartListByUserIdAndCartId(Integer userId,Integer cartId);
 }
