@@ -4,6 +4,8 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CommentReplyService;
 import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.service.UserService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,7 @@ public class OrderController {
     CommentReplyService commentReplyService;
 
     @RequestMapping("list")
+    @RequiresPermissions(value={"admin:order:list"},logical = Logical.OR)
     public BaseReqVo listOrder(int page, int limit, Short[] orderStatusArray, Integer userId, String orderSn, String sort, String order) {
         Map<String, Object> data = orderService.getOrderList(page, limit, orderStatusArray, userId, orderSn, sort, order);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -39,6 +42,7 @@ public class OrderController {
     }
 
     @RequestMapping("detail")
+    @RequiresPermissions(value={"admin:order:detail"},logical = Logical.OR)
     public BaseReqVo orderDetail(int id) { // 此id为 orderId
         List<OrderGoods> orderGoodsByOrderId = orderService.getOrderGoodsByOrderId(id);
         Order order = orderService.getOrderById(id);
@@ -58,6 +62,7 @@ public class OrderController {
     }
 
     @PostMapping("reply")
+    @RequiresPermissions(value={"admin:order:reply"},logical = Logical.OR)
     public BaseReqVo replyComment(@RequestBody CommentReplyResVo commentReplyResVo ){
         BaseReqVo baseReqVo = new BaseReqVo();
         int commentId = commentReplyResVo.getCommentId();

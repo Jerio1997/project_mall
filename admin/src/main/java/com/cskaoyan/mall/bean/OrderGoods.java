@@ -2,6 +2,7 @@ package com.cskaoyan.mall.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class OrderGoods {
     private Integer id;
@@ -31,6 +32,26 @@ public class OrderGoods {
     private Date updateTime;
 
     private Boolean deleted;
+
+    private BigDecimal retailPrice;
+
+    private List<String[]> goodsSpecificationValues;
+
+    public BigDecimal getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(BigDecimal retailPrice) {
+        this.retailPrice = retailPrice;
+    }
+
+    public List<String[]> getGoodsSpecificationValues() {
+        return goodsSpecificationValues;
+    }
+
+    public void setGoodsSpecificationValues(List<String[]> goodsSpecificationValues) {
+        this.goodsSpecificationValues = goodsSpecificationValues;
+    }
 
     public Integer getId() {
         return id;

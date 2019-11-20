@@ -85,7 +85,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from cskaoyan_mall_permission
     where id = #{id,jdbcType=INTEGER}
@@ -101,10 +101,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.mall.bean.Permission">
-    insert into cskaoyan_mall_permission (id, role_id, permission, 
+    insert into cskaoyan_mall_permission (id, role_id, permission,
       add_time, update_time, deleted
       )
-    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{permission,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{permission,jdbcType=VARCHAR},
       #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
       )
   </insert>
@@ -225,4 +225,7 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="selectPermissionByRoleId" resultType="java.lang.String">
+      select permission from cskaoyan_mall_permission where role_id = #{roleId}
+    </select>
 </mapper>

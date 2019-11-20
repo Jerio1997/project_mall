@@ -4,6 +4,8 @@ import com.cskaoyan.mall.bean.Topic;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.TopicListResVo;
 import com.cskaoyan.mall.service.TopicService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ public class TopicController {
     TopicService topicService;
 
     @GetMapping("list")
+    @RequiresPermissions(value={"admin:topic:list"},logical = Logical.OR)
     public BaseReqVo<TopicListResVo> listTopic (Integer page, Integer limit, String title, String subtitle, String sort, String order){
         TopicListResVo topicListResVo;
         topicListResVo = topicService.queryTopic(page,limit,title,subtitle,sort,order);
@@ -34,6 +37,7 @@ public class TopicController {
     }
 
     @PostMapping("update")
+    @RequiresPermissions(value={"admin:topic:update"},logical = Logical.OR)
     public BaseReqVo updateTopic(@RequestBody Topic topic){
         topic.setUpdateTime(new Date());
         int result = topicService.updateTopic(topic);
@@ -45,6 +49,7 @@ public class TopicController {
     }
 
     @PostMapping("delete")
+    @RequiresPermissions(value={"admin:topic:delete"},logical = Logical.OR)
     public BaseReqVo deleteTopic(@RequestBody Topic topic){
         int result = topicService.deleteTopic(topic);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -54,6 +59,7 @@ public class TopicController {
     }
 
     @PostMapping("create")
+    @RequiresPermissions(value={"admin:topic:create"},logical = Logical.OR)
     public BaseReqVo createTopic(@RequestBody Topic topic){
         int result = topicService.createTopic(topic);
         BaseReqVo baseReqVo = new BaseReqVo();

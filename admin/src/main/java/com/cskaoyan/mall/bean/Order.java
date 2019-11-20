@@ -75,6 +75,14 @@ public class Order {
 
     private Boolean deleted;
 
+    public String getOrderStatusText() {
+        return orderStatusText;
+    }
+
+    public void setOrderStatusText(String orderStatusText) {
+        this.orderStatusText = orderStatusText;
+    }
+
     public Integer getId() {
         return id;
     }

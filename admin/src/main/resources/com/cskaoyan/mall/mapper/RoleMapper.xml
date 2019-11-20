@@ -86,7 +86,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from cskaoyan_mall_role
     where id = #{id,jdbcType=INTEGER}
@@ -103,10 +103,10 @@
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.mall.bean.Role">
     insert into cskaoyan_mall_role (id, name, `desc`,
-      enabled, add_time, update_time, 
+      enabled, add_time, update_time,
       deleted)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}, 
-      #{enabled,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR},
+      #{enabled,jdbcType=BIT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.cskaoyan.mall.bean.Role">
@@ -243,4 +243,7 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="selectRoleById" resultType="java.lang.String">
+      select name from cskaoyan_mall_role where id = #{roleId}
+    </select>
 </mapper>

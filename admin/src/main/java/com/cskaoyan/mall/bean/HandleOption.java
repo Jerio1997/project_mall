@@ -15,6 +15,16 @@ public class HandleOption {
     public HandleOption() {
     }
 
+    public HandleOption(Order order){
+        this.cancel = false;//问题1(order.getOrderStatus() == 1)
+        this.delete = order.getDeleted();
+        this.pay = false;//问题2
+        this.comment = false;//问题3
+        this.confirm = (order.getConfirmTime() != null);
+        this.refund = false;//问题4
+        this.rebuy = false;//问题5
+    }
+
     public HandleOption(Boolean cancel, Boolean delete, Boolean pay, Boolean comment, Boolean confirm, Boolean refund, Boolean rebuy) {
         this.cancel = cancel;
         this.delete = delete;

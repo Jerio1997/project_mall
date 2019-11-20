@@ -132,4 +132,23 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryResVo_wx;
 
     }
+
+    @Override
+    public List<Category> selectCategoryList() {
+        CategoryExample example = new CategoryExample();
+        example.createCriteria().andPidEqualTo(0);
+        return categoryMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<Category> selectCurrentSubCategoryByPid(Integer pid) {
+        CategoryExample example = new CategoryExample();
+        example.createCriteria().andPidEqualTo(pid);
+        return categoryMapper.selectByExample(example);
+    }
+
+    @Override
+    public Category selectCurrentCategoryById(Integer id) {
+        return categoryMapper.selectByPrimaryKey(id);
+    }
 }

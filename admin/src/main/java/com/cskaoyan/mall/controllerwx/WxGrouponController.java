@@ -3,6 +3,8 @@ package com.cskaoyan.mall.controllerwx;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.service.GrouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +22,7 @@ public class WxGrouponController {
     @Autowired
     GrouponService grouponService;
 
-    @RequestMapping("list")
+    @GetMapping("list")
     public BaseReqVo listGroupon(Integer page,Integer size){
         BaseReqVo baseReqVo = new BaseReqVo();
         Map<String,Object> map = grouponService.listGroupon(page,size);
@@ -30,5 +32,24 @@ public class WxGrouponController {
         return baseReqVo;
     }
 
-    
+    @GetMapping("my")
+    /*没写完！缺userId*/
+    public BaseReqVo myGroupon(Integer showType){
+        BaseReqVo baseReqVo = new BaseReqVo();
+        Map<String,Object> map = grouponService.queryMyGroupon(showType);
+        baseReqVo.setData(map);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @GetMapping("detail")
+    public BaseReqVo detailGroupon(Integer grouponId){
+        BaseReqVo baseReqVo = new BaseReqVo();
+        Map<String,Object> map = grouponService.getDetailOfGrouponById(grouponId);
+        baseReqVo.setData(map);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
 }

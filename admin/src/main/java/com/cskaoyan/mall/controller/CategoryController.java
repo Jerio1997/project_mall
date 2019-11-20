@@ -3,6 +3,8 @@ package com.cskaoyan.mall.controller;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Category;
 import com.cskaoyan.mall.service.CategoryService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping("list")
+    @RequiresPermissions(value={"admin:category:list"},logical = Logical.OR)
     public BaseReqVo listCategory() {
         List<Category> categoryList = categoryService.getCategoryList();
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -28,6 +31,7 @@ public class CategoryController {
     }
 
     @RequestMapping("l1")
+    @RequiresPermissions(value={"admin:category:l1"},logical = Logical.OR)
     public BaseReqVo listForLevel1() {
         List<Category> categoryList = categoryService.getCategoryListForL1();
         List<Map> listForLevel1 = new ArrayList<>();
@@ -45,6 +49,7 @@ public class CategoryController {
     }
 
     @RequestMapping("update")
+    @RequiresPermissions(value={"admin:category:update"},logical = Logical.OR)
     public BaseReqVo updateCategory(@RequestBody Category category) {
         category.setUpdateTime(new Date());
         int i = categoryService.updateCategory(category);
@@ -55,6 +60,7 @@ public class CategoryController {
     }
 
     @RequestMapping("delete")
+    @RequiresPermissions(value={"admin:category:delete"},logical = Logical.OR)
     public BaseReqVo deleteCategory(@RequestBody Category category) {
         //直接删除，并删除其子类目
 //        categoryService.deleteCategoryByPid(category.getId());
@@ -66,6 +72,7 @@ public class CategoryController {
     }
 
     @RequestMapping("create")
+    @RequiresPermissions(value={"admin:category:create"},logical = Logical.OR)
     public BaseReqVo createCategory(@RequestBody Category category) {
         category.setUpdateTime(new Date());
         category.setAddTime(new Date());

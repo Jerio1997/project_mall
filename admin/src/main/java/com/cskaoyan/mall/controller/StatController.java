@@ -5,6 +5,8 @@ import com.cskaoyan.mall.bean.GoodsStatVo;
 import com.cskaoyan.mall.bean.OrderStatResVo;
 import com.cskaoyan.mall.bean.StatisticUsers;
 import com.cskaoyan.mall.service.StatService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

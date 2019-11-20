@@ -32,4 +32,6 @@ public interface PermissionMapper {
 
     @Select("select permission from cskaoyan_mall_permission where role_id = #{roleId} ")
     List<String> selectPermissionsByRoleId(@Param("roleId") String roleId);
+
+    List<String> selectPermissionByRoleId(Integer roleId);
 }
