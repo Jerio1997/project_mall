@@ -31,4 +31,10 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
         int insert = searchHistoryMapper.insert(searchHistory);
         return insert;
     }
+
+    @Override
+    public void deleteSearchHistory() {
+        searchHistoryMapper.deleteByExample(new SearchHistoryExample());
+    }
+
 }
