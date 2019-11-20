@@ -48,4 +48,10 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
 
 
     }
+
+    @Override
+    public void deleteSearchHistory() {
+        searchHistoryMapper.deleteByExample(new SearchHistoryExample());
+    }
+
 }
