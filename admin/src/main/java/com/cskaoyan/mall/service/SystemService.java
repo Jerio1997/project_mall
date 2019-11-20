@@ -99,4 +99,16 @@ public interface SystemService {
     Double getExpressFreightMin();
 
     Double getExpressFreightValue();
+
+    Integer getIndexNewSize();
+
+    Integer getIndexHotSize();
+
+    Integer getIndexBrandSize();
+
+    Integer getIndexTopicSize();
+
+    Integer getCategoryListSize();
+
+    Integer getCategoryGoodsSize();
 }

@@ -188,4 +188,60 @@ public class SystemServiceImpl implements SystemService {
         Double keyValue = Double.valueOf(systems.get(0).getKeyValue());
         return keyValue;
     }
+
+    @Override
+    public Integer getIndexNewSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_new");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexHotSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_hot");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexBrandSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_brand");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexTopicSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_topic");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getCategoryListSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_catlog_list");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getCategoryGoodsSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_catlog_goods");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+
 }
