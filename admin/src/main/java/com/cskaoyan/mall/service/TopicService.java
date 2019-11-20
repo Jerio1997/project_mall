@@ -4,6 +4,7 @@ import com.cskaoyan.mall.bean.Topic;
 import com.cskaoyan.mall.bean.TopicListResVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author Jerio
@@ -19,4 +20,8 @@ public interface TopicService {
     int deleteTopic(Topic topic);
 
     int createTopic(Topic topic);
+
+    Map<String, Object> queryTopicOnWx(Integer page, Integer size);
+
+    Map<String, Object> getDetailOfTopic(Integer id);
 }
