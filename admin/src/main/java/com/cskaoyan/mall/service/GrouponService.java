@@ -4,6 +4,7 @@ import com.cskaoyan.mall.bean.Groupon;
 import com.cskaoyan.mall.bean.GrouponRecordListResVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author Jerio
@@ -13,4 +14,5 @@ public interface GrouponService {
 
     GrouponRecordListResVo getGrouponRecord(Integer page, Integer limit, Integer goodsId, String sort, String order);
 
+    Map<String, Object> listGroupon(Integer page, Integer size);
 }
