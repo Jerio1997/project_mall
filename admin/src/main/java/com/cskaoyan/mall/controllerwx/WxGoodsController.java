@@ -3,14 +3,18 @@ package com.cskaoyan.mall.controllerwx;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CategoryService;
 import com.cskaoyan.mall.service.GoodsService;
+import com.cskaoyan.mall.service.SearchHistoryService;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.System;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -20,6 +24,8 @@ public class WxGoodsController {
     GoodsService goodsService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    SearchHistoryService searchHistoryService;
 
     /**
      * 统计商品总数
@@ -35,7 +41,7 @@ public class WxGoodsController {
         return baseReqVo;
     }
 
-    /**
+    /**categoryId 不影响 filterCategoryList
      * 获得商品列表
      * @param brandId
      * @param page
@@ -43,19 +49,15 @@ public class WxGoodsController {
      * @return
      */
     @GetMapping("list")
-    public BaseReqVo<GoodsListResVo_Wx> getGoodsList(Integer brandId, Integer page, Integer size){
+    public BaseReqVo<GoodsListResVo_Wx> getGoodsListByCondition(String keyword,Integer brandId,Integer categoryId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size){
         BaseReqVo<GoodsListResVo_Wx> baseReqVo = new BaseReqVo<>();
         GoodsListResVo_Wx goodsListResVo_wx = new GoodsListResVo_Wx();
-        List<Goods> goodsList = goodsService.queryGoodsByBrandId(brandId,page,size);
-        ArrayList<Category> filterCategoryList = new ArrayList<>();
-        int count = goodsList.size();
-        if (count!=0){
-            for (Goods goods : goodsList) {
-                Integer categoryId = goods.getCategoryId();
-                Category category = categoryService.getCategoryById(categoryId);
-                filterCategoryList.add(category);
-            }
+        List<Category> filterCategoryList = goodsService.queryCategoryByGoodsCodition(keyword, brandId, isHot, isNew, page, sort, order, size);
+        List<Goods> goodsList = goodsService.queryGoodsByCondition(keyword,brandId,categoryId,isHot,isNew,page,sort,order,size);
+        if(!StringUtils.isEmpty(keyword)){
+            searchHistoryService.addHistoryKeyword(keyword);
         }
+        int count = goodsList.size();
         goodsListResVo_wx.setFilterCategoryList(filterCategoryList);
         goodsListResVo_wx.setCount(count);
         goodsListResVo_wx.setGoodsList(goodsList);
@@ -97,5 +99,18 @@ public class WxGoodsController {
         return baseReqVo;
     }
 
-
+    /**
+     * 获得分类数据
+     * @param id
+     * @return
+     */
+    @GetMapping("category")
+    public BaseReqVo getCategory(Integer id){
+        BaseReqVo baseReqVo = new BaseReqVo();
+        CategoryResVo_Wx categoryResVo_wx = categoryService.queryNestedCategory(id);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(categoryResVo_wx);
+        return baseReqVo;
+    }
 }

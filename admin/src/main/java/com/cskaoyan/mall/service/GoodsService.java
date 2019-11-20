@@ -22,7 +22,9 @@ public interface GoodsService {
 
     List<Goods> queryGoodsByCategoryLevel1(int page, int limit, Integer id);
 
-    List<Goods> queryGoodsByBrandId(Integer brandId, Integer page, Integer size);
+    List<Category> queryCategoryByGoodsCodition(String keyword,Integer brandId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size);
+
+    List<Goods> queryGoodsByCondition(String keyword,Integer brandId,Integer categoryId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size);
 
     List<Goods> queryRelateGoods(Integer id );
 

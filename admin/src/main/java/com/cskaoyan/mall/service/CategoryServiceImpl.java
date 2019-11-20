@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Category;
 import com.cskaoyan.mall.bean.CategoryExample;
+import com.cskaoyan.mall.bean.CategoryResVo_Wx;
 import com.cskaoyan.mall.mapper.CategoryMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +101,35 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryMapper.selectByExample(categoryExample);
         Category category = categories.get(0);
         return category;
+    }
+
+    @Override
+    public CategoryResVo_Wx queryNestedCategory(Integer id) {
+        Category category = getCategoryById(id);
+        CategoryResVo_Wx categoryResVo_wx = new CategoryResVo_Wx();
+        if ("L1".equals(category.getLevel())){
+            CategoryExample categoryExample = new CategoryExample();
+            categoryExample.createCriteria().andPidEqualTo(id);
+            List<Category> brotherCategory = categoryMapper.selectByExample(categoryExample);
+            Category category1 = brotherCategory.get(0);
+            categoryResVo_wx.setCurrentCategory(category1);
+            categoryResVo_wx.setParentCategory(category);
+            categoryResVo_wx.setBrotherCategory(brotherCategory);
+
+        }else if("L2".equals(category.getLevel())){
+            CategoryExample categoryExample = new CategoryExample();
+            categoryExample.createCriteria().andPidEqualTo(category.getPid());
+            List<Category> brotherCategory = categoryMapper.selectByExample(categoryExample);
+           categoryResVo_wx.setBrotherCategory(brotherCategory);
+
+            CategoryExample categoryExample1 = new CategoryExample();
+            categoryExample1.createCriteria().andIdEqualTo(category.getPid());
+            List<Category> parentCategories = categoryMapper.selectByExample(categoryExample1);
+            Category parentCategory = parentCategories.get(0);
+            categoryResVo_wx.setParentCategory(parentCategory);
+            categoryResVo_wx.setCurrentCategory(category);
+        }
+        return categoryResVo_wx;
+
     }
 }

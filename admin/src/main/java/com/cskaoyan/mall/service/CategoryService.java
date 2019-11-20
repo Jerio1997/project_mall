@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Category;
+import com.cskaoyan.mall.bean.CategoryResVo_Wx;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface CategoryService {
     List<Category> getCategoryList(int page, int limit);
 
     Category getCategoryById(Integer id);
+
+    CategoryResVo_Wx queryNestedCategory(Integer id);
 }

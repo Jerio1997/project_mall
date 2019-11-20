@@ -7,4 +7,6 @@ import java.util.List;
 public interface SearchHistoryService {
     List<SearchHistory> selectHistoryKeywordList();
 
+    int addHistoryKeyword(String keyword);
+
 }
