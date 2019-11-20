@@ -30,6 +30,8 @@ public class GoodsServiceImpl implements GoodsService {
     GrouponRulesMapper grouponRulesMapper;
     @Autowired
     IssueMapper issueMapper;
+    @Autowired
+    CategoryService categoryService;
 
 
     @Override
@@ -345,10 +347,49 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> queryGoodsByBrandId(Integer brandId, Integer page, Integer size) {
+    public List<Category> queryCategoryByGoodsCodition(String keyword, Integer brandId, Boolean isHot, Boolean isNew, Integer page, String sort, String order, Integer size) {
+        List<Goods> goodsList = queryGoodsByCondition(keyword, brandId, null, isHot, isNew, page, sort, order, size);
+        ArrayList<Category> filterCategoryList = new ArrayList<>();
+        HashSet<Integer> categoryIds = new HashSet<>();
+        int count = goodsList.size();
+        if (count!=0){
+            for (Goods goods : goodsList) {
+                Integer qCategoryId = goods.getCategoryId();
+                categoryIds.add(qCategoryId);
+            }
+            for (Integer categoryId : categoryIds) {
+                Category category = categoryService.getCategoryById(categoryId);
+                filterCategoryList.add(category);
+            }
+        }
+        return filterCategoryList;
+    }
+
+    @Override
+    public List<Goods> queryGoodsByCondition(String keyword,Integer brandId,Integer categoryId,Boolean isHot,Boolean isNew, Integer page,String sort,String order, Integer size) {
         PageHelper.startPage(page,size);
         GoodsExample goodsExample = new GoodsExample();
-        goodsExample.createCriteria().andBrandIdEqualTo(brandId);
+        if(!StringUtils.isEmpty(sort)&&!StringUtils.isEmpty(order)){
+            String sortOrder = sort+" "+order.toUpperCase();
+            goodsExample.setOrderByClause(sortOrder);
+        }
+        if(!StringUtils.isEmpty(categoryId)&&categoryId != 0){
+            goodsExample.createCriteria().andCategoryIdEqualTo(categoryId);
+        }
+        if(!StringUtils.isEmpty(isNew)){
+            goodsExample.createCriteria().andIsNewEqualTo(true);
+        }
+        if(!StringUtils.isEmpty(isHot)){
+            goodsExample.createCriteria().andIsHotEqualTo(true);
+        }
+        if(!StringUtils.isEmpty(keyword)){
+            goodsExample.createCriteria().andNameLike("%"+keyword+"%");
+        }
+
+        if(!StringUtils.isEmpty(brandId)){
+            goodsExample.createCriteria().andBrandIdEqualTo(brandId);
+        }
+
         List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);
         return goods;
     }
