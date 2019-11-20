@@ -71,6 +71,8 @@ public class CouponServiceImpl implements CouponService{
             id = couponList.get(0).getId();
         }
         coupon.setId(++id);
+        coupon.setAddTime(new Date());
+        coupon.setUpdateTime(new Date());
         int result = couponMapper.insertSelective(coupon);
         return result;
     }
@@ -181,6 +183,7 @@ public class CouponServiceImpl implements CouponService{
             //能够查到的都是未删除的、兑换码正确、券状态为可用的 券
             Coupon couponCur = new Coupon();
             couponCur.setUpdateTime(new Date());
+            couponCur.setId(coupon.getId());
             if(coupon.getTotal() == 1){
                 //表示只剩下1张券了，要把它删除状态置位
                 couponCur.setDeleted(true);
