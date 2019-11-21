@@ -17,4 +17,6 @@ public interface OrderService {
     int InsertOrders(List<Order> orderList);
 
     OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username);
+
+    int InsertOrder(Order order);
 }

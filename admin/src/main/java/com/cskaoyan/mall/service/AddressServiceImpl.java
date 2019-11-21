@@ -41,4 +41,9 @@ public class AddressServiceImpl implements AddressService{
         return i;
     }
 
+    @Override
+    public Address getAddressById(int addressId) {
+        Address address = addressMapper.selectByPrimaryKey(addressId);
+        return address;
+    }
 }

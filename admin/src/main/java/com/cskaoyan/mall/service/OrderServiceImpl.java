@@ -116,7 +116,13 @@ public class OrderServiceImpl implements OrderService {
         orderReqVo.setData(orders);
         long l = orderMapper.countByExample(new OrderExample());
         orderReqVo.setCount((int) l);
-        orderReqVo.setTotalPages((int) (l/size));
+        orderReqVo.setTotalPages((int) Math.ceil(1.0 * l / size));
         return orderReqVo;
+    }
+
+    @Override
+    public int InsertOrder(Order order) {
+        int i = orderMapper.insertSelectiveAndGetId(order);
+        return i;
     }
 }

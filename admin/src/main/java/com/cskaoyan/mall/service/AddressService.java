@@ -10,4 +10,6 @@ public interface AddressService {
     Integer deleteAddress(Address address);
 
     Integer saveAddress(Address address);
+
+    Address getAddressById(int addressId);
 }

@@ -1,13 +1,20 @@
 package com.cskaoyan.mall.controllerwx;
 
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.Order;
-import com.cskaoyan.mall.bean.OrderReqVo;
-import com.cskaoyan.mall.service.OrderService;
+import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.service.*;
 import com.cskaoyan.mall.utils.OrderStatusUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("wx/order")
@@ -16,10 +23,33 @@ public class WxOrderController {
     @Autowired
     OrderService orderService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    AddressService addressService;
+
+    @Autowired
+    CartService cartService;
+
+    @Autowired
+    SystemService systemService;
+
+    @Autowired
+    CouponService couponService;
+
+    @Autowired
+    GrouponService grouponService;
+
+    @Autowired
+    GrouponRulesService grouponRulesService;
+
 
     @RequestMapping("list")
     public BaseReqVo listOrder(int showType, int page, int size) {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         Short[] codeByType = OrderStatusUtils.getCodeByType(showType);
         OrderReqVo orderReqVo = orderService.getOrderListByUsernameAndCodes(page, size, codeByType, username);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -29,10 +59,85 @@ public class WxOrderController {
         return baseReqVo;
     }
 
-//    @RequestMapping("submit")
-//    public BaseReqVo submitOrder(int cartId, int addressId, int couponId, String message, int grouponRulesId, int grouponLinkId) {
-//        Order order = new Order();
-//
-//    }
+    @RequestMapping("submit")
+    public BaseReqVo submitOrder(@RequestBody OrderSubminReqDTO orderSubminReqDTO) {
+        int addressId = orderSubminReqDTO.getAddressId();
+        int cartId = orderSubminReqDTO.getCartId();
+        int couponId = orderSubminReqDTO.getCouponId();
+        int grouponLinkId = orderSubminReqDTO.getGrouponLinkId();
+        int grouponRulesId = orderSubminReqDTO.getGrouponRulesId();
+        String message = orderSubminReqDTO.getMessage();
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
+        User user = userService.getUserByUsername(username);
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String orderSn = simpleDateFormat.format(date);
+        orderSn += user.getId();
+        Random random = new Random();
+        int i = random.nextInt(10000);
+        orderSn+= i;
+        Short orderStatus = 101;
+        Address addressById = addressService.getAddressById(addressId);
+        String consignee = addressById.getName();
+        String mobile = addressById.getMobile();
+        String address = addressById.getAddress();
+        Double goodsPrice = 0.0;
+        if (cartId == 0) {
+            List<Cart> cartListByUserId = cartService.getCartListByUserId(user.getId());
+            for (Cart cart : cartListByUserId) {
+                goodsPrice += cart.getPrice().doubleValue() * cart.getNumber();
+            }
+        } else {
+            Cart cartById = cartService.getCartById(cartId);
+            goodsPrice += cartById.getPrice().doubleValue() * cartById.getNumber();
+        }
+        Double expressFreightMin = systemService.getExpressFreightMin();
+        Double expressFreightValue = systemService.getExpressFreightValue();
+        Double freightPrice = 0.0;
+        if (goodsPrice <= expressFreightMin) {
+            freightPrice = systemService.getExpressFreightValue();
+        } else {
+            freightPrice = 0.0;
+        }
+        Double couponPrice = 0.0;
+        if (couponId != 0 && couponId != -1) {
+            Coupon couponById = couponService.getCouponById(couponId);
+            couponPrice += couponById.getDiscount().doubleValue();
+        }
+        Double integralPrice = 0.0;
+        Double grouponPrice = 0.0;
+        if (grouponRulesId != 0) {
+            GrouponRules grouponRulesById = grouponRulesService.getGrouponRulesById(grouponRulesId);
+            grouponPrice = grouponRulesById.getDiscount().doubleValue();
+        }
+        Double orderPrice = goodsPrice + freightPrice - couponPrice;
+        Double actualPrice = orderPrice - integralPrice;
+        Order order = new Order();
+        order.setUserId(user.getId());
+        order.setOrderSn(orderSn);
+        order.setOrderStatus(orderStatus);
+        order.setConsignee(consignee);
+        order.setMobile(mobile);
+        order.setAddress(address);
+        order.setMessage(message);
+        order.setGoodsPrice(new BigDecimal(goodsPrice));
+        order.setFreightPrice(new BigDecimal(freightPrice));
+        order.setCouponPrice(new BigDecimal(couponPrice));
+        order.setIntegralPrice(new BigDecimal(integralPrice));
+        order.setGrouponPrice(new BigDecimal(grouponPrice));
+        order.setOrderPrice(new BigDecimal(orderPrice));
+        order.setActualPrice(new BigDecimal(actualPrice));
+        order.setAddTime(new Date());
+        order.setUpdateTime(new Date());
+        order.setDeleted(false);
+        int status = orderService.InsertOrder(order);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(order.getId());
+        return baseReqVo;
+    }
 
 }
