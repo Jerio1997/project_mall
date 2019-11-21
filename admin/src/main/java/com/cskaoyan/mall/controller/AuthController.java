@@ -90,6 +90,7 @@ public class AuthController {
 
     @RequestMapping("unauthenticated")
     public BaseRespVo unauthenticated(){
+
         return BaseRespVo.fail(516,"请登录再试");
     }
 }
