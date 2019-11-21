@@ -254,7 +254,7 @@ public class WxCartController {
             GrouponRules grouponRulesById = grouponRulesService.getGrouponRulesById(grouponRulesId);
             grouponPrice = grouponRulesById.getDiscount().doubleValue();
         }
-        // 此处查询address
+        Address addressById = addressService.getAddressById(addressId);
         double couponPrice = 0;
         if (couponId != 0 && couponId != -1) {
             Coupon couponById = couponService.getCouponById(couponId);
@@ -277,9 +277,9 @@ public class WxCartController {
         CartCheckoutRespVO cartCheckoutRespVO = new CartCheckoutRespVO();
         cartCheckoutRespVO.setGrouponPrice(grouponPrice);
         cartCheckoutRespVO.setGrouponRulesId(grouponRulesId);
-//        cartCheckoutRespVO.setCheckedAddress();
+        cartCheckoutRespVO.setCheckedAddress(addressById);
 //        cartCheckoutRespVO.setActualPrice(actualPrice);
-        cartCheckoutRespVO.setActualPrice(orderTotalPrice); //什么意思
+        cartCheckoutRespVO.setActualPrice(orderTotalPrice);
         cartCheckoutRespVO.setOrderTotalPrice(orderTotalPrice);
         cartCheckoutRespVO.setCouponPrice(couponPrice);
 //        cartCheckoutRespVO.setAvailableCouponLength();
