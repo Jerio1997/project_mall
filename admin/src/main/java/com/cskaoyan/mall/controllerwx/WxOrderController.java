@@ -140,7 +140,9 @@ public class WxOrderController {
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
-        baseReqVo.setData(order.getId());
+        Map<String, Integer> data = new HashMap<>();
+        data.put("orderId", order.getId());
+        baseReqVo.setData(data);
         return baseReqVo;
     }
 

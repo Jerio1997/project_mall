@@ -255,6 +255,7 @@ public class WxCartController {
             grouponPrice = grouponRulesById.getDiscount().doubleValue();
         }
         Address addressById = addressService.getAddressById(addressId);
+        List<Coupon> coupons = couponService.selectList(cartId, grouponRulesId, user.getId());
         double couponPrice = 0;
         if (couponId != 0 && couponId != -1) {
             Coupon couponById = couponService.getCouponById(couponId);
@@ -282,7 +283,7 @@ public class WxCartController {
         cartCheckoutRespVO.setActualPrice(orderTotalPrice);
         cartCheckoutRespVO.setOrderTotalPrice(orderTotalPrice);
         cartCheckoutRespVO.setCouponPrice(couponPrice);
-//        cartCheckoutRespVO.setAvailableCouponLength();
+        cartCheckoutRespVO.setAvailableCouponLength(coupons.size());
         cartCheckoutRespVO.setCouponId(couponId);
         cartCheckoutRespVO.setFreightPrice(freightPrice);
         cartCheckoutRespVO.setCheckedGoodsList(cartListByUserIdAndCartId);
