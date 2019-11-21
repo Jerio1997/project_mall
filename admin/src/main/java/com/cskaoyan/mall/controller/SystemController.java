@@ -1,10 +1,7 @@
 package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bean.*;
-import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.service.SystemService;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -167,12 +164,23 @@ public class SystemController {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
 
         Set<String> assignedPermissions = systemService.selectAssignedPermissions(roleId);
-        List<System> systemPermissions = systemService.selectSystemPermissions();
+        ArrayList<Map<String, Object>> systemPermissions = systemService.selectSystemPermissions();
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("assignedPermissions", assignedPermissions);
         map.put("systemPermissions", systemPermissions);
         baseReqVo.setData(map);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @PostMapping("role/permissions")
+    public BaseReqVo allocatePermissions(@RequestBody Map<String, Object> data) {
+        List<String> permissions = (List<String>) data.get("permissions");
+        Integer roleId = (Integer) data.get("roleId");
+        systemService.insertPermissionsByRoleId(permissions, roleId);
+        BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         return baseReqVo;

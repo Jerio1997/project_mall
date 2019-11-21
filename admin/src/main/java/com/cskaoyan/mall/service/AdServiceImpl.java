@@ -49,7 +49,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public int updateAd(Ad ad) {
-        int result = adMapper.updateByPrimaryKey(ad);
+        int result = adMapper.updateByPrimaryKey(ad);//更改成功的条数
         return result;
     }
 
@@ -66,7 +66,7 @@ public class AdServiceImpl implements AdService {
         }
         ad.setId(++id);
         ad.setDeleted(false);
-        int result = adMapper.insert(ad);
+        int result = adMapper.insert(ad);//插入成功的条数
         return result;
     }
 

@@ -13,11 +13,18 @@ public class AddressServiceImpl implements AddressService{
     @Autowired
     AddressMapper addressMapper;
     @Override
-    public List<Address> listAddress() {
-        AddressExample example = new AddressExample();
-        List<Address> data = addressMapper.selectByExample(example);
-
-        return data;
+    public List<Address> listAddress(Integer userId, String name) {
+        List<Address> addresses = addressMapper.queryAddress(userId,name);
+        for (Address address : addresses) {
+            String province = addressMapper.queryProvinceByPid(address.getProvinceId());
+            String city = addressMapper.queryProvinceByPid(address.getCityId());
+            String area = addressMapper.queryProvinceByPid(address.getAreaId());
+            address.setProvince(province);
+            address.setCity(city);
+            address.setArea(area);
+            address.setDetailedAddress(province+city+area);
+        }
+        return addresses;
     }
 
     @Override

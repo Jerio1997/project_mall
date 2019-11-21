@@ -6,9 +6,7 @@ import com.cskaoyan.mall.bean.CommentCountReqVo_Wx;
 import com.cskaoyan.mall.bean.CommentResVo_Wx;
 import com.cskaoyan.mall.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("wx/comment")
 @RestController
@@ -41,6 +39,16 @@ public class WxCommentController {
         BaseReqVo<CommentCountReqVo_Wx> baseReqVo = new BaseReqVo<>();
         CommentCountReqVo_Wx commentCountReqVo_wx = commentService.queryCommentCountByConditionForWx(valueId,type);
         baseReqVo.setData(commentCountReqVo_wx);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @PostMapping("post")
+    public BaseReqVo<Comment> postComment(@RequestBody Comment comment){
+        BaseReqVo<Comment> baseReqVo = new BaseReqVo<>();
+        Comment res = commentService.postComment(comment);
+        baseReqVo.setData(res);
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
         return baseReqVo;

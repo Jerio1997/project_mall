@@ -24,7 +24,7 @@ public class WxGrouponController {
 
     @GetMapping("list")
     public BaseReqVo listGroupon(Integer page,Integer size){
-        BaseReqVo baseReqVo = new BaseReqVo();
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
         Map<String,Object> map = grouponService.listGroupon(page,size);
         baseReqVo.setData(map);
         baseReqVo.setErrno(0);
@@ -45,7 +45,7 @@ public class WxGrouponController {
 
     @GetMapping("detail")
     public BaseReqVo detailGroupon(Integer grouponId){
-        BaseReqVo baseReqVo = new BaseReqVo();
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
         Map<String,Object> map = grouponService.getDetailOfGrouponById(grouponId);
         baseReqVo.setData(map);
         baseReqVo.setErrno(0);

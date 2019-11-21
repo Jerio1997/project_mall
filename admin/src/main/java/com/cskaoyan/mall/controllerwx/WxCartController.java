@@ -3,7 +3,6 @@ package com.cskaoyan.mall.controllerwx;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +38,7 @@ public class WxCartController {
 
 
 
-    @RequestMapping(value = {"add", "fastadd"})
+    @RequestMapping("add")
     public BaseReqVo addCart(@RequestBody CartReqTo cartReqTo, HttpServletRequest request) {
         Integer goodsId = cartReqTo.getGoodsId();
         Short number = cartReqTo.getNumber();
@@ -81,6 +80,48 @@ public class WxCartController {
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         baseReqVo.setData(totalCount);
+        return baseReqVo;
+    }
+
+
+    @RequestMapping("fastadd")
+    public BaseReqVo fastaddCart(@RequestBody CartReqTo cartReqTo, HttpServletRequest request) {
+        Integer goodsId = cartReqTo.getGoodsId();
+        Short number = cartReqTo.getNumber();
+        Integer productId = cartReqTo.getProductId();
+        String username = "lanzhao";
+        User userByUsername = userService.getUserByUsername(username);
+        // 相同product的商品加入购物车时购物车只有一条记录，即用update而不是add
+        Cart cartByUserIdAndProductId = cartService.getCartByUserIdAndProductId(userByUsername.getId(), productId);
+        Cart cart = new Cart();
+        cart.setUserId(userByUsername.getId());
+        cart.setGoodsId(goodsId);
+        Goods goodsById = goodsService.getGoodsById(goodsId);
+        cart.setGoodsSn(goodsById.getGoodsSn());
+        cart.setGoodsName(goodsById.getName());
+        GoodsProduct goodsProductById = goodsService.getGoodsProductById(productId);
+        cart.setProductId(productId);
+        cart.setPrice(goodsProductById.getPrice());
+        cart.setNumber(number);
+        cart.setSpecifications(goodsProductById.getSpecifications());
+        cart.setChecked(true);
+        cart.setPicUrl(goodsProductById.getUrl());
+        cart.setAddTime(new Date());
+        cart.setUpdateTime(new Date());
+        cart.setDeleted(false);
+        if (cartByUserIdAndProductId != null) {
+            cart.setId(cartByUserIdAndProductId.getId());
+            cart.setChecked(cartByUserIdAndProductId.getChecked());
+            cart.setNumber(number);
+            int status = cartService.updateCart(cart);
+        } else {
+            int status = cartService.addCart(cart);
+        }
+        Cart cart1 = cartService.getCartByUserIdAndProductId(userByUsername.getId(), productId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        baseReqVo.setData(cart1.getId());
         return baseReqVo;
     }
 

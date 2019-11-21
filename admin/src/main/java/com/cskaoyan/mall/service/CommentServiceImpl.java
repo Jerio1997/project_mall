@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.lang.System;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -113,5 +114,26 @@ public class CommentServiceImpl implements CommentService {
         commentCountReqVo_wx.setAllCount(all);
         commentCountReqVo_wx.setHasPicCount(hasPicture);
         return commentCountReqVo_wx;
+    }
+
+    @Override
+    @Transactional
+    public Comment postComment(Comment comment) {
+        comment.setUserId(1);
+        comment.setAddTime(new Date());
+        comment.setDeleted(false);
+        comment.setId(null);
+        int insert = commentMapper.insert(comment);
+        System.out.println("insert = " + insert);
+        CommentExample commentExample = new CommentExample();
+        commentExample.setOrderByClause("id"+ " " + "DESC");
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        Comment commentRes = new Comment();
+        if(comments.isEmpty()){
+             commentRes = commentMapper.selectByPrimaryKey(1);
+        }else{
+            commentRes = commentMapper.selectByPrimaryKey(comments.get(0).getId());
+        }
+        return commentRes;
     }
 }

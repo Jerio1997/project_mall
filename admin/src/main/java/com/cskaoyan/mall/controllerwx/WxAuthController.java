@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.controllerwx;
 
+import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.BaseRespVo;
 import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.mapper.UserMapper;
@@ -48,8 +49,6 @@ public class WxAuthController {
 		try {
 			subject.login(customToken);
 		} catch (AuthenticationException e) {
-			/*result.put("token", null);
-			return BaseRespVo.ok(result);*/
 			return BaseRespVo.fail(515,"登陆失败");
 		}
 		Serializable sessionId = subject.getSession().getId();
@@ -62,40 +61,7 @@ public class WxAuthController {
 		userInfo.put("avatarUrl",userFromDb.getAvatar());
 		result.put("userInfo",userInfo);
 		return BaseRespVo.ok(result);
-		/*Map<Object, Object> result = new HashMap<Object, Object>();
-		List<User> loginUser = userService.authUser(user);
 
-		if (loginUser.size() == 0) {
-			// 登录失败
-			result.put("token", null);
-			return result;
-		}
-
-		// 登录成功，将登录成功的 User 加入到 session 域中
-		request.getSession().setAttribute("user", loginUser.get(0));
-
-		//*******************************
-		//根据username和password查询user信息
-		//*******************************
-
-		// userInfo
-		UserInfo userInfo = new UserInfo();
-		userInfo.setNickName(user.getUsername());
-		//userInfo.setAvatarUrl(user.getAvatar());
-
-
-
-		//********************************
-		//根据获得userid
-		int userId = 1;
-		//********************************
-		// token
-		UserToken userToken = UserTokenManager.generateToken(userId);
-
-		result.put("token", userToken.getToken());
-		result.put("tokenExpire", userToken.getExpireTime().toString());
-		result.put("userInfo", userInfo);
-		return BaseRespVo.ok(result);*/
 	}
 
 	@RequestMapping("auth/login_by_weixin")
@@ -105,7 +71,11 @@ public class WxAuthController {
 
 	@RequestMapping("auth/logout")
 	public Object logout(){
-		return null;
+		SecurityUtils.getSubject().logout();
+		BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
+		baseReqVo.setErrmsg("成功");
+		baseReqVo.setErrno(0);
+		return baseReqVo;
 	}
 
 
@@ -122,23 +92,6 @@ public class WxAuthController {
 		HashMap<Object, Object> data = new HashMap<>();
 		data.put("order",order);
 		return BaseRespVo.ok(data);
-		/*//前端写了一个token放在请求头中
-		//*************************
-		//获得请求头
-		String tokenKey = request.getHeader("X-Litemall-Token");
-		Integer userId = UserTokenManager.getUserId(tokenKey);
-		//通过请求头获得userId，进而可以获得一切关于user的信息
-		//**************************
-		if (userId == null) {
-			return BaseRespVo.fail();
-		}
-
-		Map<Object, Object> data = new HashMap<Object, Object>();
-		//***********************************
-		//根据userId查询订单信息
-		data.put("order", null);
-		//***********************************
-
-		return BaseRespVo.ok(data);*/
+		
 	}
 }

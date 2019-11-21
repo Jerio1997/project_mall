@@ -31,6 +31,9 @@ public class SystemServiceImpl implements SystemService {
     @Autowired
     private SystemMapper systemMapper;
 
+    @Autowired
+    private SystemPermissionsMapper systemPermissionsMapper;
+
     @Override
     public Map<String, Object> findAllAdmin(Integer page, Integer limit, String sort, String order, String username) {
         PageHelper.startPage(page, limit, sort + " " + order);
@@ -164,11 +167,62 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Set<String> selectAssignedPermissions(String roleId) {
+        if (roleId.equals("1")) {
+           return new HashSet<>(permissionMapper.selectAllPermissions());
+        }
         return new HashSet<>(permissionMapper.selectPermissionsByRoleId(roleId));
     }
     @Override
-    public List<System> selectSystemPermissions() {
-        return null;
+    public ArrayList<Map<String, Object>> selectSystemPermissions() {
+        SystemPermissionsExample example = new SystemPermissionsExample();
+        int i = 0;
+        example.createCriteria().andPIdEqualTo(i);
+        List<SystemPermissions> systemPermissionsList1 = systemPermissionsMapper.selectByExample(example);
+        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        for (SystemPermissions systemPermission1 : systemPermissionsList1) {
+            i++;
+            HashMap<String, Object> stringListHashMap = new HashMap<>();
+            stringListHashMap.put("id", systemPermission1.getId());
+            stringListHashMap.put("label", systemPermission1.getLabel());
+
+            // 根据 i 依次查询
+            SystemPermissionsExample systemPermissionsExample = new SystemPermissionsExample();
+            systemPermissionsExample.createCriteria().andPIdEqualTo(i);
+            List<SystemPermissions> systemPermissionsList2 = systemPermissionsMapper.selectByExample(systemPermissionsExample);
+
+            ArrayList<Map<String, Object>> permissionsList = new ArrayList<>();
+
+            for (SystemPermissions systemPermissions2 : systemPermissionsList2) {
+                // 真正的权限
+                HashMap<String, Object> permissionsMap = new HashMap<>();
+                permissionsMap.put("id", systemPermissions2.getId());
+                permissionsMap.put("label", systemPermissions2.getLabel());
+
+                SystemPermissionsExample permissionsExample = new SystemPermissionsExample();
+                permissionsExample.createCriteria().andPIdEqualTo(systemPermissions2.getsId());
+                List<SystemPermissions> systemPermissions = systemPermissionsMapper.selectByExample(permissionsExample);
+                permissionsMap.put("children", systemPermissions);
+                permissionsList.add(permissionsMap);
+
+            }
+
+            stringListHashMap.put("children", permissionsList);
+
+            list.add(stringListHashMap);
+        }
+        return list;
+    }
+
+    @Override
+    public void insertPermissionsByRoleId(List<String> permissions, Integer roleId) {
+        Permission permission = new Permission();
+        permission.setAddTime(new Date());
+        permission.setUpdateTime(new Date());
+        permission.setRoleId(roleId);
+        for (String s : permissions) {
+            permission.setPermission(s);
+            permissionMapper.insertSelective(permission);
+        }
     }
 
     @Override
@@ -188,4 +242,60 @@ public class SystemServiceImpl implements SystemService {
         Double keyValue = Double.valueOf(systems.get(0).getKeyValue());
         return keyValue;
     }
+
+    @Override
+    public Integer getIndexNewSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_new");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexHotSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_hot");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexBrandSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_brand");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getIndexTopicSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_index_topic");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getCategoryListSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_catlog_list");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+    @Override
+    public Integer getCategoryGoodsSize() {
+        SystemExample example = new SystemExample();
+        example.createCriteria().andKeyNameEqualTo("cskaoyan_mall_wx_catlog_goods");
+        List<System> systems = systemMapper.selectByExample(example);
+        Integer keyValue = Integer.valueOf(systems.get(0).getKeyValue());
+        return keyValue;
+    }
+
+
 }

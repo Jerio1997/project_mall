@@ -375,21 +375,23 @@ public class GoodsServiceImpl implements GoodsService {
             String sortOrder = sort+" "+order.toUpperCase();
             goodsExample.setOrderByClause(sortOrder);
         }
+        GoodsExample.Criteria criteria = goodsExample.createCriteria();
         if(!StringUtils.isEmpty(categoryId)&&categoryId != 0){
-            goodsExample.createCriteria().andCategoryIdEqualTo(categoryId);
+            criteria.andCategoryIdEqualTo(categoryId);
         }
         if(!StringUtils.isEmpty(isNew)){
-            goodsExample.createCriteria().andIsNewEqualTo(true);
+            criteria.andIsNewEqualTo(true);
         }
         if(!StringUtils.isEmpty(isHot)){
-            goodsExample.createCriteria().andIsHotEqualTo(true);
+            criteria.andIsHotEqualTo(true);
         }
         if(!StringUtils.isEmpty(keyword)){
-            goodsExample.createCriteria().andNameLike("%"+keyword+"%");
+            String value = "%" + keyword + "%";
+            criteria.andNameLike(value);
         }
 
         if(!StringUtils.isEmpty(brandId)){
-            goodsExample.createCriteria().andBrandIdEqualTo(brandId);
+            criteria.andBrandIdEqualTo(brandId);
         }
 
         List<Goods> goods = goodsMapper.selectByExampleWithBLOBs(goodsExample);

@@ -24,4 +24,6 @@ public interface TopicService {
     Map<String, Object> queryTopicOnWx(Integer page, Integer size);
 
     Map<String, Object> getDetailOfTopic(Integer id);
+
+    List<Topic> getRelatedTopic(Integer id);
 }
