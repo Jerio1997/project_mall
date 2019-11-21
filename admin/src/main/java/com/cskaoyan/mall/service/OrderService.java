@@ -4,6 +4,7 @@ import com.cskaoyan.mall.bean.Order;
 import com.cskaoyan.mall.bean.OrderGoods;
 import com.cskaoyan.mall.bean.OrderReqVo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,4 +20,9 @@ public interface OrderService {
     OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username);
 
     int InsertOrder(Order order);
+    List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId);
+
+    HashMap<String, Object> selectOrderInfoById(Integer orderId);
+
+    void deleteOrder(Integer orderId);
 }

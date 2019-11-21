@@ -16,13 +16,14 @@ public class HandleOption {
     }
 
     public HandleOption(Order order){
-        this.cancel = false;//问题1(order.getOrderStatus() == 1)
-        this.delete = order.getDeleted();
-        this.pay = false;//问题2
-        this.comment = false;//问题3
-        this.confirm = (order.getConfirmTime() != null);
-        this.refund = false;//问题4
-        this.rebuy = false;//问题5
+        Short status = order.getOrderStatus();
+        this.cancel = OrderStatus.canCancel(status);     // 是否可取消
+        this.delete = OrderStatus.canDelete(status);   // 是否可删除
+        this.pay = OrderStatus.canPay(status);
+        this.comment = OrderStatus.canComment(order);
+        this.confirm = OrderStatus.canConfirm(status);  // 是否可确认收款
+        this.refund = OrderStatus.canRefund(status);    // 是否可退款
+        this.rebuy = true;  // 是否可重买
     }
 
     public HandleOption(Boolean cancel, Boolean delete, Boolean pay, Boolean comment, Boolean confirm, Boolean refund, Boolean rebuy) {

@@ -38,4 +38,5 @@ public interface UserService {
     User getUserByUsername(String username);
     List<User> authUser(User user);
 
+    UserIndexReqVo_Wx queryUserIndexByUserId(Integer id);
 }

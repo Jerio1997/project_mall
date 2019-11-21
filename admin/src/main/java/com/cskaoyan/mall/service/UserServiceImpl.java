@@ -38,6 +38,9 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.mapper.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +63,8 @@ public class UserServiceImpl implements UserService {
     SearchHistoryMapper searchHistoryMapper;
     @Autowired
     FeedbackMapper feedbackMapper;
+    @Autowired
+    OrderMapper orderMapper;
     //会员管理1
     @Override
     public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order,User user) {
@@ -200,6 +205,31 @@ public class UserServiceImpl implements UserService {
         UserExample example = new UserExample();
         example.createCriteria().andUsernameEqualTo(user.getUsername()).andPasswordEqualTo(user.getPassword());
         return userMapper.selectByExample(example);
+    }
+
+    @Override
+    public UserIndexReqVo_Wx queryUserIndexByUserId(Integer id) {
+        UserIndexReqVo_Wx userIndexReqVo_wx = new UserIndexReqVo_Wx();
+        UserIndexReqVo_Wx.OrderBean orderBean = new UserIndexReqVo_Wx.OrderBean();
+        OrderExample orderExampleR = new OrderExample();
+        orderExampleR.createCriteria().andOrderStatusEqualTo((short) 301).andUserIdEqualTo(id).andDeletedNotEqualTo(true);
+        long l = orderMapper.countByExample(orderExampleR);
+        OrderExample orderExampleC = new OrderExample();
+        orderExampleC.createCriteria().andCommentsGreaterThan((short) 0).andUserIdEqualTo(id).andDeletedNotEqualTo(true);
+        long l1 = orderMapper.countByExample(orderExampleC);
+        OrderExample orderExampleP = new OrderExample();
+        orderExampleP.createCriteria().andOrderStatusEqualTo((short) 101).andUserIdEqualTo(id).andDeletedNotEqualTo(true);
+        long l2 = orderMapper.countByExample(orderExampleP);
+        OrderExample orderExampleS = new OrderExample();
+        orderExampleS.createCriteria().andOrderStatusEqualTo((short) 201).andUserIdEqualTo(id).andDeletedNotEqualTo(true);
+        long l3 = orderMapper.countByExample(orderExampleS);
+        orderBean.setUnrecv((int) l);
+        orderBean.setUncomment((int) l1);
+        orderBean.setUnpaid((int) l2);
+        orderBean.setUnship((int) l3);
+        userIndexReqVo_wx.setOrder(orderBean);
+        return userIndexReqVo_wx;
+
     }
 
     @Override

@@ -13,8 +13,10 @@ public class AddressServiceImpl implements AddressService{
     @Autowired
     AddressMapper addressMapper;
     @Override
-    public List<Address> listAddress(Integer userId, String name) {
-        List<Address> addresses = addressMapper.queryAddress(userId,name);
+    public List<Address> listAddress() {
+        AddressExample addressExample = new AddressExample();
+        List<Address> addresses = addressMapper.selectByExample(addressExample);
+
         for (Address address : addresses) {
             String province = addressMapper.queryProvinceByPid(address.getProvinceId());
             String city = addressMapper.queryProvinceByPid(address.getCityId());
@@ -22,7 +24,8 @@ public class AddressServiceImpl implements AddressService{
             address.setProvince(province);
             address.setCity(city);
             address.setArea(area);
-            address.setDetailedAddress(province+city+area);
+            String s = address.getAddress();
+            address.setDetailedAddress(province+city+area+s);
         }
         return addresses;
     }
@@ -36,9 +39,25 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public Integer saveAddress(Address address) {
-        Integer i = addressMapper.updateByPrimaryKey(address);
-        return i;
+    public List<Address> saveAddress(Address address) {
+        AddressExample example = new AddressExample();
+        List<Address> addressList = addressMapper.selectByExample(example);
+        addressMapper.insertSelective(address);
+        return addressList;
+    }
+
+    @Override
+    public List<Address> detailAddress(Integer id) {
+        List<Address> addresses = addressMapper.queryDetailAddress(id);
+        for (Address address : addresses) {
+            String province = addressMapper.queryProvinceByPid(address.getProvinceId());
+            String city = addressMapper.queryProvinceByPid(address.getCityId());
+            String area = addressMapper.queryProvinceByPid(address.getAreaId());
+            address.setProvince(province);
+            address.setCity(city);
+            address.setArea(area);
+        }
+        return addresses;
     }
 
     @Override

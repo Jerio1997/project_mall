@@ -2,19 +2,22 @@ package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.*;
+import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.utils.OrderStatusUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("wx/order")
@@ -59,6 +62,7 @@ public class WxOrderController {
         return baseReqVo;
     }
 
+
     @RequestMapping("submit")
     public BaseReqVo submitOrder(@RequestBody OrderSubminReqDTO orderSubminReqDTO) {
         int addressId = orderSubminReqDTO.getAddressId();
@@ -77,7 +81,7 @@ public class WxOrderController {
         orderSn += user.getId();
         Random random = new Random();
         int i = random.nextInt(10000);
-        orderSn+= i;
+        orderSn += i;
         Short orderStatus = 101;
         Address addressById = addressService.getAddressById(addressId);
         String consignee = addressById.getName();
@@ -137,6 +141,30 @@ public class WxOrderController {
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setData(order.getId());
+        return baseReqVo;
+    }
+
+    @RequestMapping("detail")
+    public BaseReqVo orderDetail(Integer orderId) {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        List<OrderGoods> orderGoods = orderService.selectOrderGoodsByOrderId(orderId);
+        Map orderInfo = orderService.selectOrderInfoById(orderId);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("orderGoods", orderGoods);
+        hashMap.put("orderInfo", orderInfo);
+        baseReqVo.setData(hashMap);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @PostMapping("delete")
+    public BaseReqVo deleteOrder(@RequestBody Map map) {
+        Integer orderId = (Integer) map.get("orderId");
+        orderService.deleteOrder(orderId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
         return baseReqVo;
     }
 

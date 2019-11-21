@@ -336,17 +336,27 @@
     select name from cskaoyan_mall_region where id = #{areaId}
   </select>
   <select id="queryAddress" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from cskaoyan_mall_address
+  <where>
+    <if test="userId != null ">
+      and user_id = #{userId}
+    </if>
+    <if test="name != null">
+      and name like "%" #{name}"%"
+    </if>
+  </where>
+  <!--    where id = #{id,jdbcType=INTEGER}-->
+</select>
+  <select id="queryDetailAddress" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from cskaoyan_mall_address
     <where>
-      <if test="userId != null ">
-        and user_id = #{userId}
-      </if>
-      <if test="name != null">
-        and name like "%" #{name}"%"
+      <if test="id != null ">
+        and id = #{id}
       </if>
     </where>
-<!--    where id = #{id,jdbcType=INTEGER}-->
   </select>
 </mapper>
