@@ -16,7 +16,7 @@ public interface GrouponService {
 
     Map<String, Object> listGroupon(Integer page, Integer size);
 
-    Map<String, Object> queryMyGroupon(Integer showType);
+    Map<String, Object> queryMyGroupon(Integer showType,Integer id);
 
     Map<String, Object> getDetailOfGrouponById(Integer grouponId);
 }

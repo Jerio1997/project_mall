@@ -3,6 +3,7 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.Order;
 import com.cskaoyan.mall.bean.OrderGoods;
 import com.cskaoyan.mall.bean.OrderReqVo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +20,23 @@ public interface OrderService {
 
     OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username);
 
+
+
+    List<Order> selectOrderByUserIdAndStatus(Integer id, String unrecv);
+
+
     int InsertOrder(Order order);
+
     List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId);
 
     HashMap<String, Object> selectOrderInfoById(Integer orderId);
 
     void deleteOrder(Integer orderId);
 
+
+
     void cancelOrderByOrderId(Integer orderId);
 
     void confirmOrderByOrderId(Integer orderId);
+
 }

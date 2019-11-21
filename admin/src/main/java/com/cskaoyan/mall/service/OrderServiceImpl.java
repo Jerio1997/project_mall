@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Map<String, Object> getOrderList(int page, int limit, Short[] orderStatusArray, Integer userId, String orderSn, String sort, String order) {
-        PageHelper.startPage(page,limit);
+        PageHelper.startPage(page, limit);
         OrderExample example = new OrderExample();
         OrderExample.Criteria criteria = example.createCriteria();
         if (userId != null) {
@@ -131,6 +131,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+
+    public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        return orderList;
+    }
+
     public int InsertOrder(Order order) {
         int i = orderMapper.insertSelectiveAndGetId(order);
         return i;
@@ -144,7 +152,10 @@ public class OrderServiceImpl implements OrderService {
         return orderGoods;
     }
 
-    @Override
+
+
+
+
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
         // 获取详细地址
