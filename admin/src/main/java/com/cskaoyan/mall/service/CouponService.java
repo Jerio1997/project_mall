@@ -31,9 +31,9 @@ public interface CouponService {
 
     int receiveCoupon(Integer couponId,Integer userId);
 
-    Map<String, Object> myListCoupon(Integer page, Integer size, Short status);
+    Map<String, Object> myListCoupon(Integer page, Integer size, Short status, Integer userId);
 
-    int exchangeCouponByCode(String code);
+    int exchangeCouponByCode(String code,Integer id);
 
     List<Coupon> selectList(Integer cartId, Integer grouponRulesId, Integer userId);
 }

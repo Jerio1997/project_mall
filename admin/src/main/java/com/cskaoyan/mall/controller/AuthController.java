@@ -1,5 +1,6 @@
 package com.cskaoyan.mall.controller;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.cskaoyan.mall.aop.AdminLog;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.AuthService;
 import com.cskaoyan.mall.shiro.CustomToken;
+import com.cskaoyan.mall.utils.Md5Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.annotation.Logical;
@@ -36,12 +38,11 @@ public class AuthController {
         Subject subject = SecurityUtils.getSubject();
         String username = loginVo.getUsername();
         String password = loginVo.getPassword();
-
-        CustomToken customToken = new CustomToken(username, password, "admin");
         try {
-
+            String md5Password = Md5Util.getMd5(password);
+            CustomToken customToken = new CustomToken(username, md5Password, "admin");
             subject.login(customToken);
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | NoSuchAlgorithmException e) {
             return BaseRespVo.fail(515,"登陆失败");
         }
         Serializable sessionId = subject.getSession().getId();
