@@ -3,6 +3,7 @@ package com.cskaoyan.mall.controllerwx;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.BaseRespVo;
 import com.cskaoyan.mall.bean.User;
+import com.cskaoyan.mall.bean.UserIndexReqVo_Wx;
 import com.cskaoyan.mall.mapper.UserMapper;
 import com.cskaoyan.mall.service.UserService;
 import com.cskaoyan.mall.shiro.CustomToken;
@@ -84,14 +85,15 @@ public class WxAuthController {
 		Subject subject = SecurityUtils.getSubject();
 		User userLogined = (User) subject.getPrincipal();
 		Integer id = userLogined.getId();
+		UserIndexReqVo_Wx userIndexReqVo_wx = userService.queryUserIndexByUserId(id);
 		HashMap<Object, Object> order = new HashMap<>();
-		order.put("unrecv",1);
-		order.put("uncomment",2);
-		order.put("unpaid",3);
-		order.put("unship",4);
+		order.put("unrecv",userIndexReqVo_wx.getOrder().getUnrecv());
+		order.put("uncomment",userIndexReqVo_wx.getOrder().getUncomment());
+		order.put("unpaid",userIndexReqVo_wx.getOrder().getUnpaid());
+		order.put("unship",userIndexReqVo_wx.getOrder().getUnship());
 		HashMap<Object, Object> data = new HashMap<>();
 		data.put("order",order);
 		return BaseRespVo.ok(data);
-		
+
 	}
 }

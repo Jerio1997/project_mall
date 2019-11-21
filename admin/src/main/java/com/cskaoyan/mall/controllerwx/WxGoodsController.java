@@ -2,10 +2,14 @@ package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CategoryService;
+import com.cskaoyan.mall.service.FootPrintService;
 import com.cskaoyan.mall.service.GoodsService;
 import com.cskaoyan.mall.service.SearchHistoryService;
 import com.fasterxml.jackson.databind.ser.Serializers;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +30,8 @@ public class WxGoodsController {
     CategoryService categoryService;
     @Autowired
     SearchHistoryService searchHistoryService;
+    @Autowired
+    FootPrintService footPrintService;
 
     /**
      * 统计商品总数
@@ -75,9 +81,14 @@ public class WxGoodsController {
      * @return
      */
     @GetMapping("detail")
+    @Transactional
     public BaseReqVo<GoodsDetailResVo_Wx> getGoodsDetail(Integer id){
         BaseReqVo baseReqVo = new BaseReqVo();
         GoodsDetailResVo_Wx goodsDetailResVo_wx = goodsService.queryGoodsDetail(id);
+        Subject subject = SecurityUtils.getSubject();
+        User principal = ((User) subject.getPrincipal());
+        Integer userId = principal.getId();
+        int i =  footPrintService.addFootPrint(userId,id);
         baseReqVo.setData(goodsDetailResVo_wx);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
