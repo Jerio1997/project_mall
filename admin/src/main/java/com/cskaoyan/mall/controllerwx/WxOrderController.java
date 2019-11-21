@@ -13,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("wx/order")
@@ -46,6 +42,9 @@ public class WxOrderController {
 
     @Autowired
     GrouponRulesService grouponRulesService;
+
+    @Autowired
+    OrderGoodsService orderGoodsService;
 
 
     @RequestMapping("list")
@@ -88,14 +87,19 @@ public class WxOrderController {
         String mobile = addressById.getMobile();
         String address = addressById.getAddress();
         Double goodsPrice = 0.0;
+        List<Cart> cartList = new ArrayList<>();
         if (cartId == 0) {
-            List<Cart> cartListByUserId = cartService.getCartListByUserId(user.getId());
-            for (Cart cart : cartListByUserId) {
+            cartList = cartService.getCartListByUserIdChecked(user.getId());
+            for (Cart cart : cartList) {
                 goodsPrice += cart.getPrice().doubleValue() * cart.getNumber();
+                cartService.deleteCartById(cart.getId());
+                OrderGoods orderGoods = new OrderGoods();
             }
         } else {
             Cart cartById = cartService.getCartById(cartId);
             goodsPrice += cartById.getPrice().doubleValue() * cartById.getNumber();
+            cartService.deleteCartById(cartById.getId());
+            cartList.add(cartById);
         }
         Double expressFreightMin = systemService.getExpressFreightMin();
         Double expressFreightValue = systemService.getExpressFreightValue();
@@ -137,6 +141,24 @@ public class WxOrderController {
         order.setUpdateTime(new Date());
         order.setDeleted(false);
         int status = orderService.InsertOrder(order);
+        // 添加goods到 ordergoods表中
+        for (Cart cart : cartList) {
+            OrderGoods orderGoods = new OrderGoods();
+            orderGoods.setOrderId(order.getId());
+            orderGoods.setGoodsId(cart.getGoodsId());
+            orderGoods.setGoodsName(cart.getGoodsName());
+            orderGoods.setGoodsSn(cart.getGoodsSn());
+            orderGoods.setProductId(cart.getProductId());
+            orderGoods.setNumber(cart.getNumber());
+            orderGoods.setPrice(cart.getPrice());
+            orderGoods.setSpecifications(cart.getSpecifications());
+            orderGoods.setPicUrl(cart.getPicUrl());
+            orderGoods.setComment(null);
+            orderGoods.setAddTime(new Date());
+            orderGoods.setUpdateTime(new Date());
+            orderGoods.setDeleted(false);
+            orderGoodsService.insertOrderGoods(orderGoods);
+        }
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
