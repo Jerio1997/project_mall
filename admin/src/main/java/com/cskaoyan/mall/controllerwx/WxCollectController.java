@@ -1,11 +1,15 @@
 package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.BaseReqVo;
+import com.cskaoyan.mall.bean.Collect;
+import com.cskaoyan.mall.bean.Goods;
 import com.cskaoyan.mall.service.CollectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,8 +30,8 @@ public class WxCollectController {
     }
     //添加或删除商品收藏
     @RequestMapping("addordelete")
-    public BaseReqVo addordeleteCollect(Byte type,Integer valueId){
-        Map<String,Object> data = collectService.addordeleteCollect(type,valueId);
+    public BaseReqVo addordeleteCollect(Integer userId,Integer valueId){
+        String data = collectService.addordeleteCollect(userId,valueId);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);

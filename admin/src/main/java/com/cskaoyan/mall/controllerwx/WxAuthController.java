@@ -1,6 +1,10 @@
 package com.cskaoyan.mall.controllerwx;
 
+
+
+
 import com.cskaoyan.mall.bean.*;
+
 import com.cskaoyan.mall.mapper.UserMapper;
 import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.service.SmsService;
@@ -46,6 +50,7 @@ public class WxAuthController {
     public Object login(@RequestBody User user) {
 //		String username = JacksonUtil.parseString(body, "username");
 //		String password = JacksonUtil.parseString(body, "password");
+
         Map<Object, Object> result = new HashMap<Object, Object>();
         String username = user.getUsername();
         String password = user.getPassword();
@@ -53,10 +58,9 @@ public class WxAuthController {
 
 
         try {
-            String md5Password = Md5Util.getMd5(password);
-            CustomToken customToken = new CustomToken(username, md5Password, "wx");
+            CustomToken customToken = new CustomToken(username, password, "wx");
             subject.login(customToken);
-        } catch (AuthenticationException | NoSuchAlgorithmException e) {
+        } catch (AuthenticationException e) {
             return BaseRespVo.fail(515, null);
         }
         Serializable sessionId = subject.getSession().getId();
@@ -98,13 +102,10 @@ public class WxAuthController {
             return BaseRespVo.fail(519, null);
         }
         userService.register(wxRegister);
-
-        User userLogin = new User();
-
-        userLogin.setUsername(user.getUsername());
-        userLogin.setPassword(user.getPassword());
-
-        return login(userLogin);
+        User userRegister = new User();
+        userRegister.setUsername(wxRegister.getUsername());
+        userRegister.setPassword(wxRegister.getPassword());
+        return login(userRegister);
     }
 
     @RequestMapping("auth/regCaptcha")
@@ -149,10 +150,12 @@ public class WxAuthController {
         List<Order> orderuncommentUserList = orderService.selectOrderByUserIdAndStatus(id, uncommentUser);
         List<Order> orderunpaidList = orderService.selectOrderByUserIdAndStatus(id, unpaid);
         List<Order> orderunshipList = orderService.selectOrderByUserIdAndStatus(id, unship);
-        order.put("unrecv", orderunrecvList.size());
-        order.put("uncomment", orderuncommentSystemList.size() + orderuncommentUserList.size());
-        order.put("unpaid", orderunpaidList.size());
-        order.put("unship", orderunshipList.size());
+
+        order.put("unrecv", orderunrecvList == null ? 0 : orderunrecvList.size());
+        order.put("uncomment",(orderuncommentSystemList == null ? 0 : orderuncommentSystemList.size())
+                + (orderuncommentUserList == null ? 0 : orderuncommentUserList.size()));
+        order.put("unpaid", orderunpaidList == null ? 0 : orderunpaidList.size());
+        order.put("unship", orderunshipList == null ? 0 : orderunshipList.size());
         HashMap<Object, Object> data = new HashMap<>();
         data.put("order", order);
         return BaseRespVo.ok(data);

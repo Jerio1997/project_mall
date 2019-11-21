@@ -5,6 +5,7 @@ import com.cskaoyan.mall.bean.OrderGoods;
 import com.cskaoyan.mall.bean.OrderReqVo;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,5 +20,13 @@ public interface OrderService {
 
     OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username);
 
+
     List<Order> selectOrderByUserIdAndStatus(Integer id, String unrecv);
+
+    List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId);
+
+    HashMap<String, Object> selectOrderInfoById(Integer orderId);
+
+    void deleteOrder(Integer orderId);
+
 }

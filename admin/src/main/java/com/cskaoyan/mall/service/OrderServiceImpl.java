@@ -6,7 +6,6 @@ import com.cskaoyan.mall.utils.OrderStatusUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.OrderUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -31,6 +30,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     GrouponMapper grouponMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private RegionMapper regionMapper;
 
 
     @Override
@@ -87,6 +92,9 @@ public class OrderServiceImpl implements OrderService {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username);
         List<User> users = userMapper.selectByExample(userExample);
+        if (users.size() == 0) {
+            return null;
+        }
         PageHelper.startPage(page, size);
         // 用户id
         OrderExample.Criteria criteria = orderExample.createCriteria().andUserIdEqualTo(users.get(0).getId());
@@ -127,4 +135,58 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
     }
-}
+        public List<OrderGoods> selectOrderGoodsByOrderId (Integer orderId){
+            OrderGoodsExample example = new OrderGoodsExample();
+            example.createCriteria().andOrderIdEqualTo(orderId);
+            List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
+            return orderGoods;
+        }
+
+        @Override
+        public HashMap<String, Object> selectOrderInfoById (Integer orderId){
+            Order order = orderMapper.selectByPrimaryKey(orderId);
+            // 获取详细地址
+            String detailAddress = order.getAddress();
+            AddressExample addressExample = new AddressExample();
+            addressExample.createCriteria().andAddressEqualTo(detailAddress);
+            List<Address> addresses = addressMapper.selectByExample(addressExample);
+            // 获取区地址
+            Integer areaId = addresses.get(0).getAreaId();
+            RegionExample regionExample = new RegionExample();
+            regionExample.createCriteria().andCodeEqualTo(areaId);
+            List<Region> regions = regionMapper.selectByExample(regionExample);
+            Region region = regions.get(0);
+            String areaName = region.getName();
+            // 获取市
+            Integer cityId = region.getPid();
+            Region city = regionMapper.selectByPrimaryKey(cityId);
+            String cityName = city.getName();
+            // 获取省份
+            Integer pid = city.getPid();
+            Region province = regionMapper.selectByPrimaryKey(pid);
+            String provinceName = province.getName();
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("address", provinceName + cityName + areaName + detailAddress);
+            map.put("addTime", order.getAddTime());
+            map.put("actualPrice", order.getActualPrice());
+            map.put("consignee", order.getConsignee());
+            map.put("couponPrice", order.getCouponPrice());
+            map.put("freightPrice", order.getFreightPrice());
+            map.put("goodsPrice", order.getGoodsPrice());
+            map.put("id", order.getId());
+            map.put("mobile", order.getMobile());
+            map.put("orderSn", order.getOrderSn());
+
+            Short orderStatus = order.getOrderStatus();
+            map.put("orderStatusText", OrderStatus.getOrderStatusText(orderStatus));
+            map.put("handleOption", new HandleOption(order));
+            return map;
+        }
+
+        @Override
+        public void deleteOrder (Integer orderId){
+            orderMapper.deleteByPrimaryKey(orderId);
+        }
+
+    }

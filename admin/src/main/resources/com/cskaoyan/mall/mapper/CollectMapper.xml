@@ -240,4 +240,34 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+<select id="queryCollect" resultMap="BaseResultMap">
+select
+<include refid="Base_Column_List" />
+from cskaoyan_mall_collect
+<where>
+  <if test="userId != null ">
+    and user_id = #{userId}
+  </if>
+  <if test="valueId != null">
+    and value_id = #{valueId}
+  </if>
+</where>
+</select>
+  <!--<delete id="deleteById" >
+    delete from cskaoyan_mall_collect
+    <if test="userId != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="valueId != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>-->
+  <insert id="insertById">
+  insert into cskaoyan_mall_collect (user_id,value_id)
+    values (#{userId},#{valueId})
+</insert>
+  <update id="deleteById">
+    update cskaoyan_mall_collect set delete = 1
+    where value_id = #{valueId} and user_id = #{userId}
+  </update>
 </mapper>

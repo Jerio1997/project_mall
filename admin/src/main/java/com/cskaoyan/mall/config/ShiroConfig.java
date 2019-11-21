@@ -31,6 +31,7 @@ public class ShiroConfig {
         //配置的是拦截器 shiro提供的filter
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         //第一个参数是请求url 第二个参数是过滤器
+
         filterChainDefinitionMap.put("/admin/auth/login","anon");
 //        filterChainDefinitionMap.put("/admin/auth/unauthenticated","anon");
 
@@ -38,7 +39,6 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/wx/**","anon");
 
         filterChainDefinitionMap.put("/wx/auth/login","anon");
-
         filterChainDefinitionMap.put("/**","authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
