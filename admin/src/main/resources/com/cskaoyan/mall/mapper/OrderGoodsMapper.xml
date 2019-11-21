@@ -10,7 +10,7 @@
         <result column="product_id" jdbcType="INTEGER" property="productId"/>
         <result column="number" jdbcType="SMALLINT" property="number"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
-        <result column="specifications" jdbcType="VARCHAR" property="specifications"/>
+        <result column="specifications" jdbcType="VARCHAR" property="specifications" typeHandler="com.cskaoyan.mall.handler.String2ArrayTypeHandler"/>
         <result column="pic_url" jdbcType="VARCHAR" property="picUrl"/>
         <result column="comment" jdbcType="INTEGER" property="comment"/>
         <result column="add_time" jdbcType="TIMESTAMP" property="addTime"/>
@@ -125,7 +125,7 @@
       update_time, deleted)
     values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER},
       #{goodsName,jdbcType=VARCHAR}, #{goodsSn,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER},
-      #{number,jdbcType=SMALLINT}, #{price,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR},
+      #{number,jdbcType=SMALLINT}, #{price,jdbcType=DECIMAL}, #{specifications,jdbcType=VARCHAR, typeHandler=com.cskaoyan.mall.handler.String2ArrayTypeHandler},
       #{picUrl,jdbcType=VARCHAR}, #{comment,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
   </insert>
@@ -201,7 +201,7 @@
                 #{price,jdbcType=DECIMAL},
             </if>
             <if test="specifications != null">
-                #{specifications,jdbcType=VARCHAR},
+                #{specifications,jdbcType=VARCHAR, typeHandler=com.cskaoyan.mall.handler.String2ArrayTypeHandler},
             </if>
             <if test="picUrl != null">
                 #{picUrl,jdbcType=VARCHAR},
