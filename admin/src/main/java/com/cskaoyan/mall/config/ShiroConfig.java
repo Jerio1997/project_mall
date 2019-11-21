@@ -33,7 +33,11 @@ public class ShiroConfig {
         //第一个参数是请求url 第二个参数是过滤器
         filterChainDefinitionMap.put("/admin/auth/login","anon");
 //        filterChainDefinitionMap.put("/admin/auth/unauthenticated","anon");
-        filterChainDefinitionMap.put("/wx/user/login","anon");
+
+        //微信端开发结束后删除这一句
+        filterChainDefinitionMap.put("/wx/**","anon");
+
+        filterChainDefinitionMap.put("/wx/auth/login","anon");
 
         filterChainDefinitionMap.put("/**","authc");
         filterChainDefinitionMap.put("/**","anon");
@@ -73,7 +77,11 @@ public class ShiroConfig {
     public CustomSessionManager sessionManager(){
         CustomSessionManager customSessionManager = new CustomSessionManager();
         customSessionManager.setDeleteInvalidSessions(true);
+<<<<<<< HEAD
+        customSessionManager.setGlobalSessionTimeout(1800000);
+=======
         customSessionManager.setGlobalSessionTimeout(1000*60*30);
+>>>>>>> 9c42d317e5ca8314a209fea1364589fc0c12ecc0
         return customSessionManager;
     }
 
