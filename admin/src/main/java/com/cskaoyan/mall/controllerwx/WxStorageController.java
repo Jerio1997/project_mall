@@ -1,7 +1,9 @@
 package com.cskaoyan.mall.controllerwx;
 
+import com.aliyun.oss.OSSClient;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Storage;
+import com.cskaoyan.mall.component.AliyunComponent;
 import com.cskaoyan.mall.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -20,13 +21,21 @@ import java.util.UUID;
 public class WxStorageController {
 
     @Autowired
+    AliyunComponent aliyunComponent;
+
+    @Autowired
     SystemService systemService;
 
     @RequestMapping("upload")
     public BaseReqVo<Storage> uploadStorage(MultipartFile file, HttpServletRequest request) {
         // 不需要 fileupload 组件
         // 拼接 url 前缀与后缀，并且已经在 yml 文件中添加 url 前缀映射路径
-        String urlPrefix = "http://" + request.getServerName() + ":" + request.getServerPort() + "/wx/storage/fetch/";
+//        String urlPrefix = "http://" + request.getServerName() + ":" + request.getServerPort() + "/wx/storage/fetch/";
+        // 采用 oss
+        OSSClient ossClient = aliyunComponent.getOssClient();
+        String bucket = aliyunComponent.getOss().getBucket();
+        String endPoint = aliyunComponent.getOss().getEndPoint();
+        String urlPrefix = "https://" + bucket + "." + endPoint + "/";
         String[] split = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
         String urlSuffix = split[split.length - 1];
         // 生成随机文件名
@@ -34,12 +43,12 @@ public class WxStorageController {
         String s = uuid.toString().replace("-", "");
         String key = s + "." + urlSuffix;
         // 存储文件
-        File filePath = new File("admin\\target\\classes\\static", key);
+//        File filePath = new File("admin\\target\\classes\\static", key);
         //        修改为文件系统路径
 //        File filePath = new File("D:/picture");
-        String absolutePath = filePath.getAbsolutePath();
+//        String absolutePath = filePath.getAbsolutePath();
         try {
-            file.transferTo(new File(absolutePath));
+            ossClient.putObject(aliyunComponent.getOss().getBucket(), key, file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,5 +69,4 @@ public class WxStorageController {
         baseReqVo.setErrno(0);
         return baseReqVo;
     }
-
 }
