@@ -429,10 +429,16 @@ public class CouponServiceImpl implements CouponService{
             totalPrice = totalPrice.add(cart.getPrice().multiply(number_bigDecimal));
         }
         //得到满足couponUser要求的couponlist，逐一遍历，判断是否满足购物总价
-        for (Coupon coupon : couponList) {
+        /*for (Coupon coupon : couponList) {
             BigDecimal min = coupon.getMin();
             if(totalPrice.compareTo(min) < 0 ){
                 couponList.remove(coupon);
+            }
+        }*/
+        for (int i = 0; i < couponList.size(); i++) {
+            BigDecimal min = couponList.get(i).getMin();
+            if(totalPrice.compareTo(min) < 0 ){
+                couponList.remove(couponList.get(i));
             }
         }
         //满足
