@@ -29,4 +29,6 @@ public interface OrderService {
     void cancelOrderByOrderId(Integer orderId);
 
     void confirmOrderByOrderId(Integer orderId);
+
+    void commitOrder(Integer orderId, Integer goodsId);
 }

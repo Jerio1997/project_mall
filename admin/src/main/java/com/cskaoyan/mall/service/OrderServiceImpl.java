@@ -206,4 +206,11 @@ public class OrderServiceImpl implements OrderService {
         order.setEndTime(new Date());
         orderMapper.updateByPrimaryKeySelective(order);
     }
+
+    @Override
+    public void commitOrder(Integer orderId, Integer goodsId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        order.setComments((short) (order.getComments() + 1));
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
 }

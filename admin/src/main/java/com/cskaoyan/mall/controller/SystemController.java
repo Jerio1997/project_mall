@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.controller;
 
 import com.aliyun.oss.OSSClient;
+import com.cskaoyan.mall.aop.AdminLog;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.component.AliyunComponent;
@@ -42,6 +43,7 @@ public class SystemController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("admin/update")
     public BaseReqVo<Admin> updateAdmin(@RequestBody Admin admin) {
         BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
@@ -53,6 +55,7 @@ public class SystemController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("admin/create")
     public BaseReqVo<Admin> createAdmin(@RequestBody Admin admin) {
         BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
@@ -65,6 +68,7 @@ public class SystemController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("admin/delete")
     public Map<String, Object> deleteAdmin(@RequestBody Admin admin) {
         HashMap<String, Object> map = new HashMap<>();
@@ -138,6 +142,7 @@ public class SystemController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("role/create")
     public BaseReqVo<Role> createRole(@RequestBody Role role) {
         BaseReqVo<Role> baseReqVo = new BaseReqVo<>();
@@ -150,6 +155,7 @@ public class SystemController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("role/update")
     public Map<String, Object> updateRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
@@ -160,6 +166,7 @@ public class SystemController {
         return map;
     }
 
+    @AdminLog
     @RequestMapping("role/delete")
     public Map<String, Object> deleteRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
