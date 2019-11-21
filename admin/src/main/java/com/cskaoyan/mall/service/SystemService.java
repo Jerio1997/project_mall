@@ -1,10 +1,8 @@
 package com.cskaoyan.mall.service;
 
-import com.cskaoyan.mall.bean.Admin;
-import com.cskaoyan.mall.bean.Role;
-import com.cskaoyan.mall.bean.Storage;
-import com.cskaoyan.mall.bean.System;
+import com.cskaoyan.mall.bean.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,9 +92,11 @@ public interface SystemService {
      * 查找系统所有的权限列表
      * @return
      */
-    List<System> selectSystemPermissions();
+    ArrayList<Map<String, Object>> selectSystemPermissions();
 
     Double getExpressFreightMin();
 
     Double getExpressFreightValue();
+
+    void insertPermissionsByRoleId(List<String> permissions, Integer roleId);
 }
