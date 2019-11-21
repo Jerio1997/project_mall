@@ -136,14 +136,14 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> selectCategoryList() {
         CategoryExample example = new CategoryExample();
-        example.createCriteria().andPidEqualTo(0);
+        example.createCriteria().andPidEqualTo(0).andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
 
     @Override
     public List<Category> selectCurrentSubCategoryByPid(Integer pid) {
         CategoryExample example = new CategoryExample();
-        example.createCriteria().andPidEqualTo(pid);
+        example.createCriteria().andPidEqualTo(pid).andDeletedEqualTo(false);
         return categoryMapper.selectByExample(example);
     }
 
