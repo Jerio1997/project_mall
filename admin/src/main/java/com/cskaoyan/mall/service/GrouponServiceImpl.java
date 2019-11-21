@@ -4,8 +4,10 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.mapper.*;
 import com.cskaoyan.mall.utils.OrderStatusUtils;
 import com.github.pagehelper.PageHelper;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -96,19 +98,58 @@ public class GrouponServiceImpl implements GrouponService{
     }
 
     @Override
-    public Map<String, Object> queryMyGroupon(Integer showType) {
-        Map<String,Object> map = new HashMap<>();
+    @Transactional
+    public Map<String, Object> queryMyGroupon(Integer showType,Integer userId) {
+        Map<String,Object> lastMap = new HashMap<>();
+        List<Map> dataList = new ArrayList<>();
+        GrouponExample example = new GrouponExample();
+        GrouponExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
         if(showType == 1){
             //表示是发起的团购
+            criteria.andCreatorUserIdEqualTo(userId);
         } else {
             //表示是参与的团购
+            criteria.andUserIdEqualTo(userId);
         }
-
-
-        return map;
+        List<Groupon> groupons = grouponMapper.selectByExample(example);
+        for (Groupon groupon : groupons) {
+            Map<String,Object> map = new HashMap<>();
+            Order order = orderMapper.selectByPrimaryKey(groupon.getOrderId());
+            HandleOption handleOption = new HandleOption(order);
+            map.put("orderStatusText","已取消");
+            User user = userMapper.selectByPrimaryKey(groupon.getCreatorUserId());
+            map.put("creator",user.getNickname());
+            map.put("groupon",groupon);
+            map.put("orderId",groupon.getOrderId());
+            map.put("orderSn",order.getOrderSn());
+            map.put("actualPrice",order.getActualPrice());
+            //拼接joinerCount
+            GrouponExample example1 = new GrouponExample();
+            GrouponExample.Criteria criteria1 = example1.createCriteria();
+            criteria1.andDeletedEqualTo(false);
+            criteria1.andGrouponIdEqualTo(groupon.getId());
+            List<Groupon> groupons1 = grouponMapper.selectByExample(example1);
+            map.put("joinerCount",groupons1.size());
+            GrouponRules grouponRules = grouponRulesMapper.selectByPrimaryKey(groupon.getRulesId());
+            Goods goods = goodsMapper.selectByPrimaryKey(grouponRules.getGoodsId());
+            List<Goods> goods1 = new ArrayList<>();
+            goods1.add(goods);
+            map.put("goodsList",goods1);/*这里存在一点问题，为什么能取到一个list？*/
+            map.put("rules",grouponRules);
+            map.put("id",groupon.getId());
+            Boolean isCreator = (userId.equals(groupon.getCreatorUserId()));
+            map.put("isCreator", isCreator);
+            map.put("handleOption",handleOption);
+            dataList.add(map);
+        }
+        lastMap.put("data",dataList);
+        lastMap.put("count",dataList.size());
+        return lastMap;
     }
 
     @Override
+    @Transactional
     public Map<String, Object> getDetailOfGrouponById(Integer grouponId) {
         Map<String,Object> map = new HashMap<>();
         Groupon groupon = grouponMapper.selectByPrimaryKey(grouponId);
@@ -154,7 +195,6 @@ public class GrouponServiceImpl implements GrouponService{
             }
             orderGoods.setGoodsSpecificationValues(list);
         }
-
         map.put("orderGoods",orderGoodsList);
         //拼接rules 和 linkGrouponId
         GrouponRules grouponRules = grouponRulesMapper.selectByPrimaryKey(groupon.getRulesId());

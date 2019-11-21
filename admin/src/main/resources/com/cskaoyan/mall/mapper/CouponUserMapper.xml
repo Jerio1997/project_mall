@@ -73,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, coupon_id, status, used_time, start_time, end_time, order_id, add_time, 
+    id, user_id, coupon_id, `status`, used_time, start_time, end_time, order_id, add_time,
     update_time, deleted
   </sql>
   <select id="selectByExample" parameterType="com.cskaoyan.mall.bean.CouponUserExample" resultMap="BaseResultMap">
@@ -91,7 +91,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from cskaoyan_mall_coupon_user
     where id = #{id,jdbcType=INTEGER}
@@ -107,13 +107,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.cskaoyan.mall.bean.CouponUser">
-    insert into cskaoyan_mall_coupon_user (id, user_id, coupon_id, 
-      status, used_time, start_time, 
-      end_time, order_id, add_time, 
+    insert into cskaoyan_mall_coupon_user (id, user_id, coupon_id,
+      `status`, used_time, start_time,
+      end_time, order_id, add_time,
       update_time, deleted)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{couponId,jdbcType=INTEGER}, 
-      #{status,jdbcType=SMALLINT}, #{usedTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{couponId,jdbcType=INTEGER},
+      #{status,jdbcType=SMALLINT}, #{usedTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP}, #{orderId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.cskaoyan.mall.bean.CouponUser">
@@ -241,7 +241,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       coupon_id = #{record.couponId,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=SMALLINT},
+      `status` = #{record.status,jdbcType=SMALLINT},
       used_time = #{record.usedTime,jdbcType=TIMESTAMP},
       start_time = #{record.startTime,jdbcType=TIMESTAMP},
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
@@ -263,7 +263,7 @@
         coupon_id = #{couponId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=SMALLINT},
+        `status` = #{status,jdbcType=SMALLINT},
       </if>
       <if test="usedTime != null">
         used_time = #{usedTime,jdbcType=TIMESTAMP},
@@ -293,7 +293,7 @@
     update cskaoyan_mall_coupon_user
     set user_id = #{userId,jdbcType=INTEGER},
       coupon_id = #{couponId,jdbcType=INTEGER},
-      status = #{status,jdbcType=SMALLINT},
+      `status` = #{status,jdbcType=SMALLINT},
       used_time = #{usedTime,jdbcType=TIMESTAMP},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},

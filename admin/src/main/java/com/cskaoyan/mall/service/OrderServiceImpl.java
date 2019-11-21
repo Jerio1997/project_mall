@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Map<String, Object> getOrderList(int page, int limit, Short[] orderStatusArray, Integer userId, String orderSn, String sort, String order) {
-        PageHelper.startPage(page,limit);
+        PageHelper.startPage(page, limit);
         OrderExample example = new OrderExample();
         OrderExample.Criteria criteria = example.createCriteria();
         if (userId != null) {
@@ -98,6 +98,10 @@ public class OrderServiceImpl implements OrderService {
         // 判断要查看的订单订单状态
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
+            if (codeByType[0].toString().contains("4")) {
+                Short comments = 0;
+                criteria.andCommentsIsNotNull().andCommentsNotEqualTo(comments);
+            }
         }
         orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
@@ -133,19 +137,21 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
     }
+
     public int InsertOrder(Order order) {
         int i = orderMapper.insertSelectiveAndGetId(order);
         return i;
     }
 
-        public List<OrderGoods> selectOrderGoodsByOrderId (Integer orderId){
-            OrderGoodsExample example = new OrderGoodsExample();
-            example.createCriteria().andOrderIdEqualTo(orderId);
-            List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
-            return orderGoods;
-        }
 
     @Override
+    public List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId) {
+        OrderGoodsExample example = new OrderGoodsExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
+        return orderGoods;
+    }
+
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
         // 获取详细地址
@@ -209,6 +215,13 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus((short) 402);
         order.setUpdateTime(new Date());
         order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    @Override
+    public void commitOrder(Integer orderId, Integer goodsId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        order.setComments((short) (order.getComments() + 1));
         orderMapper.updateByPrimaryKeySelective(order);
     }
 }

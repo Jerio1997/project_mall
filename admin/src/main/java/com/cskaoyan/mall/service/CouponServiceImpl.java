@@ -85,6 +85,18 @@ public class CouponServiceImpl implements CouponService{
                 coupon.setStatus((short) 1);
             }
         }
+        //设置结束时间
+        if(coupon.getTimeType() == 0){
+            coupon.setStartTime(coupon.getAddTime());
+            Date addtime = coupon.getAddTime();
+            long time = addtime.getTime();
+            long day = coupon.getDays();
+            time += 24*60*60*day;
+            Date date1 = new Date();
+            date1.setTime(time);
+            coupon.setEndTime(date1);
+        }
+
         int result = couponMapper.insertSelective(coupon);
         return result;
     }
@@ -167,8 +179,8 @@ public class CouponServiceImpl implements CouponService{
         //---------优惠券操作-----------
         //      --优惠券列表仅显示注册用券和通用券--
         Date date = new Date();
-        Coupon coupon = couponMapper.selectByPrimaryKey(couponId);
-        coupon = judgeCoupon(coupon);
+        Coupon couponA = couponMapper.selectByPrimaryKey(couponId);
+        Coupon coupon = judgeCoupon(couponA);
         //若是每人限领张数，则先判断
         if(coupon.getLimit() != 0){
             //表示限制领券张数，先查询当前用户已有数量
@@ -177,7 +189,7 @@ public class CouponServiceImpl implements CouponService{
             criteria.andCouponIdEqualTo(couponId);
             criteria.andUserIdEqualTo(userId);
             List<CouponUser> couponUsers = couponUserMapper.selectByExample(example);
-            if((couponUsers.size() < coupon.getLimit())){
+            if((couponUsers.size() >= coupon.getLimit())){
                 //表示不能接着领取
                 return -3;
             }
@@ -196,7 +208,11 @@ public class CouponServiceImpl implements CouponService{
             }
             coupon.setUpdateTime(new Date());
         }
+
         couponMapper.updateByPrimaryKeySelective(coupon);
+//        couponMapper.updateStausAndTimeById(coupon.getId());
+
+
         //----------coupon_user相关insert操作-----------
         CouponUser couponUser = new CouponUser();
         //获得上一个的id
@@ -209,7 +225,8 @@ public class CouponServiceImpl implements CouponService{
         } else {
             id = couponUsers.get(0).getId();
         }
-        couponUser.setId(id);
+//        couponUser.setId(++id);
+        couponUser.setId(null);
         //再其他信息
         couponUser.setUserId(userId);
         couponUser.setCouponId(couponId);
@@ -231,6 +248,11 @@ public class CouponServiceImpl implements CouponService{
         return 0;
     }
 
+    /**
+     * 判断优惠券是否日期可用
+     * @param coupon
+     * @return
+     */
     private Coupon judgeCoupon(Coupon coupon) {
         Date date = new Date();
         long curTime = date.getTime();
@@ -243,6 +265,8 @@ public class CouponServiceImpl implements CouponService{
             Date date1 = new Date();
             date1.setTime(time);
             coupon.setEndTime(date1);
+            /*Date date1 = coupon.getEndTime();
+            long time = date1.getTime();*/
             if(curTime < time){
                 //表示没有过期
                 coupon.setStatus((short) 0);
@@ -270,14 +294,35 @@ public class CouponServiceImpl implements CouponService{
     }
 
     @Override
-    public Map<String, Object> myListCoupon(Integer page, Integer size, Short status) {
+    @Transactional
+    public Map<String, Object> myListCoupon(Integer page, Integer size, Short status, Integer userId) {
         Map<String,Object> map = new HashMap<>();
         PageHelper.startPage(page,size);
-        CouponExample example = new CouponExample();
+        /*CouponExample example = new CouponExample();
         CouponExample.Criteria criteria = example.createCriteria();
         criteria.andDeletedEqualTo(false);
         criteria.andStatusEqualTo(status);
         List<Coupon> couponList = couponMapper.selectByExample(example);
+        map.put("data",couponList);
+        map.put("count",couponList.size());*/
+        CouponUserExample example = new CouponUserExample();
+        CouponUserExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        if(status != 0 ){ status = 2;}//因为status在两表中意义不同：  coupon_user->coupon      0->0    2->1
+        criteria.andStatusEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        List<CouponUser> couponUserList = couponUserMapper.selectByExample(example);
+        List<Coupon> couponList = new ArrayList<>();
+        for (CouponUser couponUser : couponUserList) {
+            //对每一个couponUser,找到相应的coupon
+            Coupon coupona = couponMapper.selectByPrimaryKey(couponUser.getCouponId());
+            Coupon coupon = judgeCoupon(coupona);
+            //要不要更新,更！
+            couponMapper.updateByPrimaryKeySelective(coupon);
+            if(!coupon.getDeleted()) {
+                couponList.add(coupon);
+            }
+        }
         map.put("data",couponList);
         map.put("count",couponList.size());
         return map;
@@ -290,7 +335,7 @@ public class CouponServiceImpl implements CouponService{
      */
     @Override
     @Transactional
-    public int exchangeCouponByCode(String code) {//还缺个userId
+    public int exchangeCouponByCode(String code, Integer userId) {//还缺个userId  补上了
         CouponExample example = new CouponExample();
         CouponExample.Criteria criteria = example.createCriteria();
         criteria.andDeletedEqualTo(false);
@@ -303,8 +348,14 @@ public class CouponServiceImpl implements CouponService{
             return 2;
         }
         for (Coupon coupon : couponList) {
+            Coupon coupona = judgeCoupon(coupon);
+            couponList.remove(coupon);
+            couponList.add(coupona);
+        }
+
+        for (Coupon coupon : couponList) {
             //-------先对优惠券的数量的操作------------
-            //能够查到的都是未删除的、兑换码正确、券状态为可用的 券
+            //能够查到的都是未删除的、兑换码正确、券日期可用、状态status为可用的 券
             Coupon couponCur = new Coupon();
             couponCur.setUpdateTime(new Date());
             couponCur.setId(coupon.getId());
@@ -317,13 +368,32 @@ public class CouponServiceImpl implements CouponService{
             }
             couponMapper.updateByPrimaryKeySelective(couponCur);
             //--------再对user添加相应的优惠券------------
-            /*此处还要个userId*/
-
+            /*此处还要个userId               有了*/
+            CouponUser couponUser = new CouponUser();
+            CouponUserExample example2 = new CouponUserExample();
+            example.setOrderByClause("id desc");
+            List<CouponUser> couponUsers = couponUserMapper.selectByExample(example2);
+            Integer cu_id;
+            if(couponUsers == null || couponUsers.size() == 0){
+                cu_id = 0;
+            } else {
+                cu_id = couponUsers.get(0).getId();
+            }
+            couponUser.setId(cu_id);
+            couponUser.setUserId(userId);
+            couponUser.setCouponId(coupon.getId());
+            couponUser.setStartTime(coupon.getStartTime());
+            couponUser.setEndTime(coupon.getEndTime());
+            couponUser.setAddTime(new Date());
+            couponUser.setUpdateTime(new Date());
+            couponUser.setDeleted(false);
+            couponUserMapper.insert(couponUser);
         }
         return 1;
     }
 
     @Override
+    @Transactional
     public List<Coupon> selectList(Integer cartId, Integer grouponRulesId, Integer userId) {
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria criteria = example.createCriteria();
@@ -369,5 +439,17 @@ public class CouponServiceImpl implements CouponService{
         return couponList;
     }
 
-
+    @Override
+    public int updateCouponUserStatusById(int couponId, int status) {
+        CouponUserExample couponUserExample = new CouponUserExample();
+        Short oldStatus = 0;
+        couponUserExample.createCriteria().andDeletedEqualTo(false).andCouponIdEqualTo(couponId).andStatusEqualTo(oldStatus);
+        List<CouponUser> couponUsers = couponUserMapper.selectByExample(couponUserExample);
+        if (couponUsers != null && couponUsers.size() != 0) {
+            CouponUser couponUser = couponUsers.get(0);
+            couponUser.setStatus((short) status);
+            couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        }
+        return 1;
+    }
 }

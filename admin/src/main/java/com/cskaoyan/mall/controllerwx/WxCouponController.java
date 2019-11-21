@@ -1,9 +1,6 @@
 package com.cskaoyan.mall.controllerwx;
 
-import com.cskaoyan.mall.bean.Admin;
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.Coupon;
-import com.cskaoyan.mall.bean.User;
+import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CouponService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -40,20 +37,21 @@ public class WxCouponController {
 
     //@return  -2:券已经过期  -3:当前券领取数量已经达到上限  0:没啥问题
     @PostMapping("receive")
-    public BaseReqVo receiveCoupon(Integer couponId){
+    public BaseReqVo receiveCoupon(@RequestBody CurCoupon coupon){
         BaseReqVo baseReqVo = new BaseReqVo();
         Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        Integer userId = user.getId();
-        int result = couponService.receiveCoupon(couponId,userId);
+//        User user = (User) subject.getPrincipal();
+//        Integer userId = user.getId();
+        Integer id = coupon.getCouponId();
+        int result = couponService.receiveCoupon(id,1);
         if(result == 0) {
             baseReqVo.setErrno(0);
             baseReqVo.setErrmsg("成功");
             return baseReqVo;
         }else if(result == -2){
             baseReqVo.setErrmsg("券已过期");
-        }else {
-            baseReqVo.setErrmsg("当前账号领取该券数量已达上限");
+        }else if(result == -3){
+            baseReqVo.setErrmsg("没啊");
         }
         baseReqVo.setErrno(737);
         return baseReqVo;
@@ -61,8 +59,10 @@ public class WxCouponController {
 
     @GetMapping("mylist")
     public BaseReqVo myListCoupon(Integer page, Integer size, Short status){
-        BaseReqVo baseReqVo = new BaseReqVo();
-        Map<String,Object> map = couponService.myListCoupon(page,size,status);
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Map<String,Object> map = couponService.myListCoupon(page,size,status,user.getId());
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setData(map);
@@ -78,7 +78,9 @@ public class WxCouponController {
             baseReqVo.setErrmsg("兑换码不能为空");
             return baseReqVo;
         }
-        int result = couponService.exchangeCouponByCode(code);
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        int result = couponService.exchangeCouponByCode(code,user.getId());
         if (result == 1){
             //表示兑换成功
             baseReqVo.setErrno(0);
@@ -96,7 +98,7 @@ public class WxCouponController {
         BaseReqVo<List> baseReqVo = new BaseReqVo<>();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        List<Coupon> couponList = couponService.selectList(cartId,grouponRulesId,1);
+        List<Coupon> couponList = couponService.selectList(cartId,grouponRulesId,user.getId());
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
         baseReqVo.setData(couponList);
