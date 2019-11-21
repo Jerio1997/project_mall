@@ -40,18 +40,18 @@ public class WxCouponController {
     public BaseReqVo receiveCoupon(@RequestBody CurCoupon coupon){
         BaseReqVo baseReqVo = new BaseReqVo();
         Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        Integer userId = user.getId();
+//        User user = (User) subject.getPrincipal();
+//        Integer userId = user.getId();
         Integer id = coupon.getCouponId();
-        int result = couponService.receiveCoupon(id,userId);
+        int result = couponService.receiveCoupon(id,1);
         if(result == 0) {
             baseReqVo.setErrno(0);
             baseReqVo.setErrmsg("成功");
             return baseReqVo;
         }else if(result == -2){
             baseReqVo.setErrmsg("券已过期");
-        }else {
-            baseReqVo.setErrmsg("已领取过");
+        }else if(result == -3){
+            baseReqVo.setErrmsg("没啊");
         }
         baseReqVo.setErrno(737);
         return baseReqVo;

@@ -7,10 +7,8 @@ import com.cskaoyan.mall.utils.OrderStatusUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -220,6 +218,23 @@ public class WxOrderController {
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @GetMapping("goods")
+    public BaseReqVo orderGoods(Integer orderId, Integer goodsId) {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        orderService.commitOrder(orderId, goodsId);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @PostMapping("comment")
+    public BaseReqVo commentOrder(@RequestBody Map map) {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
         return baseReqVo;
     }
 

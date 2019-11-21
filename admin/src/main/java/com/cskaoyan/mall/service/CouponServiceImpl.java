@@ -189,7 +189,7 @@ public class CouponServiceImpl implements CouponService{
             criteria.andCouponIdEqualTo(couponId);
             criteria.andUserIdEqualTo(userId);
             List<CouponUser> couponUsers = couponUserMapper.selectByExample(example);
-            if((couponUsers.size() < coupon.getLimit())){
+            if((couponUsers.size() >= coupon.getLimit())){
                 //表示不能接着领取
                 return -3;
             }
@@ -208,7 +208,11 @@ public class CouponServiceImpl implements CouponService{
             }
             coupon.setUpdateTime(new Date());
         }
+
         couponMapper.updateByPrimaryKeySelective(coupon);
+//        couponMapper.updateStausAndTimeById(coupon.getId());
+
+
         //----------coupon_user相关insert操作-----------
         CouponUser couponUser = new CouponUser();
         //获得上一个的id
@@ -221,7 +225,8 @@ public class CouponServiceImpl implements CouponService{
         } else {
             id = couponUsers.get(0).getId();
         }
-        couponUser.setId(id);
+//        couponUser.setId(++id);
+        couponUser.setId(null);
         //再其他信息
         couponUser.setUserId(userId);
         couponUser.setCouponId(couponId);

@@ -131,7 +131,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
@@ -151,10 +150,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
         return orderGoods;
     }
-
-
-
-
 
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
@@ -219,6 +214,13 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus((short) 402);
         order.setUpdateTime(new Date());
         order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    @Override
+    public void commitOrder(Integer orderId, Integer goodsId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        order.setComments((short) (order.getComments() + 1));
         orderMapper.updateByPrimaryKeySelective(order);
     }
 }

@@ -64,7 +64,10 @@ public class OrderStatus {
     }
 
     public static boolean canComment(Order order) {
-        return order.getComments() != null;
+        if (order.getOrderStatus() != 402) {
+            return false;
+        }
+        return order.getComments() == 0;
     }
 
     public static boolean canRefund(int orderStatus) {

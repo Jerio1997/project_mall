@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cskaoyan.mall.aop.AdminLog;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.AuthService;
 import com.cskaoyan.mall.shiro.CustomToken;
@@ -24,6 +25,7 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    @AdminLog
     @RequestMapping("login")
     public BaseRespVo login(@RequestBody LoginVo loginVo){
 
@@ -80,6 +82,7 @@ public class AuthController {
         return baseReqVo;
     }
 
+    @AdminLog
     @RequestMapping("logout")
     public BaseReqVo logout(){
         SecurityUtils.getSubject().logout();
