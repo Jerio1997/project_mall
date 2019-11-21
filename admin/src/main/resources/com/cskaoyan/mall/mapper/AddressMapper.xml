@@ -321,15 +321,32 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="queryProvinceByPid" resultType="string">
-    select r.name as province from cskaoyan_mall_region r left join cskaoyan_mall_address a
-    on a.province_id = r.id where r.id = #{provinceId}
+<!--    select r.name as province from cskaoyan_mall_region r left join cskaoyan_mall_address a-->
+<!--    on a.province_id = r.id where r.id = #{provinceId}-->
+    select name from cskaoyan_mall_region where id = #{provinceId}
   </select>
   <select id="queryCityByPid" resultType="string">
-    select r.name as city from cskaoyan_mall_region r left join cskaoyan_mall_address a
-    on a.city_id = r.id where r.id = #{cityId}
+<!--    select r.name as city from cskaoyan_mall_region r left join cskaoyan_mall_address a-->
+<!--    on a.city_id = r.id where r.id = #{cityId}-->
+    select name from cskaoyan_mall_region where id = #{cityId}
   </select>
   <select id="queryAreaByPid" resultType="string">
-    select r.name as area from cskaoyan_mall_region r left join cskaoyan_mall_address a
-    on a.area_id = r.id where r.id = #{areaId}
+<!--    select r.name as area from cskaoyan_mall_region r left join cskaoyan_mall_address a-->
+<!--    on a.area_id = r.id where r.id = #{areaId}-->
+    select name from cskaoyan_mall_region where id = #{areaId}
+  </select>
+  <select id="queryAddress" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cskaoyan_mall_address
+    <where>
+      <if test="userId != null ">
+        and user_id = #{userId}
+      </if>
+      <if test="name != null">
+        and name like "%" #{name}"%"
+      </if>
+    </where>
+<!--    where id = #{id,jdbcType=INTEGER}-->
   </select>
 </mapper>

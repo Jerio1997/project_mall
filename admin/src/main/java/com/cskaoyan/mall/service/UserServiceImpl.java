@@ -85,16 +85,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getAddresslist(Integer page, Integer limit, Integer userId, String name, String sort, String order) {
         PageHelper.startPage(page,limit,sort + " " + order);
-        AddressExample example = new AddressExample();
-        AddressExample.Criteria criteria = example.createCriteria();
-        if (userId != null){
-            criteria.andUserIdEqualTo(userId);
+//        AddressExample example = new AddressExample();
+//        AddressExample.Criteria criteria = example.createCriteria();
+//        if (userId != null){
+//            criteria.andUserIdEqualTo(userId);
+//        }
+//        if (name != null){
+//            criteria.andNameLike("%" + name + "%");
+//        }
+        List<Address> addresses = addressMapper.queryAddress(userId,name);
+        for (Address address : addresses) {
+            String province = addressMapper.queryProvinceByPid(address.getProvinceId());
+            String city = addressMapper.queryProvinceByPid(address.getCityId());
+            String area = addressMapper.queryProvinceByPid(address.getAreaId());
+            address.setProvince(province);
+            address.setCity(city);
+            address.setArea(area);
         }
-        if (name != null){
-            criteria.andNameLike("%" + name + "%");
-        }
-
-        List<Address> addresses = addressMapper.selectByExample(example);
         PageInfo<Address> addressPageInfo = new PageInfo<>(addresses);
         long total = addressPageInfo.getTotal();
         Map<String, Object> data = new HashMap<>();
