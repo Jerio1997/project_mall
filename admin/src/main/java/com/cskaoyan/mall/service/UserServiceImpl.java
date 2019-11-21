@@ -203,6 +203,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void register(WxRegister wxRegister) {
+
+    }
+
+    @Override
     public Long queryUsers() {
         Long users = userMapper.countByExample(new UserExample());
         return users;

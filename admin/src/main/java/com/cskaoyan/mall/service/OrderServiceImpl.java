@@ -119,4 +119,12 @@ public class OrderServiceImpl implements OrderService {
         orderReqVo.setTotalPages((int) (l/size));
         return orderReqVo;
     }
+
+    @Override
+    public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        return orderList;
+    }
 }
