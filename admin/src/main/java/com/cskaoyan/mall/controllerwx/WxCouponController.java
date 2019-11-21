@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public class WxCouponController {
 
     @GetMapping("list")
     public BaseReqVo listCoupon(Integer page, Integer size){
-        BaseReqVo baseReqVo = new BaseReqVo();
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
         Map<String,Object> map;
         map = couponService.queryCouponOnWx(page,size);
         baseReqVo.setErrmsg("成功");
@@ -37,20 +38,24 @@ public class WxCouponController {
         return baseReqVo;
     }
 
+    //@return  -2:券已经过期  -3:当前券领取数量已经达到上限  0:没啥问题
     @PostMapping("receive")
     public BaseReqVo receiveCoupon(Integer couponId){
         BaseReqVo baseReqVo = new BaseReqVo();
-        int result = couponService.receiveCoupon(couponId);
-        //没写完呢，还却个userId来完成这部分的逻辑
-        //------------进行user添加券的操作-----
-
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        System.out.println(user);
-
-        //-------------操作暂未完成--------
-        baseReqVo.setErrno(0);
-        baseReqVo.setErrmsg("成功");
+        Integer userId = user.getId();
+        int result = couponService.receiveCoupon(couponId,userId);
+        if(result == 0) {
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功");
+            return baseReqVo;
+        }else if(result == -2){
+            baseReqVo.setErrmsg("券已过期");
+        }else {
+            baseReqVo.setErrmsg("当前账号领取该券数量已达上限");
+        }
+        baseReqVo.setErrno(737);
         return baseReqVo;
     }
 
@@ -83,6 +88,18 @@ public class WxCouponController {
             baseReqVo.setErrno(742);
             baseReqVo.setErrmsg("优惠券不正确");
         }
+        return baseReqVo;
+    }
+
+    @GetMapping("selectlist")
+    public BaseReqVo selectListOfCoupon(Integer cartId, Integer grouponRulesId){
+        BaseReqVo<List> baseReqVo = new BaseReqVo<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        List<Coupon> couponList = couponService.selectList(cartId,grouponRulesId,1);
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setData(couponList);
         return baseReqVo;
     }
 }
