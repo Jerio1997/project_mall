@@ -1,7 +1,10 @@
 package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.BaseReqVo;
+import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.service.GrouponService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -35,8 +38,10 @@ public class WxGrouponController {
     @GetMapping("my")
     /*没写完！缺userId*/
     public BaseReqVo myGroupon(Integer showType){
-        BaseReqVo baseReqVo = new BaseReqVo();
-        Map<String,Object> map = grouponService.queryMyGroupon(showType);
+        BaseReqVo<Map> baseReqVo = new BaseReqVo<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Map<String,Object> map = grouponService.queryMyGroupon(showType,user.getId());
         baseReqVo.setData(map);
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");
