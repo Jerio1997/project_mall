@@ -2,6 +2,8 @@ package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +46,9 @@ public class WxCartController {
         Integer goodsId = cartReqTo.getGoodsId();
         Short number = cartReqTo.getNumber();
         Integer productId = cartReqTo.getProductId();
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User userByUsername = userService.getUserByUsername(username);
         // 相同product的商品加入购物车时购物车只有一条记录，即用update而不是add
         Cart cartByUserIdAndProductId = cartService.getCartByUserIdAndProductId(userByUsername.getId(), productId);
@@ -90,7 +94,9 @@ public class WxCartController {
         Integer goodsId = cartReqTo.getGoodsId();
         Short number = cartReqTo.getNumber();
         Integer productId = cartReqTo.getProductId();
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User userByUsername = userService.getUserByUsername(username);
         // 相同product的商品加入购物车时购物车只有一条记录，即用update而不是add
         Cart cartByUserIdAndProductId = cartService.getCartByUserIdAndProductId(userByUsername.getId(), productId);
@@ -128,7 +134,9 @@ public class WxCartController {
 
     @RequestMapping("index")
     public BaseReqVo listCart() {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User userByUsername = userService.getUserByUsername(username);
         List<Cart> cartListByUserId = cartService.getCartListByUserId(userByUsername.getId());
         CartTotal cartTotal = new CartTotal();
@@ -160,7 +168,9 @@ public class WxCartController {
 
     @RequestMapping("checked")
     public BaseReqVo updateChecked(@RequestBody CartCheckedReqDTO cartCheckedReqDTO) {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         Boolean checked = false;
         User userByUsername = userService.getUserByUsername(username);
         if (cartCheckedReqDTO.getIsChecked() == 1) {
@@ -178,7 +188,9 @@ public class WxCartController {
 
     @RequestMapping("update")
     public BaseReqVo updateCart(@RequestBody CartUpdateReqDTO cartUpdateReqDTO) {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User user = userService.getUserByUsername(username);
         Integer productId = cartUpdateReqDTO.getProductId();
         GoodsProduct goodsProductById = goodsService.getGoodsProductById(productId);
@@ -199,7 +211,9 @@ public class WxCartController {
 
     @RequestMapping("delete")
     public BaseReqVo deleteCart(@RequestBody CartDeleteReqDTO cartDeleteReqDTO) {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User user = userService.getUserByUsername(username);
         Integer[] productIds = cartDeleteReqDTO.getProductIds();
         for (Integer productId : productIds) {
@@ -213,7 +227,9 @@ public class WxCartController {
 
     @RequestMapping("goodscount")
     public BaseReqVo getgoodsCount() {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User user = userService.getUserByUsername(username);
         List<Cart> cartListByUserId = cartService.getCartListByUserId(user.getId());
         Integer goodsCount = 0;
@@ -229,7 +245,9 @@ public class WxCartController {
 
     @RequestMapping("checkout")
     public BaseReqVo checkout(Integer cartId, Integer addressId, Integer couponId, Integer grouponRulesId) {
-        String username = "lanzhao";
+        Subject subject = SecurityUtils.getSubject();
+        User userAuth = (User) subject.getPrincipal();
+        String username = userAuth.getUsername();
         User user = userService.getUserByUsername(username);
         double grouponPrice = 0;
         if (grouponRulesId != 0) {

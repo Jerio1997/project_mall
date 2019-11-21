@@ -18,7 +18,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("admin/coupon")
-public class CouponController {
+public class                   CouponController {
 
     @Autowired
     CouponService couponService;

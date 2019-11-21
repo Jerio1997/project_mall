@@ -39,5 +39,8 @@ public interface AddressMapper {
 
     List<Address> queryAddress(@Param("userId") Integer userId,@Param("name") String name);
 
-    List<Address> linkAddress();
+    //List<Address> linkAddress();
+
+    List<Address> queryDetailAddress(@Param("id") Integer id);
+
 }

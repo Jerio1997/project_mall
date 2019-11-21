@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface CollectMapper {
+
     long countByExample(CollectExample example);
 
     int deleteByExample(CollectExample example);
@@ -28,4 +29,10 @@ public interface CollectMapper {
     int updateByPrimaryKeySelective(Collect record);
 
     int updateByPrimaryKey(Collect record);
+
+    Collect queryCollect(@Param("userId") Integer userId, @Param("valueId") Integer valueId);
+
+    void deleteById(Integer valueId, Integer userId);
+
+    void insertById(@Param("userId") Integer userId, @Param("valueId") Integer valueId);
 }
