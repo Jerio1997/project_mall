@@ -16,4 +16,8 @@ public interface CartService {
     List<Cart> getCartListByUserIdAndCartId(Integer userId,Integer cartId);
 
     Cart getCartById(int cartId);
+
+    int deleteCartById(Integer id);
+
+    List<Cart> getCartListByUserIdChecked(Integer id);
 }

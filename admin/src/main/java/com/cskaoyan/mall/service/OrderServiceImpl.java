@@ -102,6 +102,7 @@ public class OrderServiceImpl implements OrderService {
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
         }
+        orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
         for (Order order : orders) {
             order.setOrderStatusText(OrderStatusUtils.getTextByCode(order.getOrderStatus()));
@@ -114,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setIsGroupin(false);
             }
             OrderGoodsExample orderGoodsExample = new OrderGoodsExample();
-            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId());
+            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId()).andDeletedEqualTo(false);
             List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(orderGoodsExample);
             order.setGoodsList(orderGoods);
             HandleOption status1Option = HandleOption.getStatus1Option();
