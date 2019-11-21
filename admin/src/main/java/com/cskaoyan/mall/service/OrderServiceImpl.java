@@ -8,10 +8,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -40,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Map<String, Object> getOrderList(int page, int limit, Short[] orderStatusArray, Integer userId, String orderSn, String sort, String order) {
-        PageHelper.startPage(page,limit);
+        PageHelper.startPage(page, limit);
         OrderExample example = new OrderExample();
         OrderExample.Criteria criteria = example.createCriteria();
         if (userId != null) {
@@ -102,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
         }
+        orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
         for (Order order : orders) {
             order.setOrderStatusText(OrderStatusUtils.getTextByCode(order.getOrderStatus()));
@@ -114,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setIsGroupin(false);
             }
             OrderGoodsExample orderGoodsExample = new OrderGoodsExample();
-            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId());
+            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId()).andDeletedEqualTo(false);
             List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(orderGoodsExample);
             order.setGoodsList(orderGoods);
             HandleOption status1Option = HandleOption.getStatus1Option();
@@ -129,6 +127,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+
+    public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        return orderList;
+    }
+
     public int InsertOrder(Order order) {
         int i = orderMapper.insertSelectiveAndGetId(order);
         return i;
@@ -142,7 +148,10 @@ public class OrderServiceImpl implements OrderService {
         return orderGoods;
     }
 
-    @Override
+
+
+
+
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
         // 获取详细地址
@@ -152,10 +161,7 @@ public class OrderServiceImpl implements OrderService {
         List<Address> addresses = addressMapper.selectByExample(addressExample);
         // 获取区地址
         Integer areaId = addresses.get(0).getAreaId();
-        RegionExample regionExample = new RegionExample();
-        regionExample.createCriteria().andCodeEqualTo(areaId);
-        List<Region> regions = regionMapper.selectByExample(regionExample);
-        Region region = regions.get(0);
+        Region region = regionMapper.selectByPrimaryKey(areaId);
         String areaName = region.getName();
         // 获取市
         Integer cityId = region.getPid();
@@ -186,6 +192,29 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteOrder(Integer orderId) {
+        OrderGoodsExample example = new OrderGoodsExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        orderGoodsMapper.deleteByExample(example);
         orderMapper.deleteByPrimaryKey(orderId);
+    }
+
+    @Override
+    public void cancelOrderByOrderId(Integer orderId) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderStatus((short) 102);
+        order.setUpdateTime(new Date());
+        order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    @Override
+    public void confirmOrderByOrderId(Integer orderId) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderStatus((short) 402);
+        order.setUpdateTime(new Date());
+        order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
     }
 }

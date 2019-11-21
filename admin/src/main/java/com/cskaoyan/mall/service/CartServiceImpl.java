@@ -67,4 +67,21 @@ public class CartServiceImpl implements CartService{
         Cart cart = cartMapper.selectByPrimaryKey(cartId);
         return cart;
     }
+
+    @Override
+    public int deleteCartById(Integer id) {
+        Cart cart = new Cart();
+        cart.setId(id);
+        cart.setDeleted(true);
+        int i = cartMapper.updateByPrimaryKeySelective(cart);
+        return i;
+    }
+
+    @Override
+    public List<Cart> getCartListByUserIdChecked(Integer id) {
+        CartExample cartExample = new CartExample();
+        cartExample.createCriteria().andCheckedEqualTo(true).andUserIdEqualTo(id).andDeletedEqualTo(false);
+        List<Cart> carts = cartMapper.selectByExample(cartExample);
+        return carts;
+    }
 }

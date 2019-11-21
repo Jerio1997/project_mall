@@ -23,7 +23,7 @@ public class HandleOption {
         this.comment = OrderStatus.canComment(order);
         this.confirm = OrderStatus.canConfirm(status);  // 是否可确认收款
         this.refund = OrderStatus.canRefund(status);    // 是否可退款
-        this.rebuy = true;  // 是否可重买
+        this.rebuy = OrderStatus.canReBuy(status);  // 是否可重买
     }
 
     public HandleOption(Boolean cancel, Boolean delete, Boolean pay, Boolean comment, Boolean confirm, Boolean refund, Boolean rebuy) {

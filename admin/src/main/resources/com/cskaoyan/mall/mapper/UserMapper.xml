@@ -386,4 +386,7 @@
       select count(id) as users,date_format(add_time, '%Y-%m-%d') as day from cskaoyan_mall_user
       group by date_format(add_time,'%Y-%m-%d')
     </select>
+    <insert id="insertUser">
+      insert into cskaoyan_mall_user (username,password,mobile,add_time) values (#{username},#{password},#{mobile},now())
+    </insert>
 </mapper>
