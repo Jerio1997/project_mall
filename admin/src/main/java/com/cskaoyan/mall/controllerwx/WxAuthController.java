@@ -92,6 +92,6 @@ public class WxAuthController {
 		HashMap<Object, Object> data = new HashMap<>();
 		data.put("order",order);
 		return BaseRespVo.ok(data);
-		
+
 	}
 }

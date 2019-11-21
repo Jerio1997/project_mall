@@ -77,7 +77,8 @@ public class ShiroConfig {
     public CustomSessionManager sessionManager(){
         CustomSessionManager customSessionManager = new CustomSessionManager();
         customSessionManager.setDeleteInvalidSessions(true);
-        customSessionManager.setGlobalSessionTimeout(1000*60*30);
+        customSessionManager.setGlobalSessionTimeout(1800000);
+
         return customSessionManager;
     }
 
