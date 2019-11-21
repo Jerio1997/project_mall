@@ -1,8 +1,12 @@
 package com.cskaoyan.mall.controllerwx;
 
+import com.cskaoyan.mall.bean.Admin;
 import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Coupon;
+import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.service.CouponService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +43,10 @@ public class WxCouponController {
         int result = couponService.receiveCoupon(couponId);
         //没写完呢，还却个userId来完成这部分的逻辑
         //------------进行user添加券的操作-----
+
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        System.out.println(user);
 
         //-------------操作暂未完成--------
         baseReqVo.setErrno(0);

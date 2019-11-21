@@ -33,9 +33,24 @@ public class ShiroConfig {
         //第一个参数是请求url 第二个参数是过滤器
         filterChainDefinitionMap.put("/admin/auth/login","anon");
 //        filterChainDefinitionMap.put("/admin/auth/unauthenticated","anon");
+        filterChainDefinitionMap.put("/wx/**","anon");
         filterChainDefinitionMap.put("/wx/user/login","anon");
+        filterChainDefinitionMap.put("/wx/coupon/receive","anon");
+
+
+
+
+
+
+
+
+
+
+
+
 
         filterChainDefinitionMap.put("/**","authc");
+//        filterChainDefinitionMap.put("/**","anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
