@@ -31,11 +31,12 @@ public class ShiroConfig {
         //配置的是拦截器 shiro提供的filter
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         //第一个参数是请求url 第二个参数是过滤器
-        filterChainDefinitionMap.put("/admin/auth/login","anon");
+        /*filterChainDefinitionMap.put("/admin/auth/login","anon");
 //        filterChainDefinitionMap.put("/admin/auth/unauthenticated","anon");
         filterChainDefinitionMap.put("/wx/user/login","anon");
 
-        filterChainDefinitionMap.put("/**","authc");
+        filterChainDefinitionMap.put("/**","authc");*/
+        filterChainDefinitionMap.put("/**","anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
@@ -72,7 +73,7 @@ public class ShiroConfig {
     public CustomSessionManager sessionManager(){
         CustomSessionManager customSessionManager = new CustomSessionManager();
         customSessionManager.setDeleteInvalidSessions(true);
-        customSessionManager.setGlobalSessionTimeout(60000);
+        customSessionManager.setGlobalSessionTimeout(1800000);
         return customSessionManager;
     }
 

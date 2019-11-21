@@ -5,9 +5,11 @@ import com.cskaoyan.mall.bean.Address;
 import java.util.List;
 
 public interface AddressService {
-    List<Address> listAddress(Integer userId, String name);
+    List<Address> listAddress();
 
     Integer deleteAddress(Address address);
 
-    Integer saveAddress(Address address);
+    List<Address> saveAddress(Address address);
+
+    List<Address> detailAddress(Integer id);
 }
