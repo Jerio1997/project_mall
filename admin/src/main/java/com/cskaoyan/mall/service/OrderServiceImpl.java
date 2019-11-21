@@ -98,6 +98,10 @@ public class OrderServiceImpl implements OrderService {
         // 判断要查看的订单订单状态
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
+            if (codeByType[0].toString().contains("4")) {
+                Short comments = 0;
+                criteria.andCommentsIsNotNull().andCommentsNotEqualTo(comments);
+            }
         }
         orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
