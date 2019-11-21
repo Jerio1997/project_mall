@@ -11,11 +11,15 @@ public class CustomSessionManager extends DefaultWebSessionManager {
     @Override
     protected Serializable getSessionId(ServletRequest servletRequest, ServletResponse response) {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String header = request.getHeader("X-Litemall-Admin-Token");
-        if (header != null && !"".equals(header)){
-            return header;
+        String adminHeader = request.getHeader("X-Litemall-Admin-Token");
+        String wxHeader = request.getHeader("X-cskaoyanmall-Admin-Token");
+        if (adminHeader != null && !"".equals(adminHeader)){
+            return adminHeader;
+        }else if (wxHeader != null && !"".equals(wxHeader)){
+            return wxHeader;
+        }else {
+            return super.getSessionId(request, response);
         }
 
-        return super.getSessionId(request, response);
     }
 }
