@@ -131,7 +131,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
@@ -151,10 +150,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
         return orderGoods;
     }
-
-
-
-
 
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
