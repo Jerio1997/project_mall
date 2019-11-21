@@ -160,6 +160,7 @@ public class SystemServiceImpl implements SystemService {
         return admin;
     }
 
+
     @Override
     public void deleteAdmin(Admin admin) {
         adminMapper.deleteByPrimaryKey(admin.getId());
