@@ -35,14 +35,17 @@ public class WxHomeController {
     @Autowired
     TopicService topicService;
 
+    @Autowired
+    SystemService systemService;
+
     @RequestMapping("index")
     public BaseReqVo index() {
         BaseReqVo baseReqVo = new BaseReqVo();
         HashMap<String, Object> data = new HashMap<>();
-        List<Goods> newGoodsList = goodsService.getNewGoodsList(1, 10);
+        List<Goods> newGoodsList = goodsService.getNewGoodsList(1, systemService.getIndexNewSize());
         // newGoodsList
         data.put("newGoodsList", newGoodsList);
-        List<Goods> hotGoodsList = goodsService.getHotGoodsList(1, 10);
+        List<Goods> hotGoodsList = goodsService.getHotGoodsList(1, systemService.getIndexHotSize());
         // hotGoodsList
         data.put("hotGoodsList", hotGoodsList);
         CouponListResVo couponListResVo = couponService.queryCoupon(1, 10, null, null, null, "add_time", "desc");
@@ -51,7 +54,7 @@ public class WxHomeController {
         AdListResVo adListResVo = adService.queryListAd(1, 10, null, null, "add_time", "desc");
         // banner
         data.put("banner", adListResVo.getItems());
-        List<Category> categoryList = categoryService.getCategoryList(1, 12);
+        List<Category> categoryList = categoryService.getCategoryList(1, systemService.getCategoryListSize());
         // channel
         data.put("channel", categoryList);
         GrouponRulesListResVo grouponRulesListResVo = grouponRulesService.queryGrouponRules(1, 10, null, "add_time", "desc");
@@ -70,16 +73,16 @@ public class WxHomeController {
         }
         // grouponList
         data.put("grouponList", grouponList);
-        Map<String, Object> brandList = brandService.getBrandList(1, 20, null, null, "add_time", "desc");
+        Map<String, Object> brandList = brandService.getBrandList(1, systemService.getIndexBrandSize(), null, null, "add_time", "desc");
         data.put("brandList", brandList.get("items"));
-        TopicListResVo topicListResVo = topicService.queryTopic(1, 20, null, null, "add_time", "desc");
+        TopicListResVo topicListResVo = topicService.queryTopic(1, systemService.getIndexTopicSize(), null, null, "add_time", "desc");
         data.put("topicList", topicListResVo.getItems());
         List<FloorGoodsResVo> floorGoodsList = new ArrayList<>();
         for (Category category : categoryList) {
             FloorGoodsResVo floorGoodsResVo = new FloorGoodsResVo();
             floorGoodsResVo.setId(category.getId());
             floorGoodsResVo.setName(category.getName());
-            List<Goods> goodsList = goodsService.queryGoodsByCategoryLevel1(1, 6, category.getId());
+            List<Goods> goodsList = goodsService.queryGoodsByCategoryLevel1(1, systemService.getCategoryGoodsSize(), category.getId());
             floorGoodsResVo.setGoodsList(goodsList);
             floorGoodsList.add(floorGoodsResVo);
         }

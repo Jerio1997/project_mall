@@ -28,7 +28,8 @@ public class WxCartController {
     @Autowired
     GrouponRulesService grouponRulesService;
 
-//    @Autowired  // 应该自动注入一个 addressService
+    @Autowired  // 应该自动注入一个 addressService
+    AddressService addressService;
 
     @Autowired
     CouponService couponService;
