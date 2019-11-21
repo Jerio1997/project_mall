@@ -133,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderStatusEqualTo(Short.valueOf(orderStatus));
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
     }
@@ -142,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
         int i = orderMapper.insertSelectiveAndGetId(order);
         return i;
     }
+
 
     @Override
     public List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId) {

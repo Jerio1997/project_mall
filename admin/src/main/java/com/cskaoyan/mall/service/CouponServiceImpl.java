@@ -445,5 +445,17 @@ public class CouponServiceImpl implements CouponService{
         return couponList;
     }
 
-
+    @Override
+    public int updateCouponUserStatusById(int couponId, int status) {
+        CouponUserExample couponUserExample = new CouponUserExample();
+        Short oldStatus = 0;
+        couponUserExample.createCriteria().andDeletedEqualTo(false).andCouponIdEqualTo(couponId).andStatusEqualTo(oldStatus);
+        List<CouponUser> couponUsers = couponUserMapper.selectByExample(couponUserExample);
+        if (couponUsers != null && couponUsers.size() != 0) {
+            CouponUser couponUser = couponUsers.get(0);
+            couponUser.setStatus((short) status);
+            couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        }
+        return 1;
+    }
 }
