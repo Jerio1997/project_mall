@@ -25,4 +25,8 @@ public interface OrderService {
     HashMap<String, Object> selectOrderInfoById(Integer orderId);
 
     void deleteOrder(Integer orderId);
+
+    void cancelOrderByOrderId(Integer orderId);
+
+    void confirmOrderByOrderId(Integer orderId);
 }

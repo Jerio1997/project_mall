@@ -192,4 +192,32 @@ public class WxOrderController {
         return baseReqVo;
     }
 
+    @PostMapping({"cancel","refund"})
+    public BaseReqVo cancelOrder(@RequestBody Map map) {
+        Integer orderId = (Integer) map.get("orderId");
+        orderService.cancelOrderByOrderId(orderId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
+    @PostMapping("prepay")
+    public BaseReqVo orderPrepay() {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrmsg("订单不能支付");
+        baseReqVo.setErrno(724);
+        return baseReqVo;
+    }
+
+    @PostMapping("confirm")
+    public BaseReqVo confirmOrder(@RequestBody Map map) {
+        Integer orderId = (Integer) map.get("orderId");
+        orderService.confirmOrderByOrderId(orderId);
+        BaseReqVo baseReqVo = new BaseReqVo();
+        baseReqVo.setErrno(0);
+        baseReqVo.setErrmsg("成功");
+        return baseReqVo;
+    }
+
 }
