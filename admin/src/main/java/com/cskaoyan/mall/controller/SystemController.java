@@ -1,7 +1,9 @@
 package com.cskaoyan.mall.controller;
 
+import com.aliyun.oss.OSSClient;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
+import com.cskaoyan.mall.component.AliyunComponent;
 import com.cskaoyan.mall.service.SystemService;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -19,6 +20,9 @@ import java.util.*;
 public class SystemController {
     @Autowired
     private SystemService systemService;
+
+    @Autowired
+    AliyunComponent aliyunComponent;
 
     @RequestMapping("admin/list")
     public BaseReqVo<Map<String, Object>> findAllAdmins(Integer page, Integer limit, String sort, String order, String username) {
@@ -76,7 +80,12 @@ public class SystemController {
     public BaseReqVo<Storage> createStorage(MultipartFile file, HttpServletRequest request) {
         // 不需要 fileupload 组件
         // 拼接 url 前缀与后缀，并且已经在 yml 文件中添加 url 前缀映射路径
-        String urlPrefix = "http://" + request.getServerName() + ":" + request.getServerPort() + "/wx/storage/fetch/";
+//        String urlPrefix = "http://" + request.getServerName() + ":" + request.getServerPort() + "/wx/storage/fetch/";
+        //采用oss
+        OSSClient ossClient = aliyunComponent.getOssClient();
+        String bucket = aliyunComponent.getOss().getBucket();
+        String endPoint = aliyunComponent.getOss().getEndPoint();
+        String urlPrefix = "https://" + bucket + "." + endPoint + "/";
         String[] split = Objects.requireNonNull(file.getOriginalFilename()).split("\\.");
         String urlSuffix = split[split.length - 1];
         // 生成随机文件名
@@ -84,12 +93,12 @@ public class SystemController {
         String s = uuid.toString().replace("-", "");
         String key = s + "." + urlSuffix;
         // 存储文件
-        File filePath = new File("admin\\target\\classes\\static", key);
+//        File filePath = new File("admin\\target\\classes\\static", key);
         //        修改为文件系统路径
 //        File filePath = new File("D:/picture");
-        String absolutePath = filePath.getAbsolutePath();
+//        String absolutePath = filePath.getAbsolutePath();
         try {
-            file.transferTo(new File(absolutePath));
+            ossClient.putObject(aliyunComponent.getOss().getBucket(), key, file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
