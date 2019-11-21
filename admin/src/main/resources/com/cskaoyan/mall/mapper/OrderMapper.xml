@@ -547,4 +547,171 @@
     sum(order_price) as amount, (sum(order_price)/count(distinct user_id)) as pcr from cskaoyan_mall_order
     group by date_format(add_time,'%Y-%m-%d')
   </select>
+
+    <insert id="insertSelectiveAndGetId" parameterType="com.cskaoyan.mall.bean.Order">
+        <selectKey order="AFTER" keyProperty="id" keyColumn="id" resultType="com.cskaoyan.mall.bean.Order">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+        insert into cskaoyan_mall_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="orderSn != null">
+                order_sn,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="consignee != null">
+                consignee,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="message != null">
+                message,
+            </if>
+            <if test="goodsPrice != null">
+                goods_price,
+            </if>
+            <if test="freightPrice != null">
+                freight_price,
+            </if>
+            <if test="couponPrice != null">
+                coupon_price,
+            </if>
+            <if test="integralPrice != null">
+                integral_price,
+            </if>
+            <if test="grouponPrice != null">
+                groupon_price,
+            </if>
+            <if test="orderPrice != null">
+                order_price,
+            </if>
+            <if test="actualPrice != null">
+                actual_price,
+            </if>
+            <if test="payId != null">
+                pay_id,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="shipSn != null">
+                ship_sn,
+            </if>
+            <if test="shipChannel != null">
+                ship_channel,
+            </if>
+            <if test="shipTime != null">
+                ship_time,
+            </if>
+            <if test="confirmTime != null">
+                confirm_time,
+            </if>
+            <if test="comments != null">
+                comments,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="addTime != null">
+                add_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="orderSn != null">
+                #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=SMALLINT},
+            </if>
+            <if test="consignee != null">
+                #{consignee,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="message != null">
+                #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsPrice != null">
+                #{goodsPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="freightPrice != null">
+                #{freightPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="couponPrice != null">
+                #{couponPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="integralPrice != null">
+                #{integralPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="grouponPrice != null">
+                #{grouponPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="orderPrice != null">
+                #{orderPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="actualPrice != null">
+                #{actualPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="payId != null">
+                #{payId,jdbcType=VARCHAR},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="shipSn != null">
+                #{shipSn,jdbcType=VARCHAR},
+            </if>
+            <if test="shipChannel != null">
+                #{shipChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="shipTime != null">
+                #{shipTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="confirmTime != null">
+                #{confirmTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="comments != null">
+                #{comments,jdbcType=SMALLINT},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
 </mapper>

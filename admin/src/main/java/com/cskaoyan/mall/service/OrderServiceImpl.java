@@ -8,10 +8,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -102,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
         }
+        orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
         for (Order order : orders) {
             order.setOrderStatusText(OrderStatusUtils.getTextByCode(order.getOrderStatus()));
@@ -114,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
                 order.setIsGroupin(false);
             }
             OrderGoodsExample orderGoodsExample = new OrderGoodsExample();
-            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId());
+            orderGoodsExample.createCriteria().andOrderIdEqualTo(order.getId()).andDeletedEqualTo(false);
             List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(orderGoodsExample);
             order.setGoodsList(orderGoods);
             HandleOption status1Option = HandleOption.getStatus1Option();
@@ -124,16 +122,30 @@ public class OrderServiceImpl implements OrderService {
         orderReqVo.setData(orders);
         long l = orderMapper.countByExample(new OrderExample());
         orderReqVo.setCount((int) l);
-        orderReqVo.setTotalPages((int) (l/size));
+        orderReqVo.setTotalPages((int) Math.ceil(1.0 * l / size));
         return orderReqVo;
     }
 
     @Override
+<<<<<<< HEAD
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
+=======
+    public int InsertOrder(Order order) {
+        int i = orderMapper.insertSelectiveAndGetId(order);
+        return i;
+    }
+
+    @Override
+    public List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId) {
+        OrderGoodsExample example = new OrderGoodsExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
+        return orderGoods;
+>>>>>>> 48567d6bd1c954377ccb7fb6be5e6068774d8ced
     }
         public List<OrderGoods> selectOrderGoodsByOrderId (Integer orderId){
             OrderGoodsExample example = new OrderGoodsExample();
@@ -142,6 +154,7 @@ public class OrderServiceImpl implements OrderService {
             return orderGoods;
         }
 
+<<<<<<< HEAD
         @Override
         public HashMap<String, Object> selectOrderInfoById (Integer orderId){
             Order order = orderMapper.selectByPrimaryKey(orderId);
@@ -190,3 +203,72 @@ public class OrderServiceImpl implements OrderService {
         }
 
     }
+=======
+    @Override
+    public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        // 获取详细地址
+        String detailAddress = order.getAddress();
+        AddressExample addressExample = new AddressExample();
+        addressExample.createCriteria().andAddressEqualTo(detailAddress);
+        List<Address> addresses = addressMapper.selectByExample(addressExample);
+        // 获取区地址
+        Integer areaId = addresses.get(0).getAreaId();
+        Region region = regionMapper.selectByPrimaryKey(areaId);
+        String areaName = region.getName();
+        // 获取市
+        Integer cityId = region.getPid();
+        Region city = regionMapper.selectByPrimaryKey(cityId);
+        String cityName = city.getName();
+        // 获取省份
+        Integer pid = city.getPid();
+        Region province = regionMapper.selectByPrimaryKey(pid);
+        String provinceName = province.getName();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("address", provinceName + cityName + areaName + detailAddress);
+        map.put("addTime", order.getAddTime());
+        map.put("actualPrice", order.getActualPrice());
+        map.put("consignee", order.getConsignee());
+        map.put("couponPrice", order.getCouponPrice());
+        map.put("freightPrice", order.getFreightPrice());
+        map.put("goodsPrice", order.getGoodsPrice());
+        map.put("id", order.getId());
+        map.put("mobile", order.getMobile());
+        map.put("orderSn", order.getOrderSn());
+
+        Short orderStatus = order.getOrderStatus();
+        map.put("orderStatusText", OrderStatus.getOrderStatusText(orderStatus));
+        map.put("handleOption", new HandleOption(order));
+        return map;
+    }
+
+    @Override
+    public void deleteOrder(Integer orderId) {
+        OrderGoodsExample example = new OrderGoodsExample();
+        example.createCriteria().andOrderIdEqualTo(orderId);
+        orderGoodsMapper.deleteByExample(example);
+        orderMapper.deleteByPrimaryKey(orderId);
+    }
+
+    @Override
+    public void cancelOrderByOrderId(Integer orderId) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderStatus((short) 102);
+        order.setUpdateTime(new Date());
+        order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    @Override
+    public void confirmOrderByOrderId(Integer orderId) {
+        Order order = new Order();
+        order.setId(orderId);
+        order.setOrderStatus((short) 402);
+        order.setUpdateTime(new Date());
+        order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+}
+>>>>>>> 48567d6bd1c954377ccb7fb6be5e6068774d8ced

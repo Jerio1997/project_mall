@@ -31,7 +31,7 @@ public class OrderStatusUtils {
         statusTypeCodeMap.put(0, new Short[0]);
         statusTypeCodeMap.put(1, new Short[]{101});
         statusTypeCodeMap.put(2, new Short[]{201, 202});
-        statusTypeCodeMap.put(3, new Short[]{301, 102, 103});
+        statusTypeCodeMap.put(3, new Short[]{301});
         statusTypeCodeMap.put(4, new Short[]{401, 402});
     }
 
