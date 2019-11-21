@@ -264,11 +264,8 @@ public class UserServiceImpl implements UserService {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username);
         List<User> users = userMapper.selectByExample(userExample);
-<<<<<<< HEAD
-        if (users == null || users.size() == 0) {
-=======
+
         if (users == null ||users.size() == 0) {
->>>>>>> 48567d6bd1c954377ccb7fb6be5e6068774d8ced
             return null;
         }
         return users.get(0);

@@ -127,26 +127,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-<<<<<<< HEAD
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderStatusEqualTo(Short.valueOf(orderStatus));
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
-=======
+    }
     public int InsertOrder(Order order) {
         int i = orderMapper.insertSelectiveAndGetId(order);
         return i;
     }
 
-    @Override
-    public List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId) {
-        OrderGoodsExample example = new OrderGoodsExample();
-        example.createCriteria().andOrderIdEqualTo(orderId);
-        List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
-        return orderGoods;
->>>>>>> 48567d6bd1c954377ccb7fb6be5e6068774d8ced
-    }
         public List<OrderGoods> selectOrderGoodsByOrderId (Integer orderId){
             OrderGoodsExample example = new OrderGoodsExample();
             example.createCriteria().andOrderIdEqualTo(orderId);
@@ -154,56 +145,6 @@ public class OrderServiceImpl implements OrderService {
             return orderGoods;
         }
 
-<<<<<<< HEAD
-        @Override
-        public HashMap<String, Object> selectOrderInfoById (Integer orderId){
-            Order order = orderMapper.selectByPrimaryKey(orderId);
-            // 获取详细地址
-            String detailAddress = order.getAddress();
-            AddressExample addressExample = new AddressExample();
-            addressExample.createCriteria().andAddressEqualTo(detailAddress);
-            List<Address> addresses = addressMapper.selectByExample(addressExample);
-            // 获取区地址
-            Integer areaId = addresses.get(0).getAreaId();
-            RegionExample regionExample = new RegionExample();
-            regionExample.createCriteria().andCodeEqualTo(areaId);
-            List<Region> regions = regionMapper.selectByExample(regionExample);
-            Region region = regions.get(0);
-            String areaName = region.getName();
-            // 获取市
-            Integer cityId = region.getPid();
-            Region city = regionMapper.selectByPrimaryKey(cityId);
-            String cityName = city.getName();
-            // 获取省份
-            Integer pid = city.getPid();
-            Region province = regionMapper.selectByPrimaryKey(pid);
-            String provinceName = province.getName();
-
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("address", provinceName + cityName + areaName + detailAddress);
-            map.put("addTime", order.getAddTime());
-            map.put("actualPrice", order.getActualPrice());
-            map.put("consignee", order.getConsignee());
-            map.put("couponPrice", order.getCouponPrice());
-            map.put("freightPrice", order.getFreightPrice());
-            map.put("goodsPrice", order.getGoodsPrice());
-            map.put("id", order.getId());
-            map.put("mobile", order.getMobile());
-            map.put("orderSn", order.getOrderSn());
-
-            Short orderStatus = order.getOrderStatus();
-            map.put("orderStatusText", OrderStatus.getOrderStatusText(orderStatus));
-            map.put("handleOption", new HandleOption(order));
-            return map;
-        }
-
-        @Override
-        public void deleteOrder (Integer orderId){
-            orderMapper.deleteByPrimaryKey(orderId);
-        }
-
-    }
-=======
     @Override
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
@@ -271,4 +212,3 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.updateByPrimaryKeySelective(order);
     }
 }
->>>>>>> 48567d6bd1c954377ccb7fb6be5e6068774d8ced
