@@ -1,6 +1,8 @@
 package com.cskaoyan.mall.service;
 
-import com.cskaoyan.mall.bean.*;
+import com.cskaoyan.mall.bean.Admin;
+import com.cskaoyan.mall.bean.Role;
+import com.cskaoyan.mall.bean.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +99,18 @@ public interface SystemService {
     Double getExpressFreightMin();
 
     Double getExpressFreightValue();
+
+    Integer getIndexNewSize();
+
+    Integer getIndexHotSize();
+
+    Integer getIndexBrandSize();
+
+    Integer getIndexTopicSize();
+
+    Integer getCategoryListSize();
+
+    Integer getCategoryGoodsSize();
 
     void insertPermissionsByRoleId(List<String> permissions, Integer roleId);
 }

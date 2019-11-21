@@ -17,8 +17,8 @@ public class WxAddressController {
     AddressService addressService;
 
     @RequestMapping("list")
-    public BaseReqVo listAddress(){
-        List<Address> data = addressService.listAddress();
+    public BaseReqVo listAddress(Integer userId, String name){
+        List<Address> data = addressService.listAddress(userId,name);
         BaseReqVo baseReqVo = new BaseReqVo();
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);

@@ -5,7 +5,7 @@ import com.cskaoyan.mall.bean.Address;
 import java.util.List;
 
 public interface AddressService {
-    List<Address> listAddress();
+    List<Address> listAddress(Integer userId, String name);
 
     Integer deleteAddress(Address address);
 
