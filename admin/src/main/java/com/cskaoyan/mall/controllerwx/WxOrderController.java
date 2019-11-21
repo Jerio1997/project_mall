@@ -47,6 +47,7 @@ public class WxOrderController {
     OrderGoodsService orderGoodsService;
 
 
+
     @RequestMapping("list")
     public BaseReqVo listOrder(int showType, int page, int size) {
         Subject subject = SecurityUtils.getSubject();
@@ -105,7 +106,7 @@ public class WxOrderController {
         Double expressFreightValue = systemService.getExpressFreightValue();
         Double freightPrice = 0.0;
         if (goodsPrice <= expressFreightMin) {
-            freightPrice = systemService.getExpressFreightValue();
+            freightPrice = expressFreightValue;
         } else {
             freightPrice = 0.0;
         }
@@ -113,6 +114,8 @@ public class WxOrderController {
         if (couponId != 0 && couponId != -1) {
             Coupon couponById = couponService.getCouponById(couponId);
             couponPrice += couponById.getDiscount().doubleValue();
+            int status = couponService.updateCouponUserStatusById(couponId, 1);
+
         }
         Double integralPrice = 0.0;
         Double grouponPrice = 0.0;

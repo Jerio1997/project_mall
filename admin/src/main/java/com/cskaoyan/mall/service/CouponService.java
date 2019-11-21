@@ -36,4 +36,6 @@ public interface CouponService {
     int exchangeCouponByCode(String code,Integer id);
 
     List<Coupon> selectList(Integer cartId, Integer grouponRulesId, Integer userId);
+
+    int updateCouponUserStatusById(int couponId, int status);
 }
