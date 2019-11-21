@@ -3,6 +3,8 @@ package com.cskaoyan.mall.aop;
 import com.cskaoyan.mall.bean.Admin;
 import com.cskaoyan.mall.bean.Log;
 import com.cskaoyan.mall.mapper.LogMapper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,9 +23,6 @@ public class LogAdvice {
     @Autowired
     private HttpServletRequest request;
 
-    @Autowired
-    private HttpSession session;
-
     private Admin admin;
     private Log log;
     private Boolean flag = false;
@@ -38,7 +37,8 @@ public class LogAdvice {
         log.setAddTime(new Date());
         log.setUpdateTime(new Date());
         log.setIp(request.getRemoteAddr());
-        admin = (Admin) session.getAttribute("admin");  // 有可能为空，所以先不加入 log
+        Subject subject = SecurityUtils.getSubject();
+//        admin = (Admin) subject.getPrincipal();  // 有可能为空，所以先不加入 log
 
         String requestURI = request.getRequestURI();
         if (requestURI.contains("admin/auth/login")) {     // 登录操作
@@ -91,9 +91,9 @@ public class LogAdvice {
     @AfterThrowing(value = "logPointCut()", throwing = "throwable")
     public void myThrowing(Throwable throwable) {
         // 发生异常时的操作
-        /*if (admin == null) {
+        if (admin == null) {
             log.setAdmin("未知用户");   // 检验失败登录不能查找出登录的管理员用户名
-        }*/
+        }
         if (flag) {
             log.setStatus(false);
             logMapper.insertSelective(log);
@@ -103,8 +103,8 @@ public class LogAdvice {
     @AfterReturning("logPointCut()")
     public void myAfter() {
         // 未发生异常时的操作
-//        log.setAdmin(admin.getUsername());
         if (flag) {
+//            log.setAdmin(admin.getUsername());
             log.setStatus(true);
             logMapper.insertSelective(log);
         }
