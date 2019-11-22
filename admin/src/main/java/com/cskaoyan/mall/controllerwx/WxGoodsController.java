@@ -63,7 +63,10 @@ public class WxGoodsController {
         List<Category> filterCategoryList = goodsService.queryCategoryByGoodsCodition(keyword, brandId, isHot, isNew, page, sort, order, size);
         List<Goods> goodsList = goodsService.queryGoodsByCondition(keyword,brandId,categoryId,isHot,isNew,page,sort,order,size);
         if(!StringUtils.isEmpty(keyword)){
-            searchHistoryService.addHistoryKeyword(keyword);
+            Subject subject = SecurityUtils.getSubject();
+            User principal = (User) subject.getPrincipal();
+            Integer userId = principal.getId();
+            searchHistoryService.addHistoryKeyword(userId,keyword);
         }
         int count = goodsList.size();
         goodsListResVo_wx.setFilterCategoryList(filterCategoryList);
