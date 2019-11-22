@@ -98,6 +98,10 @@ public class OrderServiceImpl implements OrderService {
         // 判断要查看的订单订单状态
         if (codeByType.length != 0) {
             criteria.andOrderStatusIn(Arrays.asList(codeByType));
+            if (codeByType[0].toString().contains("4")) {
+                Short comments = 0;
+                criteria.andCommentsIsNotNull().andCommentsNotEqualTo(comments);
+            }
         }
         orderExample.setOrderByClause("add_time desc");
         List<Order> orders = orderMapper.selectByExample(orderExample);
@@ -127,10 +131,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-
     public List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus) {
         OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andUserIdEqualTo(id).andOrderSnEqualTo(orderStatus);
+        orderExample.createCriteria().andUserIdEqualTo(id).andOrderStatusEqualTo(Short.valueOf(orderStatus));
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         return orderList;
     }
@@ -140,6 +143,7 @@ public class OrderServiceImpl implements OrderService {
         return i;
     }
 
+
     @Override
     public List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId) {
         OrderGoodsExample example = new OrderGoodsExample();
@@ -147,10 +151,6 @@ public class OrderServiceImpl implements OrderService {
         List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(example);
         return orderGoods;
     }
-
-
-
-
 
     public HashMap<String, Object> selectOrderInfoById(Integer orderId) {
         Order order = orderMapper.selectByPrimaryKey(orderId);
@@ -215,6 +215,13 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus((short) 402);
         order.setUpdateTime(new Date());
         order.setEndTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+    @Override
+    public void commitOrder(Integer orderId, Integer goodsId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        order.setComments((short) (order.getComments() + 1));
         orderMapper.updateByPrimaryKeySelective(order);
     }
 }

@@ -265,7 +265,6 @@ public class UserServiceImpl implements UserService {
         userExample.createCriteria().andUsernameEqualTo(username);
         List<User> users = userMapper.selectByExample(userExample);
 
-
         if (users == null || users.size() == 0) {
             return null;
         }
