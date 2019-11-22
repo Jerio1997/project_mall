@@ -17,6 +17,7 @@ public class ConfigController {
     ConfigService configService;
 
     @RequestMapping(value = {"mall"}, method = RequestMethod.GET)
+    @RequiresPermissions(value={"admin:config:mall:list"},logical = Logical.OR)
     public BaseReqVo getMallInfo() {
         BaseReqVo<Mall> baseReqVo = new BaseReqVo<>();
         Mall mallResult = configService.selectMallInfo();
@@ -27,6 +28,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "mall", method = RequestMethod.POST)
+    @RequiresPermissions(value={"admin:config:mall:updateConfigs"},logical = Logical.OR)
     public BaseReqVo changeMallInfo(@RequestBody Mall mall) {
         BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
         int result = configService.updateMallInfo(mall);
@@ -51,6 +53,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "express", method = RequestMethod.GET)
+    @RequiresPermissions(value={"admin:config:express:list"},logical = Logical.OR)
     public BaseReqVo getExpressInfo() {
         BaseReqVo<Express> baseReqVo = new BaseReqVo<>();
         Express express = configService.selectExpressInfo();
@@ -61,6 +64,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "express", method = RequestMethod.POST)
+    @RequiresPermissions(value={"admin:config:express:updateConfigs"},logical = Logical.OR)
     public BaseReqVo changeExpressInfo(@RequestBody Express express) {
         BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
         int result = configService.updateExpressInfo(express);
@@ -75,6 +79,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "order", method = RequestMethod.GET)
+    @RequiresPermissions(value={"admin:config:order:list"},logical = Logical.OR)
     public BaseReqVo getOrderInfo() {
         BaseReqVo<OrderConfig> baseReqVo = new BaseReqVo<>();
         OrderConfig orderConfig = configService.selectOrderInfo();
@@ -85,6 +90,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "order", method = RequestMethod.POST)
+    @RequiresPermissions(value={"admin:config:order:updateConfigs"},logical = Logical.OR)
     public BaseReqVo changeOrderInfo(@RequestBody OrderConfig orderConfig) {
         BaseReqVo<OrderConfig> baseReqVo = new BaseReqVo<>();
         int result = configService.updateOrderConfigInfo(orderConfig);
@@ -99,6 +105,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "wx", method = RequestMethod.GET)
+    @RequiresPermissions(value={"admin:config:wx:list"},logical = Logical.OR)
     public BaseReqVo getWechatInfo() {
         BaseReqVo<WechatConfig> baseReqVo = new BaseReqVo<>();
         WechatConfig wechatConfig = configService.selectWechatInfo();
@@ -109,6 +116,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "wx", method = RequestMethod.POST)
+    @RequiresPermissions(value={"admin:config:wx:updateConfigs"},logical = Logical.OR)
     public BaseReqVo ChangeWechatInfo(@RequestBody WechatConfig wechatConfig) {
         BaseReqVo<WechatConfig> baseReqVo = new BaseReqVo<>();
         int result = configService.updateWechatConfigInfo(wechatConfig);
