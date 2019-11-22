@@ -6,6 +6,8 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.component.AliyunComponent;
 import com.cskaoyan.mall.service.SystemService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ public class SystemController {
     AliyunComponent aliyunComponent;
 
     @RequestMapping("admin/list")
+    @RequiresPermissions(value={"admin:admin:list"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> findAllAdmins(Integer page, Integer limit, String sort, String order, String username) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         Map<String, Object> map = systemService.findAllAdmin(page, limit, sort, order, username);
@@ -57,6 +60,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("admin/create")
+    @RequiresPermissions(value={"admin:admin:create"},logical = Logical.OR)
     public BaseReqVo<Admin> createAdmin(@RequestBody Admin admin) {
         BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
         admin.setAddTime(new Date());
@@ -70,6 +74,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("admin/delete")
+    @RequiresPermissions(value={"admin:admin:delete"},logical = Logical.OR)
     public Map<String, Object> deleteAdmin(@RequestBody Admin admin) {
         HashMap<String, Object> map = new HashMap<>();
         systemService.deleteAdmin(admin);

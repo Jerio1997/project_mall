@@ -50,6 +50,7 @@ public class UserController {
     @ResponseBody
     //会员管理1
     @RequestMapping("user/list")
+    @RequiresPermissions(value={"admin:user:list"},logical = Logical.OR)
     public BaseReqVo listUser(Integer page,Integer limit,String username,String mobile,String sort,String order,User user){
         Map<String,Object> data = userService.getUserlist(page,limit,username,mobile,sort,order,user);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -60,6 +61,7 @@ public class UserController {
     }
     //收货地址1
     @RequestMapping("address/list")
+    @RequiresPermissions(value={"admin:address:list"},logical = Logical.OR)
     public BaseReqVo addressUser(Integer page,Integer limit,Integer userId,String name,String sort,String order){
         Map<String,Object> data = userService.getAddresslist(page,limit,userId,name,sort,order);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -70,6 +72,7 @@ public class UserController {
     }
     //会员收藏1
     @RequestMapping("collect/list")
+    @RequiresPermissions(value={"admin:collect:list"},logical = Logical.OR)
     public BaseReqVo collectUser(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order, Collect collect){
         Map<String,Object> data = userService.getCollectlist(page,limit,userId,valueId,sort,order,collect);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -80,6 +83,7 @@ public class UserController {
     }
     //会员足迹1
     @RequestMapping("footprint/list")
+    @RequiresPermissions(value={"admin:footprint:list"},logical = Logical.OR)
     public BaseReqVo cartUser(Integer page, Integer limit, Integer userId, Integer goodsId, String sort, String order, Footprint footprint){
         Map<String,Object> data = userService.getFootlist(page,limit,userId,goodsId,sort,order,footprint);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -90,6 +94,7 @@ public class UserController {
     }
     //搜索历史
     @RequestMapping("history/list")
+    @RequiresPermissions(value={"admin:history:list"},logical = Logical.OR)
     public BaseReqVo searchHistory(Integer page, Integer limit, Integer userId, String keyword, String sort, String order, SearchHistory searchHistory){
         Map<String,Object> data = userService.getSearchHistorylist(page,limit,userId,keyword,sort,order,searchHistory);
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -100,6 +105,7 @@ public class UserController {
     }
     //意见反馈
     @RequestMapping(value = "feedback/list")
+    @RequiresPermissions(value={"admin:feedback:list"},logical = Logical.OR)
     public BaseReqVo feedBack(Integer page,Integer limit,Integer id,String username,String sort,String order,Feedback feedback) {
         Map<String, Object> data = userService.getFeetBacklist(page, limit, id, username, sort, order,feedback);
         BaseReqVo baseReqVo = new BaseReqVo();

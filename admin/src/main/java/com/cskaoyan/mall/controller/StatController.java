@@ -24,6 +24,7 @@ public class StatController {
     StatService statService;
 
     @GetMapping("user")
+    @RequiresPermissions(value={"admin:stat:user"},logical = Logical.OR)
     public BaseReqVo<StatisticUsers> viewUser() {
         StatisticUsers statisticUsers = statService.queryStatUser();
         BaseReqVo baseReqVo = new BaseReqVo();
@@ -34,6 +35,7 @@ public class StatController {
     }
 
     @RequestMapping("goods")
+    @RequiresPermissions(value={"admin:stat:goods"},logical = Logical.OR)
     public GoodsStatVo viewGoods() {
         GoodsStatVo goodsStatVo = statService.queryStatGoods();
         goodsStatVo.setErrno(0);
@@ -42,6 +44,7 @@ public class StatController {
     }
 
     @RequestMapping("order")
+    @RequiresPermissions(value={"admin:stat:order"},logical = Logical.OR)
     public OrderStatResVo viewOrder() {
         OrderStatResVo orderStatResVo = statService.queryStatOrder();
         orderStatResVo.setErrno(0);
