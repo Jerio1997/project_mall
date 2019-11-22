@@ -35,4 +35,6 @@ public interface CollectMapper {
     void deleteById(@Param("valueId") Integer valueId, @Param("userId") Integer userId);
 
     void insertById(@Param("userId") Integer userId, @Param("valueId") Integer valueId);
+
+    List<Integer> queryGoodsIdByUserId(@Param("userId") Integer userId);
 }

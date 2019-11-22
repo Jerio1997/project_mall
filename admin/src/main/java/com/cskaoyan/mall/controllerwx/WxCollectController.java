@@ -5,6 +5,7 @@ import com.cskaoyan.mall.bean.Collect;
 import com.cskaoyan.mall.bean.Goods;
 import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.service.CollectService;
+import com.github.pagehelper.PageInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,20 @@ public class WxCollectController {
     @RequestMapping("list")
     public BaseReqVo listCollect(Integer page,Integer type,Integer size){
 
-       /* Subject subject = SecurityUtils.getSubject();
-        Collect collect = (Collect) subject.getPrincipal();
-        Integer valueId = collect.getValueId();*/
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Integer userId = user.getId();
 
-        Map<String,Object> data = collectService.getCollectList(page,type,size);
+        List<Goods> collectList = collectService.collectList(page,type,size,userId);
+
+        PageInfo<Goods> collectPageInfo = new PageInfo<>(collectList);
+        int totalPages = collectPageInfo.getPages();
+
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("totalPages",totalPages);
+        data.put("collectList",collectList);
+
+        //Map<String,Object> data = collectService.getCollectList(page,type,size);
 
         //List<Collect> data = collectService.collectList(page,type,size);
 

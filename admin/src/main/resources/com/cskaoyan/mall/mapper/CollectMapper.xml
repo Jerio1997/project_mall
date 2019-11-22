@@ -270,4 +270,8 @@ from cskaoyan_mall_collect
     update cskaoyan_mall_collect set deleted = 1
     where value_id = #{valueId} and user_id = #{userId}
   </update>
+
+  <select id="queryGoodsIdByUserId" resultType="java.lang.Integer">
+    select value_id from cskaoyan_mall_collect where user_id = #{userId}
+  </select>
 </mapper>

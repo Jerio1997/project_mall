@@ -8,10 +8,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CollectServiceImpl implements CollectService {
@@ -20,7 +17,7 @@ public class CollectServiceImpl implements CollectService {
     GoodsMapper goodsMapper;
     @Autowired
     CollectMapper collectMapper;
-    @Override
+    /*@Override
     public Map<String, Object> getCollectList(Integer page, Integer type, Integer size) {
         PageHelper.startPage(page,size);
         GoodsExample goodsExample = new GoodsExample();
@@ -31,20 +28,22 @@ public class CollectServiceImpl implements CollectService {
         data.put("totalpages",totalpages);
         data.put("collectList",goodsList);
         return data;
+    }*/
+
+    @Override
+    public List<Goods> collectList(Integer page, Integer type, Integer size, Integer userId) {
+
+        PageHelper.startPage(page,size);
+
+        List<Integer> goodsIdList = collectMapper.queryGoodsIdByUserId(userId);
+        List<Goods> collectList = new ArrayList<>();
+        for (Integer goodsId : goodsIdList) {
+            Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+            collectList.add(goods);
+        }
+        return collectList;
     }
 
-    /*@Override
-    public List<Collect> collectList(Integer page, Integer type, Integer size) {
-        PageHelper.startPage(page,size);
-        GoodsExample goodsExample = new GoodsExample();
-        List<Goods> goodsList = goodsMapper.selectByExample(goodsExample);
-        PageInfo<Goods> goodsPageInfo = new PageInfo<>(goodsList);
-        long totalpages = goodsPageInfo.getTotal();
-        Map<String,Object> data = new HashMap<>();
-        data.put("totalpages",totalpages);
-        data.put("collectList",goodsList);
-        return goodsList;
-    }*/
 
     @Override
     public HashMap<String, Object> addordeleteCollect(Collect collect,Integer userId) {
