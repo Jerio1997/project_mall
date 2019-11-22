@@ -35,7 +35,9 @@ public interface UserService {
     Map<String, Object> getSearchHistorylist(Integer page, Integer limit, Integer userId, String keyword, String sort, String order, SearchHistory searchHistory);
 
     Map<String, Object> getFeetBacklist(Integer page, Integer limit, Integer id, String username, String sort, String order, Feedback feedback);
+
     User getUserByUsername(String username);
+
     List<User> authUser(User user);
 
     UserIndexReqVo_Wx queryUserIndexByUserId(Integer id);

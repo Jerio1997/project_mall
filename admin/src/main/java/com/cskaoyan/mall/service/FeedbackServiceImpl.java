@@ -13,17 +13,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Autowired
     FeedbackMapper feedbackMapper;
     @Override
-    public int addFeedback(Feedback feedback) {
+    public int addFeedback(Feedback feedback, String usename) {
         FeedbackExample feedbackExample = new FeedbackExample();
-        //feedbackExample.createCriteria().andUsernameEqualTo(feedback.getUsername());
-        List<Feedback> feedbackList = feedbackMapper.selectByExample(feedbackExample);
-        Integer status;
-        if (feedbackList == null || feedbackList.size() == 0){
-            status = 0;
-        }else {
-            status = feedbackList.get(0).getStatus();
-        }
-        feedback.setStatus(status);
+        feedback.setUsername(usename);
         int i = feedbackMapper.insertSelective(feedback);
         return i;
     }

@@ -69,7 +69,7 @@ public class Collect {
         this.updateTime = updateTime;
     }
 
-    public Boolean getDeleted() {
+    public Boolean getDeleted(boolean b) {
         return deleted;
     }
 

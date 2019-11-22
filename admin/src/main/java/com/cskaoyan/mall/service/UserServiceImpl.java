@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     FeedbackMapper feedbackMapper;
     @Autowired
     OrderMapper orderMapper;
-    //会员管理1
+    //会员管理
     @Override
     public Map<String, Object> getUserlist(Integer page, Integer limit, String username,String mobile, String sort, String order,User user) {
         PageHelper.startPage(page,limit,sort + " " + order);
