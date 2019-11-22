@@ -40,10 +40,10 @@ public class WxCouponController {
     public BaseReqVo receiveCoupon(@RequestBody CurCoupon coupon){
         BaseReqVo baseReqVo = new BaseReqVo();
         Subject subject = SecurityUtils.getSubject();
-//        User user = (User) subject.getPrincipal();
-//        Integer userId = user.getId();
+        User user = (User) subject.getPrincipal();
+        Integer userId = user.getId();
         Integer id = coupon.getCouponId();
-        int result = couponService.receiveCoupon(id,1);
+        int result = couponService.receiveCoupon(id,userId);
         if(result == 0) {
             baseReqVo.setErrno(0);
             baseReqVo.setErrmsg("成功");
