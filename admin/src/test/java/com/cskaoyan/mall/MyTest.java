@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 public class MyTest {
     @Test
     public void test1() throws NoSuchAlgorithmException {
-        String a = Md5Util.getMd5("123");
+        String a = Md5Util.getMd5("promotion123");
         System.out.println(a);
     }
 }
