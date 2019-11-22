@@ -224,4 +224,10 @@ public class OrderServiceImpl implements OrderService {
         order.setComments((short) (order.getComments() + 1));
         orderMapper.updateByPrimaryKeySelective(order);
     }
+
+    @Override
+    public int updateOrder(Order orderById) {
+        int i = orderMapper.updateByPrimaryKeySelective(orderById);
+        return i;
+    }
 }

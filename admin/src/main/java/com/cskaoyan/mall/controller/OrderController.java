@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,39 @@ public class OrderController {
             baseReqVo.setErrmsg("成功");
         }
 
+        return baseReqVo;
+    }
+
+    @RequestMapping("ship")
+    public BaseReqVo ship(@RequestBody Ship ship) {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        Integer orderId = ship.getOrderId();
+        String shipChannel = ship.getShipChannel();
+        String shipSn = ship.getShipSn();
+        Order orderById = orderService.getOrderById(orderId);
+        orderById.setShipChannel(shipChannel);
+        orderById.setShipSn(shipSn);
+        orderById.setShipTime(new Date());
+        orderById.setUpdateTime(new Date());
+        Short status = 301;
+        orderById.setOrderStatus(status);
+        int i = orderService.updateOrder(orderById);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
+        return baseReqVo;
+    }
+
+    @RequestMapping("refund")
+    public BaseReqVo refund(@RequestBody Refund refund) {
+        BaseReqVo baseReqVo = new BaseReqVo();
+        Integer orderId = refund.getOrderId();
+        Double refundMoney = refund.getRefundMoney();
+        Order orderById = orderService.getOrderById(orderId);
+        Short status = 203;
+        orderById.setOrderStatus(status);
+        int i = orderService.updateOrder(orderById);
+        baseReqVo.setErrmsg("成功");
+        baseReqVo.setErrno(0);
         return baseReqVo;
     }
 }

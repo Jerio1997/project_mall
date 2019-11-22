@@ -210,4 +210,9 @@ public class GrouponServiceImpl implements GrouponService{
         List<Groupon> groupons = grouponMapper.selectByExample(grouponExample);
         return groupons;
     }
+
+    @Override
+    public int insertGroupon(Groupon groupon) {
+        return 0;
+    }
 }
