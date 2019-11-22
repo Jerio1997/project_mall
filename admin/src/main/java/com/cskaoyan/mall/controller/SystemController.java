@@ -6,6 +6,7 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.component.AliyunComponent;
 import com.cskaoyan.mall.service.SystemService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,13 @@ public class SystemController {
         admin.setUpdateTime(new Date());
         Admin updateAdmin = systemService.createAdmin(admin);
         baseReqVo.setData(updateAdmin);
-        baseReqVo.setErrmsg("成功");
-        baseReqVo.setErrno(0);
+        if (updateAdmin != null) {
+            baseReqVo.setErrmsg("成功");
+            baseReqVo.setErrno(0);
+        } else {
+            baseReqVo.setErrmsg("创建失败，该管理员已存在！");
+            baseReqVo.setErrno(622);
+        }
         return baseReqVo;
     }
 
@@ -77,9 +83,20 @@ public class SystemController {
     @RequiresPermissions(value={"admin:admin:delete"},logical = Logical.OR)
     public Map<String, Object> deleteAdmin(@RequestBody Admin admin) {
         HashMap<String, Object> map = new HashMap<>();
-        systemService.deleteAdmin(admin);
-        map.put("errmsg", "成功");
-        map.put("errno", 0);
+        Admin loginAdmin = (Admin) SecurityUtils.getSubject().getPrincipal();
+        if (loginAdmin.getId() == admin.getId()) {
+            map.put("errmsg", "失败，你不能自杀");
+            map.put("errno", 623);
+            return map;
+        }
+        boolean deleteAdmin = systemService.deleteAdmin(admin);
+        if (deleteAdmin) {
+            map.put("errmsg", "成功");
+            map.put("errno", 0);
+        } else {
+            map.put("errmsg", "失败，至少存在一名超级管理员");
+            map.put("errno", 623);
+        }
         return map;
     }
 
@@ -158,9 +175,14 @@ public class SystemController {
         role.setAddTime(new Date());
         role.setUpdateTime(new Date());
         Role createdRole = systemService.createRole(role);
-        baseReqVo.setData(createdRole);
-        baseReqVo.setErrmsg("成功");
-        baseReqVo.setErrno(0);
+        if (createdRole != null) {
+            baseReqVo.setData(createdRole);
+            baseReqVo.setErrmsg("成功");
+            baseReqVo.setErrno(0);
+        } else {
+            baseReqVo.setErrmsg("失败，该角色已存在");
+            baseReqVo.setErrno(624);
+        }
         return baseReqVo;
     }
 
@@ -181,9 +203,14 @@ public class SystemController {
     @RequiresPermissions(value = {"admin:role:delete"},logical = Logical.OR)
     public Map<String, Object> deleteRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
-        systemService.deleteRole(role);
-        map.put("errmsg", "成功");
-        map.put("errno", 0);
+        boolean deleteRole = systemService.deleteRole(role);
+        if (deleteRole) {
+            map.put("errmsg", "成功");
+            map.put("errno", 0);
+        } else {
+            map.put("errmsg", "当前角色存在管理员，不能删除");
+            map.put("errno", 642);
+        }
         return map;
     }
 

@@ -1,6 +1,7 @@
 package com.cskaoyan.mall.aop;
 
 import com.cskaoyan.mall.bean.Admin;
+import com.cskaoyan.mall.bean.BaseReqVo;
 import com.cskaoyan.mall.bean.Log;
 import com.cskaoyan.mall.mapper.LogMapper;
 import org.apache.shiro.SecurityUtils;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 @Aspect
@@ -86,29 +88,52 @@ public class LogAdvice {
     @AfterThrowing(value = "logPointCut()", throwing = "throwable")
     public void myThrowing(Throwable throwable) {
         // 发生异常时的操作
-        if (request.getRequestURI().equals("admin/auth/login")) {
-
-            if (admin == null) {
-                log.setAdmin("未知用户");   // 检验失败登录不能查找出登录的管理员用户名
-            } else {
-                log.setAdmin(admin.getUsername());
-            }
+        if (log.getAction() != null) {
             log.setType(1);
             log.setStatus(false);
             logMapper.insertSelective(log);
         }
     }
 
-    @AfterReturning("logPointCut()")
-    public void myAfter() {
-        // 未发生异常时的操作
+    @AfterReturning(value = "logPointCut()", returning = "object")
+    public void myAfter(Object object) {
         if (admin == null) {
             Subject subject = SecurityUtils.getSubject();
             admin = (Admin) subject.getPrincipal();
         }
-        log.setAdmin(admin.getUsername());
-        log.setStatus(true);
-        logMapper.insertSelective(log);
+        if (request.getRequestURI().contains("admin/auth/login")) {
+            if (admin == null) {
+                log.setAdmin("未知用户");   // 检验失败登录不能查找出登录的管理员用户名
+                log.setStatus(false);
+            } else {
+                log.setAdmin(admin.getUsername());
+                log.setStatus(true);
+            }
+            log.setType(1);
+            logMapper.insertSelective(log);
+        }
+        if (object instanceof BaseReqVo) {
+            BaseReqVo baseReqVo = (BaseReqVo) object;
+            Object data = baseReqVo.getData();
+            int status = baseReqVo.getErrno();
+            if (status == 0) {
+                log.setStatus(true);
+            } else {
+                log.setStatus(false);
+            }
+            log.setAdmin(admin.getUsername());
+            logMapper.insertSelective(log);
+        } else if (object instanceof Map) {
+            Map map = (Map) object;
+            int status = (int) map.get("errno");
+            if (status == 0) {
+                log.setStatus(true);
+            } else {
+                log.setStatus(false);
+            }
+            log.setAdmin(admin.getUsername());
+            logMapper.insertSelective(log);
+        }
 
     }
 

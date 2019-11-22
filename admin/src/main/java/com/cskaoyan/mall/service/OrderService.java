@@ -35,4 +35,6 @@ public interface OrderService {
 
 
     void commitOrder(Integer orderId, Integer goodsId);
+
+    int updateOrder(Order orderById);
 }

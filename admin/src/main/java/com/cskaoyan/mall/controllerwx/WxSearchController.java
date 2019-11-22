@@ -6,6 +6,7 @@ import com.cskaoyan.mall.bean.SearchHistory;
 import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.service.KeywordService;
 import com.cskaoyan.mall.service.SearchHistoryService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,8 +31,12 @@ public class WxSearchController {
 
     @RequestMapping("index")
     public BaseReqVo<Map<String, Object>> searchIndex() {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
         Keyword defaultKeyword = keywordService.selectDefaultKeyword(DEFAULT_KEYWORD_ID);
-        List<SearchHistory> historyKeywordList = searchHistoryService.selectHistoryKeywordList();
+        List<SearchHistory> historyKeywordList = null;
+        if (user != null) {
+            historyKeywordList = searchHistoryService.selectHistoryKeywordListByUserId(user.getId());
+        }
         List<Keyword> hotKeywordList = keywordService.selectHotKeyWordList();
         HashMap<String, Object> map = new HashMap<>();
         map.put("defaultKeyword", defaultKeyword);
@@ -58,8 +63,9 @@ public class WxSearchController {
 
     @RequestMapping("clearhistory")
     public BaseReqVo clearSearchHistory() {
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
         BaseReqVo baseReqVo = new BaseReqVo();
-        searchHistoryService.deleteSearchHistory();
+        searchHistoryService.deleteSearchHistoryByUserId(user.getId());
         baseReqVo.setErrmsg("成功");
         baseReqVo.setErrno(0);
         return baseReqVo;

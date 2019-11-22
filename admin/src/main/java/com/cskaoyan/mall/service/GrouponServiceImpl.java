@@ -202,4 +202,80 @@ public class GrouponServiceImpl implements GrouponService{
         map.put("linkGrouponId",groupon.getGrouponId());
         return map;
     }
+
+    @Override
+    public List<Groupon> selectGrouponByRuleId(Integer id) {
+        GrouponExample grouponExample = new GrouponExample();
+        grouponExample.createCriteria().andRulesIdEqualTo(id).andDeletedEqualTo(false);
+        List<Groupon> groupons = grouponMapper.selectByExample(grouponExample);
+        return groupons;
+    }
+
+    @Override
+    public int insertGroupon(Groupon groupon,Integer userId) {
+        //根据得到的rules_id找
+        GrouponExample example = new GrouponExample();
+        GrouponExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        criteria.andRulesIdEqualTo(groupon.getRulesId());
+        List<Groupon> groupons = grouponMapper.selectByExample(example);
+        if(groupons.size() == 0){
+            //表示你是第一个参加这个团购的人
+            groupon.setCreatorUserId(userId);
+            GrouponExample example1 = new GrouponExample();
+            example1.setOrderByClause("id desc");
+            List<Groupon> groupons1 = grouponMapper.selectByExample(example1);
+            Integer gro_id;
+            if(groupons1 == null || groupons.size() == 0){
+                gro_id = 0;
+            } else {
+                gro_id = groupons1.get(0).getId();
+            }
+            groupon.setId(gro_id);
+            groupon.setCreatorUserId(gro_id);
+        } else {
+            //表示你是后来加入团购的
+            //判断你是否已经参加过团购了
+            for (Groupon groupon1 : groupons) {
+                if(groupon1.getUserId() == userId && groupon1.getRulesId() == groupon.getRulesId()){
+                    return -3;
+                }
+            }
+            groupon.setCreatorUserId(groupons.get(0).getCreatorUserId());
+            groupon.setGrouponId(groupons.get(0).getGrouponId());
+        }
+        int result = grouponMapper.insertSelective(groupon);
+        return result;
+    }
+
+    @Override
+    public int queryGrouponNumber(Integer orderId) {
+        GrouponExample example = new GrouponExample();
+        GrouponExample.Criteria criteria = example.createCriteria();
+        criteria.andDeletedEqualTo(false);
+        criteria.andOrderIdEqualTo(orderId);
+        List<Groupon> grouponList = grouponMapper.selectByExample(example);
+        Integer grouponId = grouponList.get(0).getGrouponId();
+        Integer rulesId = grouponList.get(0).getRulesId();
+        GrouponExample example1 = new GrouponExample();
+        GrouponExample.Criteria cri = example1.createCriteria();
+        cri.andDeletedEqualTo(false);
+        cri.andGrouponIdEqualTo(grouponId);
+        List<Groupon> groupons = grouponMapper.selectByExample(example1);
+        GrouponRules grouponRules = grouponRulesMapper.selectByPrimaryKey(rulesId);
+        int limit_number = grouponRules.getDiscountMember();
+        int number = groupons.size();
+        if(number < limit_number){
+            //表示没有达到团购人数要求
+            return -2;
+        } else {
+            //达到人数要求了
+            for (Groupon groupon : groupons) {
+                groupon.setPayed(true);
+                grouponMapper.updateByPrimaryKeySelective(groupon);
+            }
+            return 1;
+        }
+        
+    }
 }

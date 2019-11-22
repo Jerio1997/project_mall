@@ -63,7 +63,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public int updateBrand(Brand brand) {
-        int i = brandMapper.updateByPrimaryKey(brand);
+        int i = brandMapper.updateByPrimaryKeySelective(brand);
         return i;
     }
 

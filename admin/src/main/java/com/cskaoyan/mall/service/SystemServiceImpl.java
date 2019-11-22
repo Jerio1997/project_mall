@@ -3,11 +3,14 @@ package com.cskaoyan.mall.service;
 import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.mapper.*;
+import com.cskaoyan.mall.utils.Md5Util;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service("systemService")
@@ -65,6 +68,14 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Admin updateAdmin(Admin admin) {
+        String originPassword = admin.getPassword();
+        String password = null;
+        try {
+            password = Md5Util.getMd5(originPassword);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        admin.setPassword(password);
         adminMapper.updateByPrimaryKeySelective(admin);
         return adminMapper.selectByPrimaryKey(admin.getId());
     }
@@ -109,8 +120,15 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Role createRole(Role role) {
-        roleMapper.insertSelective(role);
-        return roleMapper.selectByPrimaryKey(role.getId());
+        RoleExample example = new RoleExample();
+        example.createCriteria().andNameEqualTo(role.getName());
+        List<Role> roles = roleMapper.selectByExample(example);
+        if (roles.size() == 0) {
+            roleMapper.insertSelective(role);
+            return roleMapper.selectByPrimaryKey(role.getId());
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -119,8 +137,14 @@ public class SystemServiceImpl implements SystemService {
     }
 
     @Override
-    public void deleteRole(Role role) {
+    public boolean deleteRole(Role role) {
+        Set<String> roleIds = adminMapper.selectRoleIds();
+        String roleIdsString = String.valueOf(roleIds);
+        if (roleIdsString.contains("" + role.getId())) {
+            return false;
+        }
         roleMapper.deleteByPrimaryKey(role.getId());
+        return true;
     }
 
     @Override
@@ -156,14 +180,30 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Admin createAdmin(Admin admin) {
-        adminMapper.insertSelective(admin); // 利用 selectKey 返回了 id
-        return admin;
+        AdminExample example = new AdminExample();
+        example.createCriteria().andUsernameEqualTo(admin.getUsername());
+        List<Admin> admins = adminMapper.selectByExample(example);
+        if (admins.size() == 0) {
+            String originPassword = admin.getPassword();
+            String password = null;
+            try {
+                password = Md5Util.getMd5(originPassword);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            admin.setPassword(password);
+            adminMapper.insertSelective(admin); // 利用 selectKey 返回了 id
+            return admin;
+        } else {
+            return null;
+        }
     }
 
 
     @Override
-    public void deleteAdmin(Admin admin) {
+    public boolean deleteAdmin(Admin admin) {
         adminMapper.deleteByPrimaryKey(admin.getId());
+        return true;
     }
 
     @Override

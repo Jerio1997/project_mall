@@ -16,8 +16,10 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
     private SearchHistoryMapper searchHistoryMapper;
 
     @Override
-    public List<SearchHistory> selectHistoryKeywordList() {
-        return searchHistoryMapper.selectHistoryKeywordList();
+    public List<SearchHistory> selectHistoryKeywordListByUserId(Integer id) {
+        SearchHistoryExample example = new SearchHistoryExample();
+        example.createCriteria().andUserIdEqualTo(id);
+        return searchHistoryMapper.selectByExample(example);
     }
 
 
@@ -50,8 +52,10 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
     }
 
     @Override
-    public void deleteSearchHistory() {
-        searchHistoryMapper.deleteByExample(new SearchHistoryExample());
+    public void deleteSearchHistoryByUserId(Integer id) {
+        SearchHistoryExample example = new SearchHistoryExample();
+        example.createCriteria().andUserIdEqualTo(id);
+        searchHistoryMapper.deleteByExample(example);
     }
 
 }

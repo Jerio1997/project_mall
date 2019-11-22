@@ -117,9 +117,11 @@ public class WxOrderController {
         }
         Double integralPrice = 0.0;
         Double grouponPrice = 0.0;
-        if (grouponRulesId != 0) {
+        if (grouponRulesId != 0 && cartId != 0) {
             GrouponRules grouponRulesById = grouponRulesService.getGrouponRulesById(grouponRulesId);
-            grouponPrice = grouponRulesById.getDiscount().doubleValue();
+            if (grouponRulesById != null) {
+                grouponPrice = grouponRulesById.getDiscount().doubleValue();
+            }
         }
         Double orderPrice = goodsPrice + freightPrice - couponPrice;
         Double actualPrice = orderPrice - integralPrice;
@@ -142,6 +144,19 @@ public class WxOrderController {
         order.setUpdateTime(new Date());
         order.setDeleted(false);
         int status = orderService.InsertOrder(order);
+        // 添加groupon信息到groupon表
+        if (grouponRulesId != 0 && cartId != 0) {
+            Groupon groupon = new Groupon();
+            groupon.setOrderId(order.getId());
+            groupon.setRulesId(grouponRulesId);
+            groupon.setUserId(user.getId());
+            groupon.setAddTime(new Date());
+            groupon.setUpdateTime(new Date());
+            groupon.setPayed(false);
+            groupon.setDeleted(false);
+            int i1 = grouponService.insertGroupon(groupon,userAuth.getId());
+            //i1 为添加结果   1:成功     0：没添加成功       -3:表示已经参加过
+        }
         // 添加goods到 ordergoods表中
         for (Cart cart : cartList) {
             OrderGoods orderGoods = new OrderGoods();
@@ -203,11 +218,26 @@ public class WxOrderController {
         return baseReqVo;
     }
 
+    /**
+     * 给一个订单id
+     * @return
+     */
     @PostMapping("prepay")
-    public BaseReqVo orderPrepay() {
+    public BaseReqVo orderPrepay(@RequestBody OrderId orderId) {
         BaseReqVo baseReqVo = new BaseReqVo();
-        baseReqVo.setErrmsg("订单不能支付");
-        baseReqVo.setErrno(724);
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        int result  = grouponService.queryGrouponNumber(orderId.getOrderId());
+        if(result == -2){
+            baseReqVo.setErrmsg("团购人数不足");
+            baseReqVo.setErrno(724);
+        } else if(result == 0){
+            baseReqVo.setErrno(0);
+            baseReqVo.setErrmsg("成功下单");
+        } else {
+            baseReqVo.setErrmsg("网络繁忙");
+            baseReqVo.setErrno(724);
+        }
         return baseReqVo;
     }
 
