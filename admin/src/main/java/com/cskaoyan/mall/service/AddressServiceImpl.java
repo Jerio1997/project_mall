@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Address;
 import com.cskaoyan.mall.bean.AddressExample;
+import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,15 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public List<Address> saveAddress(Address address) {
+    public List<Address> saveAddress(Address address, Integer userid) {
         AddressExample example = new AddressExample();
         List<Address> addressList = addressMapper.selectByExample(example);
-        addressMapper.insertSelective(address);
+        address.setUserId(userid);
+        if (address.getId() == 0){
+            addressMapper.insertSelective(address);
+        }else {
+            addressMapper.updateByPrimaryKey(address);
+        }
         return addressList;
     }
 
@@ -65,4 +71,5 @@ public class AddressServiceImpl implements AddressService{
         Address address = addressMapper.selectByPrimaryKey(addressId);
         return address;
     }
+    
 }

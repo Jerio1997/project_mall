@@ -48,7 +48,7 @@ public class UserController {
     UserService userService;
 
     @ResponseBody
-    //会员管理1
+    //会员管理
     @RequestMapping("user/list")
     @RequiresPermissions(value={"admin:user:list"},logical = Logical.OR)
     public BaseReqVo listUser(Integer page,Integer limit,String username,String mobile,String sort,String order,User user){
@@ -59,7 +59,7 @@ public class UserController {
         baseReqVo.setData(data);
         return baseReqVo;
     }
-    //收货地址1
+    //收货地址
     @RequestMapping("address/list")
     @RequiresPermissions(value={"admin:address:list"},logical = Logical.OR)
     public BaseReqVo addressUser(Integer page,Integer limit,Integer userId,String name,String sort,String order){
@@ -70,7 +70,7 @@ public class UserController {
         baseReqVo.setData(data);
         return baseReqVo;
     }
-    //会员收藏1
+    //会员收藏
     @RequestMapping("collect/list")
     @RequiresPermissions(value={"admin:collect:list"},logical = Logical.OR)
     public BaseReqVo collectUser(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order, Collect collect){
@@ -81,7 +81,7 @@ public class UserController {
         baseReqVo.setData(data);
         return baseReqVo;
     }
-    //会员足迹1
+    //会员足迹
     @RequestMapping("footprint/list")
     @RequiresPermissions(value={"admin:footprint:list"},logical = Logical.OR)
     public BaseReqVo cartUser(Integer page, Integer limit, Integer userId, Integer goodsId, String sort, String order, Footprint footprint){
