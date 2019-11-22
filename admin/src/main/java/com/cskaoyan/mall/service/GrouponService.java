@@ -19,4 +19,8 @@ public interface GrouponService {
     Map<String, Object> queryMyGroupon(Integer showType,Integer id);
 
     Map<String, Object> getDetailOfGrouponById(Integer grouponId);
+
+    List<Groupon> selectGrouponByRuleId(Integer id);
+
+    int insertGroupon(Groupon groupon);
 }
