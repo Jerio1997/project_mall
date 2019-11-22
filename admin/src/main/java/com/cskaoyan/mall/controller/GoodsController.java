@@ -24,6 +24,7 @@ public class GoodsController {
      * @return
      */
     @GetMapping("list")
+    @RequiresPermissions(value={"admin:goods:list"},logical = Logical.OR)
     public BaseReqVo<GoodsListResVo> listGoods(Integer page, Integer limit,Integer goodsSn, String name, String sort, String order){
         BaseReqVo<GoodsListResVo> goodsBaseReqVo = new BaseReqVo<>();
         int total = goodsService.queryGoodsCounts(goodsSn,name);
@@ -61,6 +62,7 @@ public class GoodsController {
      * @return
      */
     @PostMapping("create")
+    @RequiresPermissions(value={"admin:goods:create"},logical = Logical.OR)
     public BaseReqVo<GoodsCreatedResVo> create(@RequestBody GoodsCreatedResVo goods ){
         BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
         int i = goodsService.createGoods(goods);
@@ -76,6 +78,7 @@ public class GoodsController {
         return goodsBaseReqVo;
     }
   @GetMapping("detail")
+  @RequiresPermissions(value={"admin:goods:read"},logical = Logical.OR)
     public BaseReqVo<GoodsDetailReqVo>getGoodsDetail(Integer id){
       BaseReqVo<GoodsDetailReqVo> goodsBaseReqVo = new BaseReqVo<>();
       GoodsDetailReqVo goodsDetail = goodsService.getGoodsDetail(id);
@@ -87,6 +90,7 @@ public class GoodsController {
   }
 
     @PostMapping("update")
+    @RequiresPermissions(value={"admin:goods:update"},logical = Logical.OR)
     public BaseReqVo<GoodsCreatedResVo> updateGoodsDetail(@RequestBody GoodsCreatedResVo goods){
         BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
         int i = goodsService.updateGoods(goods);
@@ -97,6 +101,7 @@ public class GoodsController {
     }
 
     @PostMapping("delete")
+    @RequiresPermissions(value={"admin:goods:delete"},logical = Logical.OR)
     public BaseReqVo<GoodsCreatedResVo> deleteGoodsDetail(@RequestBody Goods goods){
         BaseReqVo<GoodsCreatedResVo> goodsBaseReqVo = new BaseReqVo<>();
         goodsService.deleteGoods(goods);

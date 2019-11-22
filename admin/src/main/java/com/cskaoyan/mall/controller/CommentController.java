@@ -28,6 +28,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("list")
+    @RequiresPermissions(value={"admin:comment:list"},logical = Logical.OR)
     public BaseReqVo<CommentListResVo> listGoods(Integer page, Integer limit, Integer userId, Integer valueId, String sort, String order){
         BaseReqVo<CommentListResVo> commentResVoBaseReqVo = new BaseReqVo<>();
         int total = commentService.queryCommentCountsByCondition(userId, valueId,null,null);
@@ -41,6 +42,7 @@ public class CommentController {
         return commentResVoBaseReqVo;
     }
     @PostMapping("delete")
+    @RequiresPermissions(value={"admin:comment:delete"},logical = Logical.OR)
     public BaseReqVo<CommentListResVo> delete(@RequestBody Comment comment){
         BaseReqVo<CommentListResVo> commentResVoBaseReqVo = new BaseReqVo<>();
         commentService.deleteComment(comment);

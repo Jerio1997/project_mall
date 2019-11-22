@@ -11,7 +11,7 @@ public interface AddressService {
 
     Address getAddressById(int addressId);
 
-    List<Address> saveAddress(Address address);
+    List<Address> saveAddress(Address address,Integer userId);
 
     List<Address> detailAddress(Integer id);
 }
