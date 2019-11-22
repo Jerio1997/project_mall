@@ -180,7 +180,10 @@ public class GoodsServiceImpl implements GoodsService {
             categoryIds[0] = category.getPid();
             categoryIds[1] = category.getId();
             goodsDetailReqVo.setCategoryIds(categoryIds);
+        }else{
+            goodsDetailReqVo.setCategoryIds(new Integer[0]);
         }
+
 
         //attributes
         GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
