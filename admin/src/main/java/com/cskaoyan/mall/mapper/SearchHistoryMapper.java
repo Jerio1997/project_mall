@@ -30,6 +30,4 @@ public interface SearchHistoryMapper {
 
     int updateByPrimaryKey(SearchHistory record);
 
-    @Select("select * from cskaoyan_mall_search_history limit 8")
-    List<SearchHistory> selectHistoryKeywordList();
 }

@@ -5,9 +5,9 @@ import com.cskaoyan.mall.bean.SearchHistory;
 import java.util.List;
 
 public interface SearchHistoryService {
-    List<SearchHistory> selectHistoryKeywordList();
+    List<SearchHistory> selectHistoryKeywordListByUserId(Integer id);
 
-    void deleteSearchHistory();
+    void deleteSearchHistoryByUserId(Integer id);
 
     int addHistoryKeyword(String keyword);
 }
