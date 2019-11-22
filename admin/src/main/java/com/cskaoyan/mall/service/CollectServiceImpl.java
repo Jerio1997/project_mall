@@ -4,7 +4,6 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.mapper.CollectMapper;
 import com.cskaoyan.mall.mapper.GoodsMapper;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +41,13 @@ public class CollectServiceImpl implements CollectService {
             collectList.add(goods);
         }
         return collectList;
+    }
+
+    @Override
+    public List<Collect> collectList1(Collect collect) {
+        CollectExample collectExample = new CollectExample();
+        List<Collect> collects = collectMapper.selectByExample(collectExample);
+        return collects;
     }
 
 

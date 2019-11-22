@@ -3,10 +3,10 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Collect;
 import com.cskaoyan.mall.bean.Goods;
+import com.cskaoyan.mall.bean.GoodsAndCollect;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface CollectService {
 
@@ -15,6 +15,8 @@ public interface CollectService {
     HashMap<String, Object> addordeleteCollect(Collect collect,Integer userId);
 
     List<Goods> collectList(Integer page, Integer type, Integer size, Integer userId);
+
+    List<Collect> collectList1(Collect collect);
 
     //List<Collect> collectList(Integer page, Integer type, Integer size);
 
