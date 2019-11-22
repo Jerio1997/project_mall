@@ -2,6 +2,7 @@ package com.cskaoyan.mall.service;
 
 import com.cskaoyan.mall.bean.Groupon;
 import com.cskaoyan.mall.bean.GrouponRecordListResVo;
+import com.cskaoyan.mall.bean.OrderId;
 
 import java.util.List;
 import java.util.Map;
@@ -22,5 +23,7 @@ public interface GrouponService {
 
     List<Groupon> selectGrouponByRuleId(Integer id);
 
-    int insertGroupon(Groupon groupon);
+    int insertGroupon(Groupon groupon,Integer id);
+
+    int queryGrouponNumber(Integer orderId);
 }

@@ -5,27 +5,24 @@ package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.*;
 
-import com.cskaoyan.mall.mapper.UserMapper;
+
 import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.service.SmsService;
 import com.cskaoyan.mall.service.UserService;
 import com.cskaoyan.mall.shiro.CustomToken;
-import com.cskaoyan.mall.utils.Md5Util;
-import com.cskaoyan.mall.utils.UserInfo;
-import com.cskaoyan.mall.utils.UserToken;
-import com.cskaoyan.mall.utils.UserTokenManager;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.session.Session;
+
 import org.apache.shiro.subject.Subject;
-import org.apache.tomcat.util.http.ResponseUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -95,11 +92,11 @@ public class WxAuthController {
         String codeOne = wxRegister.getCode();
         String codeTwo = regCaptchaMap.get(wxRegister.getMobile());
         if (!codeTwo.equals(codeOne)) {
-            return BaseRespVo.fail(520, null);
+            return BaseRespVo.fail(520, "验证码错误");
         }
         User user = userService.getUserByUsername(wxRegister.getUsername());
         if (user != null) {
-            return BaseRespVo.fail(519, null);
+            return BaseRespVo.fail(519, "用户已存在");
         }
         userService.register(wxRegister);
         User userRegister = new User();
@@ -131,11 +128,11 @@ public class WxAuthController {
         String codeFromWx = reset.getCode();
         String codeFromMap = regCaptchaMap.get(reset.getMobile());
         if (!codeFromMap.equals(codeFromWx)) {
-            return BaseRespVo.fail(520, null);
+            return BaseRespVo.fail(520, "验证码错误");
         }
         User user = userService.getUserByMobile(mobile);
         if (user == null) {
-            return BaseRespVo.fail(519, null);
+            return BaseRespVo.fail(521, "用户不存在");
         }
         int result = userService.resetPasswordByMobile(password,mobile);
         BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
