@@ -30,7 +30,7 @@ public class OrderStatus {
                 orderStatusText = "用户收货";
                 break;
             case 402:
-                orderStatusText = "系统收货";
+                orderStatusText = "已收货";
                 break;
             default:
                 orderStatusText = "订单异常";
@@ -40,15 +40,7 @@ public class OrderStatus {
     }
 
     public static boolean canCancel(int orderStatus) {
-        switch (orderStatus) {
-            case 102:
-            case 103:
-            case 202:
-            case 203:
-                return false;
-            default:
-                return true;
-        }
+        return orderStatus == 101;
     }
 
     public static boolean canDelete(int orderStatus) {
@@ -64,7 +56,22 @@ public class OrderStatus {
     }
 
     public static boolean canPay(int orderStatus) {
-        switch (orderStatus) {  // 订单异常默认表示未付款
+        return orderStatus == 101;
+    }
+
+    public static boolean canConfirm(int orderStatus) {
+        return orderStatus == 301;
+    }
+
+    public static boolean canComment(Order order) {
+        if (order.getOrderStatus() != 402) {
+            return false;
+        }
+        return order.getComments() == 0;
+    }
+
+    public static boolean canRefund(int orderStatus) {
+        switch (orderStatus) {
             case 201:
             case 301:
             case 401:
@@ -75,15 +82,7 @@ public class OrderStatus {
         }
     }
 
-    public static boolean canConfirm(int orderStatus) {
-        return orderStatus == 301;
-    }
-
-    public static boolean canComment(Order order) {
-        return order.getComments() != null;
-    }
-
-    public static boolean canRefund(int orderStatus) {
-        return canPay(orderStatus);
+    public static Boolean canReBuy(Short status) {
+        return status == 402;
     }
 }

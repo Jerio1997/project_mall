@@ -32,4 +32,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     List<StatisticProperty> queryUserAndDayList();
+
+    void insertUser(@Param("username") String username, @Param("password") String password,@Param("mobile") String mobile);
 }

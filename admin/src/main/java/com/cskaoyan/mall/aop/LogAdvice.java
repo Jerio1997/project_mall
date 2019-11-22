@@ -3,6 +3,8 @@ package com.cskaoyan.mall.aop;
 import com.cskaoyan.mall.bean.Admin;
 import com.cskaoyan.mall.bean.Log;
 import com.cskaoyan.mall.mapper.LogMapper;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,14 +23,10 @@ public class LogAdvice {
     @Autowired
     private HttpServletRequest request;
 
-    @Autowired
-    private HttpSession session;
-
     private Admin admin;
     private Log log;
-    private Boolean flag = false;
 
-    @Pointcut("execution(* com.cskaoyan.mall.service..*(..))")
+    @Pointcut("@annotation(com.cskaoyan.mall.aop.AdminLog)")
     public void logPointCut() {
     }
 
@@ -38,22 +36,20 @@ public class LogAdvice {
         log.setAddTime(new Date());
         log.setUpdateTime(new Date());
         log.setIp(request.getRemoteAddr());
-        admin = (Admin) session.getAttribute("admin");  // 有可能为空，所以先不加入 log
+        Subject subject = SecurityUtils.getSubject();
+        admin = (Admin) subject.getPrincipal();  // 有可能为空，所以先不加入 log
 
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("admin/auth/login")) {     // 登录操作
-            flag = true;
+        if (requestURI.contains("login")) {     // 登录操作
             log.setAction("登录");
             log.setType(1);
-        } else if (requestURI.contains("admin/auth/logout")) {     // 退出操作
-            flag = true;
+        } else if (requestURI.contains("logout")) {     // 退出操作
             log.setAction("退出");
             log.setType(1);
         } else if (requestURI.contains("admin/admin")) {   // 对管理员的操作
-            flag = true;
             log.setType(1);
             String[] split = requestURI.split("/");
-            String operate = split[split.length-1];
+            String operate = split[split.length - 1];
             switch (operate) {
                 case "create":
                     log.setAction("创建管理员");
@@ -66,10 +62,9 @@ public class LogAdvice {
                     break;
             }
         } else if (requestURI.contains("admin/role")) {   // 对管理员角色的操作
-            flag = true;
             log.setType(1);
             String[] split = requestURI.split("/");
-            String operate = split[split.length-1];
+            String operate = split[split.length - 1];
             switch (operate) {
                 case "create":
                     log.setAction("创建角色");
@@ -91,10 +86,14 @@ public class LogAdvice {
     @AfterThrowing(value = "logPointCut()", throwing = "throwable")
     public void myThrowing(Throwable throwable) {
         // 发生异常时的操作
-        /*if (admin == null) {
-            log.setAdmin("未知用户");   // 检验失败登录不能查找出登录的管理员用户名
-        }*/
-        if (flag) {
+        if (request.getRequestURI().equals("admin/auth/login")) {
+
+            if (admin == null) {
+                log.setAdmin("未知用户");   // 检验失败登录不能查找出登录的管理员用户名
+            } else {
+                log.setAdmin(admin.getUsername());
+            }
+            log.setType(1);
             log.setStatus(false);
             logMapper.insertSelective(log);
         }
@@ -103,11 +102,14 @@ public class LogAdvice {
     @AfterReturning("logPointCut()")
     public void myAfter() {
         // 未发生异常时的操作
-//        log.setAdmin(admin.getUsername());
-        if (flag) {
-            log.setStatus(true);
-            logMapper.insertSelective(log);
+        if (admin == null) {
+            Subject subject = SecurityUtils.getSubject();
+            admin = (Admin) subject.getPrincipal();
         }
+        log.setAdmin(admin.getUsername());
+        log.setStatus(true);
+        logMapper.insertSelective(log);
+
     }
 
 }

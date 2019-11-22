@@ -31,4 +31,6 @@ public interface OrderMapper {
     int updateByPrimaryKey(Order record);
 
     List<OrderStatResVo.DataBean.RowsBean> selectOrderStatInfo();
+
+    int insertSelectiveAndGetId(Order order);
 }

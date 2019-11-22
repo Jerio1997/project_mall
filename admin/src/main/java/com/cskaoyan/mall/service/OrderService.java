@@ -19,9 +19,20 @@ public interface OrderService {
 
     OrderReqVo getOrderListByUsernameAndCodes(int page, int size, Short[] codeByType, String username);
 
+
+    List<Order> selectOrderByUserIdAndStatus(Integer id, String orderStatus);
+
+    int InsertOrder(Order order);
     List<OrderGoods> selectOrderGoodsByOrderId(Integer orderId);
 
     HashMap<String, Object> selectOrderInfoById(Integer orderId);
 
     void deleteOrder(Integer orderId);
+
+    void cancelOrderByOrderId(Integer orderId);
+
+    void confirmOrderByOrderId(Integer orderId);
+
+
+    void commitOrder(Integer orderId, Integer goodsId);
 }

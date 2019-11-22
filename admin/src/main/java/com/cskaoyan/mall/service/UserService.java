@@ -40,5 +40,12 @@ public interface UserService {
 
     List<User> authUser(User user);
 
+
+    void register(WxRegister wxRegister);
+
     UserIndexReqVo_Wx queryUserIndexByUserId(Integer id);
+
+    User getUserByMobile(String mobile);
+
+    int resetPasswordByMobile(String password, String mobile);
 }

@@ -80,6 +80,8 @@ public class CommentServiceImpl implements CommentService {
         CommentResVo_Wx commentResVo_wx = new CommentResVo_Wx();
         PageHelper.startPage(page,size);
         CommentExample commentExample = new CommentExample();
+        String sortOrder = "add_time"+" "+"DESC";
+        commentExample.setOrderByClause(sortOrder);
         CommentExample.Criteria criteria = commentExample.createCriteria();
         criteria.andValueIdEqualTo(valueId).andTypeEqualTo(type);
         if(!StringUtils.isEmpty(showType)&&showType!=0){
@@ -118,8 +120,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public Comment postComment(Comment comment) {
-        comment.setUserId(1);
+    public Comment postComment(Integer userId,Comment comment) {
+        comment.setUserId(userId);
         comment.setAddTime(new Date());
         comment.setDeleted(false);
         comment.setId(null);

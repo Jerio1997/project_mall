@@ -9,7 +9,9 @@ public interface AddressService {
 
     Integer deleteAddress(Address address);
 
-    List<Address> detailAddress(Integer id);
+    Address getAddressById(int addressId);
 
-    List<Address> saveAddress(Address address, Integer userid);
+    List<Address> saveAddress(Address address);
+
+    List<Address> detailAddress(Integer id);
 }

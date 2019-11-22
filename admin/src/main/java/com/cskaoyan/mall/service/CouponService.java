@@ -29,9 +29,13 @@ public interface CouponService {
 
     Map<String, Object> queryCouponOnWx(Integer page, Integer size);
 
-    int receiveCoupon(Integer couponId);
+    int receiveCoupon(Integer couponId,Integer userId);
 
-    Map<String, Object> myListCoupon(Integer page, Integer size, Short status);
+    Map<String, Object> myListCoupon(Integer page, Integer size, Short status, Integer userId);
 
-    int exchangeCouponByCode(String code);
+    int exchangeCouponByCode(String code,Integer id);
+
+    List<Coupon> selectList(Integer cartId, Integer grouponRulesId, Integer userId);
+
+    int updateCouponUserStatusById(int couponId, int status);
 }

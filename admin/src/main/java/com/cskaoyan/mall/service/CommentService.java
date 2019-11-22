@@ -18,5 +18,5 @@ public interface CommentService {
 
     CommentCountReqVo_Wx queryCommentCountByConditionForWx(Integer valueId, Byte type);
 
-    Comment postComment(Comment comment);
+    Comment postComment(Integer userId,Comment comment);
 }
