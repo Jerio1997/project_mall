@@ -248,6 +248,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByMobile(String mobile) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andMobileEqualTo(mobile);
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users == null || users.size() == 0){
+            return null;
+        }
+        return users.get(0);
+    }
+
+    @Override
+    public int resetPasswordByMobile(String password, String mobile) {
+        User user = new User();
+        user.setPassword(password);
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andMobileEqualTo(mobile);
+        int update = userMapper.updateByExampleSelective(user, userExample);
+        return update;
+    }
+
+    @Override
     public Long queryUsers() {
         Long users = userMapper.countByExample(new UserExample());
         return users;

@@ -24,14 +24,14 @@ public class SearchHistoryServiceImpl implements SearchHistoryService{
 
 
     @Override
-    public int addHistoryKeyword(String keyword) {
+    public int addHistoryKeyword(Integer userId,String keyword) {
         SearchHistoryExample searchHistoryExample = new SearchHistoryExample();
-        searchHistoryExample.createCriteria().andKeywordEqualTo(keyword);
+        searchHistoryExample.createCriteria().andKeywordEqualTo(keyword).andUserIdEqualTo(userId).andDeletedNotEqualTo(true);
         List<SearchHistory> searchHistories = searchHistoryMapper.selectByExample(searchHistoryExample);
         int res = searchHistories.size();
         if(res == 0){
             SearchHistory searchHistory = new SearchHistory();
-            searchHistory.setUserId(1);
+            searchHistory.setUserId(userId);
             searchHistory.setAddTime(new Date());
             searchHistory.setDeleted(false);
             searchHistory.setKeyword(keyword);

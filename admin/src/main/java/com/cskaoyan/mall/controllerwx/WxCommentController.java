@@ -1,10 +1,9 @@
 package com.cskaoyan.mall.controllerwx;
 
-import com.cskaoyan.mall.bean.BaseReqVo;
-import com.cskaoyan.mall.bean.Comment;
-import com.cskaoyan.mall.bean.CommentCountReqVo_Wx;
-import com.cskaoyan.mall.bean.CommentResVo_Wx;
+import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.service.CommentService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +46,10 @@ public class WxCommentController {
     @PostMapping("post")
     public BaseReqVo<Comment> postComment(@RequestBody Comment comment){
         BaseReqVo<Comment> baseReqVo = new BaseReqVo<>();
-        Comment res = commentService.postComment(comment);
+        Subject subject = SecurityUtils.getSubject();
+        User principal = ((User) subject.getPrincipal());
+        Integer userId = principal.getId();
+        Comment res = commentService.postComment(userId,comment);
         baseReqVo.setData(res);
         baseReqVo.setErrno(0);
         baseReqVo.setErrmsg("成功");

@@ -125,8 +125,22 @@ public class WxAuthController {
     }
 
     @RequestMapping("auth/reset")
-    public Object reset() {
-        return null;
+    public Object reset(@RequestBody Reset reset) {
+        String mobile = reset.getMobile();
+        String password = reset.getPassword();
+        String codeFromWx = reset.getCode();
+        String codeFromMap = regCaptchaMap.get(reset.getMobile());
+        if (!codeFromMap.equals(codeFromWx)) {
+            return BaseRespVo.fail(520, null);
+        }
+        User user = userService.getUserByMobile(mobile);
+        if (user == null) {
+            return BaseRespVo.fail(519, null);
+        }
+        int result = userService.resetPasswordByMobile(password,mobile);
+        BaseReqVo<Object> baseReqVo = new BaseReqVo<>();
+        baseReqVo.setErrno(0);
+        return baseReqVo;
     }
 
     @RequestMapping("auth/bindPhone")

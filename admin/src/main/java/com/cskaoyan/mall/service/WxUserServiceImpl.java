@@ -5,6 +5,7 @@ import com.cskaoyan.mall.mapper.UserIndexMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ public class WxUserServiceImpl implements WxUserService {
     public Map<String, Object> userIndex() {
         UserIndex userIndex = new UserIndex();
         List<UserIndex> userIndexList = userIndexMapper.selectIndex();
-        return null;
+        Map<String, Object> data = new HashMap<>();
+        data.put("order", userIndexList);
+        return data;
     }
 }

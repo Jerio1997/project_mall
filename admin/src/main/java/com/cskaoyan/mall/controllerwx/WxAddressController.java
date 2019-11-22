@@ -2,7 +2,10 @@ package com.cskaoyan.mall.controllerwx;
 
 import com.cskaoyan.mall.bean.Address;
 import com.cskaoyan.mall.bean.BaseReqVo;
+import com.cskaoyan.mall.bean.User;
 import com.cskaoyan.mall.service.AddressService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,7 +66,10 @@ public class WxAddressController {
     public BaseReqVo saveAddress(@RequestBody Address address){
         address.setAddTime(new Date());
         address.setUpdateTime(new Date());
-        List<Address> addressList = addressService.saveAddress(address);
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Integer userId = user.getId();
+        List<Address> addressList = addressService.saveAddress(address,userId);
         Integer data = 0;
         for (Address address1 : addressList) {
              data = address1.getId();

@@ -6,6 +6,8 @@ import com.cskaoyan.mall.bean.*;
 import com.cskaoyan.mall.bean.System;
 import com.cskaoyan.mall.component.AliyunComponent;
 import com.cskaoyan.mall.service.SystemService;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,7 @@ public class SystemController {
     AliyunComponent aliyunComponent;
 
     @RequestMapping("admin/list")
+    @RequiresPermissions(value={"admin:admin:list"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> findAllAdmins(Integer page, Integer limit, String sort, String order, String username) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         Map<String, Object> map = systemService.findAllAdmin(page, limit, sort, order, username);
@@ -57,6 +60,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("admin/create")
+    @RequiresPermissions(value={"admin:admin:create"},logical = Logical.OR)
     public BaseReqVo<Admin> createAdmin(@RequestBody Admin admin) {
         BaseReqVo<Admin> baseReqVo = new BaseReqVo<>();
         admin.setAddTime(new Date());
@@ -70,6 +74,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("admin/delete")
+    @RequiresPermissions(value={"admin:admin:delete"},logical = Logical.OR)
     public Map<String, Object> deleteAdmin(@RequestBody Admin admin) {
         HashMap<String, Object> map = new HashMap<>();
         systemService.deleteAdmin(admin);
@@ -79,6 +84,7 @@ public class SystemController {
     }
 
     @RequestMapping("storage/create")
+    @RequiresPermissions(value = {"admin:storage:create"},logical = Logical.OR)
     public BaseReqVo<Storage> createStorage(MultipartFile file, HttpServletRequest request) {
         // 不需要 fileupload 组件
         // 拼接 url 前缀与后缀，并且已经在 yml 文件中添加 url 前缀映射路径
@@ -123,6 +129,7 @@ public class SystemController {
     }
 
     @RequestMapping("log/list")
+    @RequiresPermissions(value = {"admin:log:list"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> logList(Integer page, Integer limit, String sort, String order, String name) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         Map<String, Object> map = systemService.selectLogList(page, limit, sort, order, name);
@@ -133,6 +140,7 @@ public class SystemController {
     }
 
     @RequestMapping("role/list")
+    @RequiresPermissions(value = {"admin:role:list"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> roleList(Integer page, Integer limit, String sort, String order, String name){
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
         Map<String, Object> map = systemService.selectRoleList(page, limit, sort, order, name);
@@ -144,6 +152,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("role/create")
+    @RequiresPermissions(value = {"admin:role:create"},logical = Logical.OR)
     public BaseReqVo<Role> createRole(@RequestBody Role role) {
         BaseReqVo<Role> baseReqVo = new BaseReqVo<>();
         role.setAddTime(new Date());
@@ -157,6 +166,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("role/update")
+    @RequiresPermissions(value = {"admin:role:update"},logical = Logical.OR)
     public Map<String, Object> updateRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
         role.setUpdateTime(new Date());
@@ -168,6 +178,7 @@ public class SystemController {
 
     @AdminLog
     @RequestMapping("role/delete")
+    @RequiresPermissions(value = {"admin:role:delete"},logical = Logical.OR)
     public Map<String, Object> deleteRole(@RequestBody Role role) {
         HashMap<String, Object> map = new HashMap<>();
         systemService.deleteRole(role);
@@ -177,6 +188,7 @@ public class SystemController {
     }
 
     @RequestMapping(value = "role/permissions", method = RequestMethod.GET)
+    @RequiresPermissions(value = {"admin:role:permission:get"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> rolePermissions(String roleId) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
 
@@ -193,6 +205,7 @@ public class SystemController {
     }
 
     @PostMapping("role/permissions")
+    @RequiresPermissions(value = {"admin:log:list"},logical = Logical.OR)
     public BaseReqVo allocatePermissions(@RequestBody Map<String, Object> data) {
         List<String> permissions = (List<String>) data.get("permissions");
         Integer roleId = (Integer) data.get("roleId");
@@ -205,6 +218,7 @@ public class SystemController {
 
 
     @RequestMapping("storage/list")
+    @RequiresPermissions(value = {"admin:storage:list"},logical = Logical.OR)
     public BaseReqVo<Map<String, Object>> storageList(Integer page, Integer limit, String sort,
                                                       String order, String key,String name) {
         BaseReqVo<Map<String, Object>> baseReqVo = new BaseReqVo<>();
@@ -216,6 +230,7 @@ public class SystemController {
     }
 
     @RequestMapping("storage/update")
+    @RequiresPermissions(value = {"admin:storage:update"},logical = Logical.OR)
     public BaseReqVo<Storage> updateStorage(@RequestBody Storage storage) {
         BaseReqVo<Storage> baseReqVo = new BaseReqVo<>();
         Storage updatedStorage = systemService.updateStorage(storage);
@@ -226,6 +241,7 @@ public class SystemController {
     }
 
     @RequestMapping("storage/delete")
+    @RequiresPermissions(value = {"admin:storage:delete"},logical = Logical.OR)
     public Map<String, Object> deleteStorage(@RequestBody Storage storage) {
         HashMap<String, Object> map = new HashMap<>();
         systemService.deleteStorage(storage);
