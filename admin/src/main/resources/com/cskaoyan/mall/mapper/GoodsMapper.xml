@@ -532,4 +532,17 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="queryCollect" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cskaoyan_mall_collect
+    <where>
+      <if test="userId != null ">
+        and user_id = #{userId}
+      </if>
+      <if test="valueId != null">
+        and value_id = #{valueId}
+      </if>
+    </where>
+  </select>
 </mapper>

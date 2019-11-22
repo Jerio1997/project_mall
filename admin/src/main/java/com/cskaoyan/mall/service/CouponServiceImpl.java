@@ -189,7 +189,7 @@ public class CouponServiceImpl implements CouponService{
             criteria.andCouponIdEqualTo(couponId);
             criteria.andUserIdEqualTo(userId);
             List<CouponUser> couponUsers = couponUserMapper.selectByExample(example);
-            if((couponUsers.size() < coupon.getLimit())){
+            if((couponUsers.size() >= coupon.getLimit())){
                 //表示不能接着领取
                 return -3;
             }
@@ -208,7 +208,11 @@ public class CouponServiceImpl implements CouponService{
             }
             coupon.setUpdateTime(new Date());
         }
+
         couponMapper.updateByPrimaryKeySelective(coupon);
+//        couponMapper.updateStausAndTimeById(coupon.getId());
+
+
         //----------coupon_user相关insert操作-----------
         CouponUser couponUser = new CouponUser();
         //获得上一个的id
@@ -221,7 +225,8 @@ public class CouponServiceImpl implements CouponService{
         } else {
             id = couponUsers.get(0).getId();
         }
-        couponUser.setId(id);
+//        couponUser.setId(++id);
+        couponUser.setId(null);
         //再其他信息
         couponUser.setUserId(userId);
         couponUser.setCouponId(couponId);
@@ -424,15 +429,33 @@ public class CouponServiceImpl implements CouponService{
             totalPrice = totalPrice.add(cart.getPrice().multiply(number_bigDecimal));
         }
         //得到满足couponUser要求的couponlist，逐一遍历，判断是否满足购物总价
-        for (Coupon coupon : couponList) {
+        /*for (Coupon coupon : couponList) {
             BigDecimal min = coupon.getMin();
             if(totalPrice.compareTo(min) < 0 ){
                 couponList.remove(coupon);
+            }
+        }*/
+        for (int i = 0; i < couponList.size(); i++) {
+            BigDecimal min = couponList.get(i).getMin();
+            if(totalPrice.compareTo(min) < 0 ){
+                couponList.remove(couponList.get(i));
             }
         }
         //满足
         return couponList;
     }
 
-
+    @Override
+    public int updateCouponUserStatusById(int couponId, int status) {
+        CouponUserExample couponUserExample = new CouponUserExample();
+        Short oldStatus = 0;
+        couponUserExample.createCriteria().andDeletedEqualTo(false).andCouponIdEqualTo(couponId).andStatusEqualTo(oldStatus);
+        List<CouponUser> couponUsers = couponUserMapper.selectByExample(couponUserExample);
+        if (couponUsers != null && couponUsers.size() != 0) {
+            CouponUser couponUser = couponUsers.get(0);
+            couponUser.setStatus((short) status);
+            couponUserMapper.updateByPrimaryKeySelective(couponUser);
+        }
+        return 1;
+    }
 }

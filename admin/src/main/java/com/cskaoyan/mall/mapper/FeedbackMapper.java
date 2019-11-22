@@ -4,6 +4,7 @@ import com.cskaoyan.mall.bean.Feedback;
 import com.cskaoyan.mall.bean.FeedbackExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface FeedbackMapper {

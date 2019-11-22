@@ -9,5 +9,5 @@ public interface SearchHistoryService {
 
     void deleteSearchHistoryByUserId(Integer id);
 
-    int addHistoryKeyword(String keyword);
+    int addHistoryKeyword(Integer userId,String keyword);
 }

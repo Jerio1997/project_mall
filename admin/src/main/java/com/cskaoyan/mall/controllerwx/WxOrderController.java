@@ -45,6 +45,7 @@ public class WxOrderController {
     OrderGoodsService orderGoodsService;
 
 
+
     @RequestMapping("list")
     public BaseReqVo listOrder(int showType, int page, int size) {
         Subject subject = SecurityUtils.getSubject();
@@ -103,7 +104,7 @@ public class WxOrderController {
         Double expressFreightValue = systemService.getExpressFreightValue();
         Double freightPrice = 0.0;
         if (goodsPrice <= expressFreightMin) {
-            freightPrice = systemService.getExpressFreightValue();
+            freightPrice = expressFreightValue;
         } else {
             freightPrice = 0.0;
         }
@@ -111,12 +112,16 @@ public class WxOrderController {
         if (couponId != 0 && couponId != -1) {
             Coupon couponById = couponService.getCouponById(couponId);
             couponPrice += couponById.getDiscount().doubleValue();
+            int status = couponService.updateCouponUserStatusById(couponId, 1);
+
         }
         Double integralPrice = 0.0;
         Double grouponPrice = 0.0;
-        if (grouponRulesId != 0) {
+        if (grouponRulesId != 0 && cartId != 0) {
             GrouponRules grouponRulesById = grouponRulesService.getGrouponRulesById(grouponRulesId);
-            grouponPrice = grouponRulesById.getDiscount().doubleValue();
+            if (grouponRulesById != null) {
+                grouponPrice = grouponRulesById.getDiscount().doubleValue();
+            }
         }
         Double orderPrice = goodsPrice + freightPrice - couponPrice;
         Double actualPrice = orderPrice - integralPrice;
@@ -139,6 +144,18 @@ public class WxOrderController {
         order.setUpdateTime(new Date());
         order.setDeleted(false);
         int status = orderService.InsertOrder(order);
+        // 添加groupon信息到groupon表
+        if (grouponRulesId != 0 && cartId != 0) {
+            Groupon groupon = new Groupon();
+            groupon.setOrderId(order.getId());
+            groupon.setRulesId(grouponRulesId);
+            groupon.setUserId(user.getId());
+            groupon.setAddTime(new Date());
+            groupon.setUpdateTime(new Date());
+            groupon.setPayed(false);
+            groupon.setDeleted(false);
+            int i1 = grouponService.insertGroupon(groupon);
+        }
         // 添加goods到 ordergoods表中
         for (Cart cart : cartList) {
             OrderGoods orderGoods = new OrderGoods();
