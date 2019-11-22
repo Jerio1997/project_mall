@@ -43,4 +43,7 @@ public interface UserService {
 
     UserIndexReqVo_Wx queryUserIndexByUserId(Integer id);
 
+    User getUserByMobile(String mobile);
+
+    int resetPasswordByMobile(String password, String mobile);
 }
