@@ -3,8 +3,10 @@ package com.cskaoyan.mall.mapper;
 import com.cskaoyan.mall.bean.Admin;
 import com.cskaoyan.mall.bean.AdminExample;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AdminMapper {
     long countByExample(AdminExample example);
@@ -32,4 +34,7 @@ public interface AdminMapper {
     Integer[] selectRoleIdsByUsername(String username);
 
     Admin selectAdminByUsername(String username);
+
+    @Select("select distinct role_ids from cskaoyan_mall_admin")
+    Set<String> selectRoleIds();
 }

@@ -202,4 +202,17 @@ public class GrouponServiceImpl implements GrouponService{
         map.put("linkGrouponId",groupon.getGrouponId());
         return map;
     }
+
+    @Override
+    public List<Groupon> selectGrouponByRuleId(Integer id) {
+        GrouponExample grouponExample = new GrouponExample();
+        grouponExample.createCriteria().andRulesIdEqualTo(id).andDeletedEqualTo(false);
+        List<Groupon> groupons = grouponMapper.selectByExample(grouponExample);
+        return groupons;
+    }
+
+    @Override
+    public int insertGroupon(Groupon groupon) {
+        return 0;
+    }
 }

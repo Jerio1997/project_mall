@@ -55,8 +55,9 @@ public interface SystemService {
 
     /**
      * 删除角色
+     * @return
      */
-    void deleteRole(Role role);
+    boolean deleteRole(Role role);
 
     /**
      * 查询 storage
@@ -80,8 +81,9 @@ public interface SystemService {
 
     /**
      * 删除系统管理员
+     * @return
      */
-    void deleteAdmin(Admin admin);
+    boolean deleteAdmin(Admin admin);
 
     /**
      * 根据角色 id 查找该角色已经分配的权限列表
