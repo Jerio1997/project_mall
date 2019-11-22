@@ -171,14 +171,17 @@ public class GoodsServiceImpl implements GoodsService {
         goodsDetailReqVo.setGoods(goods1);
         Integer categoryId = goods1.getCategoryId();
         // categoryIds
-        CategoryExample categoryExample = new CategoryExample();
-        categoryExample.createCriteria().andIdEqualTo(categoryId);
-        List<Category> categories = categoryMapper.selectByExample(categoryExample);
-        Category category = categories.get(0);
-        Integer[] categoryIds = new Integer[2];
-        categoryIds[0] = category.getPid();
-        categoryIds[1] = category.getId();
-        goodsDetailReqVo.setCategoryIds(categoryIds);
+        if(categoryId != null){
+            CategoryExample categoryExample = new CategoryExample();
+            categoryExample.createCriteria().andIdEqualTo(categoryId);
+            List<Category> categories = categoryMapper.selectByExample(categoryExample);
+            Category category = categories.get(0);
+            Integer[] categoryIds = new Integer[2];
+            categoryIds[0] = category.getPid();
+            categoryIds[1] = category.getId();
+            goodsDetailReqVo.setCategoryIds(categoryIds);
+        }
+
         //attributes
         GoodsAttributeExample goodsAttributeExample = new GoodsAttributeExample();
         goodsAttributeExample.createCriteria().andGoodsIdEqualTo(id);
